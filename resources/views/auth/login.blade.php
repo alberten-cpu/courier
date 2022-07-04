@@ -1,19 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login</title>
-    <link rel="stylesheet" href="{{ asset('bootstrap-3.1.1/css/bootstrap.min.css') }}">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title> Login</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<style>
+.login-form {
+    width: 340px;
+    margin: 50px auto;
+  	font-size: 15px;
+    margin-top:70px;
+}
+.login-form form {
+    margin-bottom: 15px;
+    background: #f7f7f7;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+}
+.login-form h2 {
+    margin: 0 0 15px;
+}
+.form-control, .btn {
+    min-height: 38px;
+    border-radius: 2px;
+}
+.btn {        
+    font-size: 15px;
+    font-weight: bold;
+}
+</style>
 </head>
 <body>
-
-<div class="container">
-   <div class="row" style="margin-top:45px">
-      <div class="col-md-4 col-md-offset-4">
-           <h4>Login | Custom Auth</h4><hr>
-           <form action="{{ route('auth.check') }}" method="post">
+<div class="login-form">
+    <!-- <form action="/examples/actions/confirmation.php" method="post"> -->
+    <form action="{{ route('auth.check') }}" method="post">
             @if(Session::get('fail'))
                <div class="alert alert-danger">
                   {{ Session::get('fail') }}
@@ -21,23 +46,30 @@
             @endif
   
            @csrf
-              <div class="form-group">
-                 <label>Email</label>
-                 <input type="text" class="form-control" name="email" placeholder="Enter email address" value="{{ old('email') }}">
+        <h2 class="text-center">Log in</h2>
+        <img src="{{asset('admin/img/logo.JPEG')}}" alt="speedy" width="100%" height="100%">
+       
+        <div class="form-group">
+            <!-- <input type="text" class="form-control" placeholder="Username" required="required"> -->
+            <input type="text" class="form-control" name="email" placeholder="Enter email address" value="{{ old('email') }}">
                  <span class="text-danger">@error('email'){{ $message }} @enderror</span>
-              </div>
-              <div class="form-group">
-                 <label>Password</label>
-                 <input type="password" class="form-control" name="password" placeholder="Enter password">
+        </div>
+        <div class="form-group">
+            <!-- <input type="password" class="form-control" placeholder="Password" required="required"> -->
+            <input type="password" class="form-control" name="password" placeholder="Enter password">
                  <span class="text-danger">@error('password'){{ $message }} @enderror</span>
-              </div>
-              <button type="submit" class="btn btn-block btn-primary">Sign In</button>
-              <br>
-              <a href="{{ route('auth.register') }}">I don't have an account, create new</a>
-           </form>
-      </div>
-   </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Log in</button>
+        </div>
+        <div class="clearfix">
+            <label class="float-left form-check-label"><input type="checkbox"> Remember me</label>
+            <a href="#" class="float-right">Forgot Password?</a>
+        </div> 
+        
+
+    </form>
+    <p class="text-center"> <a href="{{ route('auth.register') }}">Create an Account</a></p>
 </div>
-    
 </body>
 </html>

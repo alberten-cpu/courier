@@ -9,7 +9,7 @@ class TblUser extends Model
 {
 	protected $table = 'tbl_user';
 	public $timestamps = false;
-	//protected $fillable = ['user_email', 'user_password'];
+	protected $fillable = ['cid','CustomerID','Email','Password','Firstname','Lastname','Status','User_role','Created_at','Updated_at'];
     use HasFactory;
 
 }
