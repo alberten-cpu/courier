@@ -1,5 +1,9 @@
-@extends('layouts.adheader')
+@extends('layouts.admin.admin_layout')
 @section('content')
+
+    @push('styles')
+        {{-- Custom Style --}}
+    @endpush
 
 <!-- Content Header (Page header) -->
 <div class="content-header">
@@ -602,5 +606,8 @@
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
+    @push('scripts')
+        {{-- Custom JS --}}
+    @endpush
 
 @endsection

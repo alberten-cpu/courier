@@ -1,4 +1,4 @@
-@extends('layouts.adheader')
+@extends('layouts.admin.admin_layout')
 @section('content')
 
 <div class="card">
@@ -440,9 +440,9 @@
               <!-- /.card-body -->
             </div>
 
-@endsection            
-           
-  
+@endsection
+
+
 
 
 <script>
