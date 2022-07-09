@@ -91,7 +91,7 @@
         } else {
           if (startIndent.length > nextIndent.length) return;
           // This doesn't run if the next line immediately indents, as it is
-          // not clear of the users intention (new indented item or same level)
+          // not clear of the user intention (new indented item or same level)
           if ((startIndent.length < nextIndent.length) && (lookAhead === 1)) return;
           skipCount += 1;
         }

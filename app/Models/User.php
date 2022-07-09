@@ -2,22 +2,51 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Wildside\Userstamps\Userstamps;
 
-class User extends Authenticatable
+/**
+ * @method static create(array $array)
+ * @method static select(string $string, string $string1, string $string2, string $string3)
+ */
+class User extends Authenticatable implements
+    AuthenticatableContract,
+    CanResetPasswordContract,
+    MustVerifyEmail
 {
-    use HasFactory, Notifiable;
+    use \Illuminate\Auth\Authenticatable;
+    use CanResetPassword;
+    use HasFactory;
+    use Notifiable;
+    use SoftDeletes;
+    use Userstamps;
 
+    /**
+     * @var string
+     */
+    protected $table = 'users';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'first_name',
+        'last_name',
+        'email',
+        'mobile',
+        'password',
+        'role_id'
     ];
 
     /**
@@ -37,4 +66,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function customer(): HasOne
+    {
+        return $this->hasOne(Customer::class);
+    }
 }

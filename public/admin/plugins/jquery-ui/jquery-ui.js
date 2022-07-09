@@ -5,7 +5,7 @@
 
 ( function( factory ) {
 	"use strict";
-	
+
 	if ( typeof define === "function" && define.amd ) {
 
 		// AMD. Register as an anonymous module.
@@ -18017,7 +18017,7 @@ $.widget( "ui.tabs", {
 		this._addClass( this.tablist, "ui-tabs-nav",
 			"ui-helper-reset ui-helper-clearfix ui-widget-header" );
 
-		// Prevent users from focusing disabled tabs via click
+		// Prevent user from focusing disabled tabs via click
 		this.tablist
 			.on( "mousedown" + this.eventNamespace, "> li", function( event ) {
 				if ( $( this ).is( ".ui-state-disabled" ) ) {
@@ -18347,7 +18347,7 @@ $.widget( "ui.tabs", {
 
 	_getIndex: function( index ) {
 
-		// meta-function to give users option to provide a href string instead of a numerical index.
+		// meta-function to give user option to provide a href string instead of a numerical index.
 		if ( typeof index === "string" ) {
 			index = this.anchors.index( this.anchors.filter( "[href$='" +
 				$.escapeSelector( index ) + "']" ) );

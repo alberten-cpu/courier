@@ -1,13 +1,13 @@
-@extends('layouts.adheader')
+@extends('layouts.admin.admin_layout')
 <style>
 .switch {
   position: relative;
-  
+
   width: 60px;
   height: 34px;
 }
 
-.switch input { 
+.switch input {
   opacity: 0;
   width: 0;
   height: 0;
@@ -82,7 +82,7 @@ input:checked + .slider:before {
                 {{ Session::get('fail') }}
              </div>
            @endif
-  
+
               @csrf
                 <div class="card-body">
                   <div class="form-group">
@@ -153,7 +153,7 @@ input:checked + .slider:before {
                     <option value="disable">Disable</option>
                   </select>
                 </div>
-                  
+
                 <!-- /.card-body -->
 
                 <div class="card-footer">
