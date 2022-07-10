@@ -4,43 +4,41 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Wildside\Userstamps\Userstamps;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * @method static create(array $array)
+ * @method static select(string $string, string $string1, string $string2, string $string3)
+ */
 class Customer extends Model
 {
     use HasFactory;
-    use SoftDeletes;
-    use Userstamps;
 
+    public const CUSTOMER_ID_PREFIX = 'CID';
     /**
      * @var string
      */
-    protected $table='customers';
+    protected $table = 'customers';
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
+     * @var string[]
      */
-    protected $fillable = [
-        'customer_id',
-        'user_id',
-        'phone',
-        'street_address_1',
-        'street_address_2',
-        'street_area',
-        'billing_address_1',
-        'billing_address_2',
-        'billing_area'
-    ];
+    protected $fillable = ['user_id', 'customer_id'];
 
     /**
-     * @return BelongsTo
+     * @return HasOne
      */
-    public function user(): BelongsTo
+    public function user(): HasOne
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->hasOne(User::class);
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function createIncrementCustomerId(int $id): string
+    {
+        return self::CUSTOMER_ID_PREFIX . str_pad($id, 5, 0, STR_PAD_LEFT);
     }
 }

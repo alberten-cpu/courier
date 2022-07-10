@@ -10,7 +10,7 @@ use Validator;
 
 
 
-	
+
 class AuthController extends Controller
 {
     function createnew(){
@@ -32,7 +32,7 @@ class AuthController extends Controller
 
     	//return $request->input();
     	// validate request
-    	
+
     	$request->validate([
 
     		'name'=>'required',
@@ -43,7 +43,7 @@ class AuthController extends Controller
     	]);
 
     	//dd($request->input());
-        
+
         $user =  TblUser::create([
 
                 "user_email"            =>          $request->email,
@@ -57,7 +57,7 @@ class AuthController extends Controller
 
             return back()->with("fail", "Failed! Try after some time");
         }
-        
+
 
     }
 
@@ -82,7 +82,7 @@ class AuthController extends Controller
             if(Hash::check($request->password, $userInfo->Password)){
                 $request->session()->put('LoggedUser', $userInfo->Id);
                 return redirect('admin/dashboard');
-                
+
 
             }else{
                 return back()->with('fail','Incorrect password');
@@ -96,11 +96,10 @@ class AuthController extends Controller
             return redirect('/auth/login');
         }
     }
-    
+
     function dashboard(){
-        $data = ['LoggedUserInfo'=>TblUser::where('id','=', session('LoggedUser'))->first()];
-        return view('admin.dashboard', $data);
-        
+        return view('admin.dashboard');
+
     }
     function adddriverdb(){
         $data = ['LoggedUserInfo'=>TblUser::where('id','=', session('LoggedUser'))->first()];

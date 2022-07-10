@@ -7,13 +7,19 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Wildside\Userstamps\Userstamps;
 
-class User extends Authenticatable implements AuthenticatableContract,
+/**
+ * @method static create(array $array)
+ * @method static select(string $string, string $string1, string $string2, string $string3)
+ */
+class User extends Authenticatable implements
+    AuthenticatableContract,
     CanResetPasswordContract,
     MustVerifyEmail
 {
@@ -40,6 +46,7 @@ class User extends Authenticatable implements AuthenticatableContract,
         'email',
         'mobile',
         'password',
+        'role_id'
     ];
 
     /**
@@ -59,6 +66,14 @@ class User extends Authenticatable implements AuthenticatableContract,
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
 
     /**
      * @return HasOne
