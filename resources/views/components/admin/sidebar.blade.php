@@ -14,9 +14,15 @@
 
                 <x-admin.ui.menu name="Dashboard" route="admin.dashboard" icon="fas fa-tachometer-alt" target="0"
                                  new="0" count="0"/>
-
-                <x-admin.ui.dropdown-menu name="Users" icon="fas fa-th"
-                                          menus='[{"label":"Customers","route":"customer.index","target":"0","new":"0","count":"0"},{"label":"Driver","route":"","target":"0","new":"0","count":"0"}]'/>
+                {{--Admin Menus--}}
+                @if(auth()->user()->isAdmin())
+                    <x-admin.ui.dropdown-menu name="Users" icon="fas fa-th"
+                                              menus='[{"label":"Customers","route":"customer.index","target":"0","new":"0","count":"0"},{"label":"Driver","route":"driver.index","target":"0","new":"0","count":"0"}]'/>
+                @elseif(auth()->user()->isCustomer())
+                    {{--Customer Menus--}}
+                @elseif(auth()->user()->isDriver())
+                    {{--Driver Menus--}}
+                @endif
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
