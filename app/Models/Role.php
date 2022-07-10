@@ -15,7 +15,7 @@ class Role extends Model
 
     public const ADMIN = 1;
     public const CUSTOMER = 2;
-    public const DRIVER = 2;
+    public const DRIVER = 3;
     /**
      * @var string
      */

@@ -10,7 +10,7 @@ use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
 
-class CustomerDataTable extends DataTable
+class DriverDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -28,8 +28,8 @@ class CustomerDataTable extends DataTable
             ->editColumn('mobile', function ($query) {
                 return '<a href="tel:' . $query->mobile . '">' . $query->mobile . '</a>';
             })
-            ->editColumn('customer.customer_id', function ($query) {
-                return $query->customer->customer_id;
+            ->editColumn('driver.driver_id', function ($query) {
+                return $query->driver->driver_id;
             })
             ->editColumn('created_at', function ($query) {
                 return $query->created_at->diffForHumans();
@@ -53,8 +53,8 @@ class CustomerDataTable extends DataTable
             ->addColumn('action', function ($query) {
                 return view(
                     'components.admin.datatable.button',
-                    ['edit' => Helper::getRoute('customer.edit', $query->id),
-                        'delete' => Helper::getRoute('customer.destroy', $query->id), 'id' => $query->id]
+                    ['edit' => Helper::getRoute('driver.edit', $query->id),
+                        'delete' => Helper::getRoute('driver.destroy', $query->id), 'id' => $query->id]
                 );
             })
             ->rawColumns(['email', 'mobile', 'is_active', 'action']);
@@ -68,7 +68,7 @@ class CustomerDataTable extends DataTable
      */
     public function query(User $model): \Illuminate\Database\Eloquent\Builder
     {
-        return $model->with('customer:user_id,customer_id')->where('role_id', Role::CUSTOMER);
+        return $model->with('driver:user_id,driver_id')->where('role_id', Role::DRIVER);
     }
 
     /**
@@ -87,10 +87,10 @@ class CustomerDataTable extends DataTable
             ->parameters([
                 'dom' => 'Bfrtip',
                 'buttons' => ['excel', 'csv', 'pdf', 'print', [
-                    'text' => 'New Customer',
+                    'text' => 'New Driver',
                     'className' => 'bg-primary mb-lg-0 mb-3',
                     'action' => 'function( e, dt, button, config){
-                         window.location = "' . Helper::getRoute('customer.create') . '";
+                         window.location = "' . Helper::getRoute('driver.create') . '";
                      }'
                 ],]
             ]);
@@ -104,10 +104,10 @@ class CustomerDataTable extends DataTable
     protected function getColumns(): array
     {
         return [
-            'CID' => new Column(
-                ['title' => 'CID',
-                    'data' => 'customer.customer_id',
-                    'name' => 'customer.customer_id',
+            'DID' => new Column(
+                ['title' => 'DID',
+                    'data' => 'driver.driver_id',
+                    'name' => 'driver.driver_id',
                     'searchable' => true]
             ),
             'first_name',
@@ -145,6 +145,6 @@ class CustomerDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'User/Customer_' . date('YmdHis');
+        return 'User/Driver_' . date('YmdHis');
     }
 }

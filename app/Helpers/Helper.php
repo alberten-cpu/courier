@@ -61,6 +61,12 @@ class Helper
         }
     }
 
+    public static function getFirstRoute(string $route)
+    {
+        $routeArray = explode('.', $route);
+        return $routeArray[0];
+    }
+
     /**
      * Determines if select box or checkbox is selected.
      *

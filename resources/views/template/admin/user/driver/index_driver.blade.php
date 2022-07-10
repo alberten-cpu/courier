@@ -4,10 +4,10 @@
     @push('styles')
         {{-- Custom Style --}}
     @endpush
-    <x-admin.ui.datatable :data-table="$dataTable" title="Customer Listing">
+    <x-admin.ui.datatable :data-table="$dataTable" title="Driver Listing">
         <x-slot name="breadcrumb">
-            <x-admin.title-and-breadcrumb title="Customer"
-                                          breadcrumbs='{"Home":"admin.dashboard","User":"","Customer":""}'/>
+            <x-admin.title-and-breadcrumb title="Driver"
+                                          breadcrumbs='{"Home":"admin.dashboard","User":"","Driver":""}'/>
         </x-slot>
     </x-admin.ui.datatable>
     @push('scripts')

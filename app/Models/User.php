@@ -68,6 +68,38 @@ class User extends Authenticatable implements
     ];
 
     /**
+     * @return bool
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->is_admin === 1;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role_id === Role::ADMIN;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCustomer(): bool
+    {
+        return $this->role_id === Role::CUSTOMER;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDriver(): bool
+    {
+        return $this->role_id === Role::DRIVER;
+    }
+
+    /**
      * @return BelongsTo
      */
     public function role(): BelongsTo
@@ -81,5 +113,24 @@ class User extends Authenticatable implements
     public function customer(): HasOne
     {
         return $this->hasOne(Customer::class);
+    }
+
+    /**
+     * @return HasOne
+     */
+    
+    public function driver(): HasOne
+    {
+        return $this->hasOne(Driver::class);
+    }
+
+    /**
+     * Get the class being used to provide a User.
+     *
+     * @return string
+     */
+    protected function getUserClass(): string
+    {
+        return config('auth.providers.user.model');
     }
 }

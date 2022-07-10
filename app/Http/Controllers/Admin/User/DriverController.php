@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\Admin\User;
 
-use App\DataTables\User\CustomerDataTable;
+use App\DataTables\User\DriverDataTable;
 use App\Http\Controllers\Controller;
-use App\Models\Customer;
+use App\Models\Driver;
 use App\Models\Role;
 use App\Models\User;
-use DataTables;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -19,17 +17,16 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-class CustomerController extends Controller
+class DriverController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @param CustomerDataTable $dataTable
-     * @return Application|Factory|View|JsonResponse
+     * @return Application|Factory|View
      */
-    public function index(CustomerDataTable $dataTable)
+    public function index(DriverDataTable $dataTable)
     {
-        return $dataTable->render('template.admin.user.customer.index_customer');
+        return $dataTable->render('template.admin.user.driver.index_driver');
     }
 
     /**
@@ -39,7 +36,7 @@ class CustomerController extends Controller
      * @return RedirectResponse
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $this->validator($request->all())->validate();
         $request->has('is_active') ? $is_active = true : $is_active = false;
@@ -49,16 +46,16 @@ class CustomerController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'mobile' => $request->mobile,
-            'password' => Hash::make('customer@123'),
-            'role_id' => Role::CUSTOMER,
+            'password' => Hash::make('driver@123'),
+            'role_id' => Role::DRIVER,
             'is_active' => $is_active,
         ]);
-        $customer = Customer::create([
+        $driver = Driver::create([
             'user_id' => $user->id,
         ]);
-        $customer->customer_id = $customer->createIncrementCustomerId($customer->id);
-        $customer->save();
-        return back()->with('success', 'Customer details is saved successfully');
+        $driver->driver_id = $driver->createIncrementDriverId($driver->id);
+        $driver->save();
+        return back()->with('success', 'Driver details is saved successfully');
     }
 
     /**
@@ -90,22 +87,22 @@ class CustomerController extends Controller
     }
 
     /**
-     * Show the form for creatidashboardng a new resource.
+     * Show the form for creating a new resource.
      *
      * @return Application|Factory|View
      */
     public function create()
     {
-        return view('template.admin.user.customer.create_customer');
+        return view('template.admin.user.driver.create_driver');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param User $customer
+     * @param User $driver
      * @return Response
      */
-    public function show(User $customer)
+    public function show(User $driver)
     {
         //
     }
@@ -113,48 +110,48 @@ class CustomerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param User $customer
+     * @param User $driver
      * @return Application|Factory|View
      */
-    public function edit(User $customer)
+    public function edit(User $driver)
     {
-        return view('template.admin.user.customer.edit_customer', compact('customer'));
+        return view('template.admin.user.driver.edit_driver', compact('driver'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param User $customer
+     * @param User $driver
      * @return RedirectResponse
      * @throws ValidationException
      */
-    public function update(Request $request, User $customer): RedirectResponse
+    public function update(Request $request, User $driver): RedirectResponse
     {
-        $this->validator($request->all(), $customer->id)->validate();
+        $this->validator($request->all(), $driver->id)->validate();
         $request->has('is_active') ? $is_active = true : $is_active = false;
-        $customer->name = $request->first_name . ' ' . $request->last_name;
-        $customer->first_name = $request->first_name;
-        $customer->last_name = $request->last_name;
-        $customer->email = $request->email;
-        $customer->mobile = $request->mobile;
-        $customer->is_active = $is_active;
-        if (!$customer->isDirty()) {
+        $driver->name = $request->first_name . ' ' . $request->last_name;
+        $driver->first_name = $request->first_name;
+        $driver->last_name = $request->last_name;
+        $driver->email = $request->email;
+        $driver->mobile = $request->mobile;
+        $driver->is_active = $is_active;
+        if (!$driver->isDirty()) {
             return back()->with('info', 'No changes have made.');
         }
-        $customer->save();
-        return back()->with('success', 'Customer details updated successfully');
+        $driver->save();
+        return back()->with('success', 'Driver details updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param User $customer
+     * @param User $driver
      * @return RedirectResponse
      */
-    public function destroy(User $customer): RedirectResponse
+    public function destroy(User $driver): RedirectResponse
     {
-        $customer->delete();
-        return back()->with('success', 'Customer details deleted successfully');
+        $driver->delete();
+        return back()->with('success', 'Driver details deleted successfully');
     }
 }

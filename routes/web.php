@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\User\CustomerController;
+use App\Http\Controllers\Admin\User\DriverController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -15,31 +17,28 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Auth::routes(['verify' => true]);
 
 Route::get('/', function () {
     return redirect('login');
 });
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::resource('user/customer', CustomerController::class)->name('*', 'customer');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    /*Admin Routes */
+    Route::group(['middleware' => 'admin', 'prefix' => 'admin', 'name' => 'admin' . '.'], function () {
+        Route::resource('/user/customer', CustomerController::class)->name('*', 'customer');
+        Route::resource('/user/driver', DriverController::class)->name('*', 'driver');
+    });
+
+    /*Customer Routes */
+    Route::group(['middleware' => 'customer', 'prefix' => 'customer', 'name' => 'customer' . '.'], function () {
+        /*routes here*/
+    });
+
+    /*Driver Routes */
+    Route::group(['middleware' => 'driver', 'prefix' => 'driver', 'name' => 'driver' . '.'], function () {
+        /*routes here*/
+    });
 });
-Route::post('auth.save', [AuthController::class, 'save'])->name('auth.save');
-Route::post('auth.check', [AuthController::class, 'check'])->name('auth.check');
-Route::get('admin', [AuthController::class, 'login']);
-Route::get('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
-
-Route::get('admin/dashboard', [AuthController::class, 'dashboard'])->name('admin.dashboard');
-Route::get('admin/newuser', [AdminController::class, 'createnew'])->name('admin.newuser');
-
-//  driver
-Route::get('admin/adddriver', [AdminController::class, 'adddriver'])->name('admin.adddriver');
-Route::post('admin.adddriverdb', [AdminController::class, 'adddriverdb'])->name('admin.adddriverdb');
-Route::get('admin/viewdriver', [AdminController::class, 'viewdriver'])->name('admin.viewdriver');
-// area
-Route::get('admin/addarea', [AdminController::class, 'addarea'])->name('admin.addarea');
-Route::post('admin/addareadb', [AdminController::class, 'addareadb'])->name('admin.addareadb');
-
-
-Auth::routes(['verify' => true]);
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
