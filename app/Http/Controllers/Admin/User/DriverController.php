@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin\User;
 
-use App\DataTables\User\DriverDataTable;
+use App\DataTables\Admin\User\DriverDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\Driver;
 use App\Models\Role;
@@ -41,6 +41,7 @@ class DriverController extends Controller
         $this->validator($request->all())->validate();
         $request->has('is_active') ? $is_active = true : $is_active = false;
         $user = User::create([
+
             'name' => $request->first_name . ' ' . $request->last_name,
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -52,9 +53,14 @@ class DriverController extends Controller
         ]);
         $driver = Driver::create([
             'user_id' => $user->id,
+            'driver_id' => $request->did,
+            'area_id' => $request->area_id,
+            'pager_number' => $request->pager_number,
+            'street_address_1' => $request->street_address_1,
+            'street_address_2' => $request->street_address_2,
         ]);
-        $driver->driver_id = $driver->createIncrementDriverId($driver->id);
-        $driver->save();
+//        $driver->driver_id = $driver->createIncrementDriverId($driver->id);
+//        $driver->save();
         return back()->with('success', 'Driver details is saved successfully');
     }
 
@@ -66,7 +72,7 @@ class DriverController extends Controller
      *
      * @return \Illuminate\Contracts\Validation\Validator|\Illuminate\Validation\Validator
      **/
-    protected function validator(array $data, int $id = null)
+    protected function validator(array $data, int $id = null, int $driver_id = null)
     {
         \Validator::extend(
             'without_spaces',
@@ -78,10 +84,13 @@ class DriverController extends Controller
         return Validator::make(
             $data,
             [
+                'did' => ['required', 'string', 'unique:drivers,driver_id,' .$driver_id],
                 'first_name' => ['required', 'string', 'max:250'],
                 'last_name' => ['required', 'string'],
                 'email' => ['required', 'string', 'unique:users,email,' . $id],
                 'mobile' => ['required', 'unique:users,mobile,' . $id],
+                'area_id' => ['required'],
+                'street_address_1' => ['required'],
             ]
         );
     }
@@ -128,7 +137,7 @@ class DriverController extends Controller
      */
     public function update(Request $request, User $driver): RedirectResponse
     {
-        $this->validator($request->all(), $driver->id)->validate();
+        $this->validator($request->all(), $driver->id, $driver->driver->id)->validate();
         $request->has('is_active') ? $is_active = true : $is_active = false;
         $driver->name = $request->first_name . ' ' . $request->last_name;
         $driver->first_name = $request->first_name;
@@ -136,10 +145,18 @@ class DriverController extends Controller
         $driver->email = $request->email;
         $driver->mobile = $request->mobile;
         $driver->is_active = $is_active;
+        $driver_table = Driver::findOrFail($driver->driver->id);
+        $driver_table->driver_id = $request->did;
+        $driver_table->area_id = $request->area_id;
+        $driver_table->pager_number = $request->pager_number;
+        $driver_table->street_address_1 = $request->street_address_1;
+        $driver_table->street_address_2 = $request->street_address_2;
+
         if (!$driver->isDirty()) {
             return back()->with('info', 'No changes have made.');
         }
         $driver->save();
+        $driver_table->save();
         return back()->with('success', 'Driver details updated successfully');
     }
 
