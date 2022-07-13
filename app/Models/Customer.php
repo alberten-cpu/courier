@@ -23,7 +23,7 @@ class Customer extends Model
     /**
      * @var string[]
      */
-    protected $fillable = ['user_id', 'customer_id'];
+    protected $fillable = ['user_id', 'customer_id','area_id','street_address_1', 'street_address_2'];
 
     /**
      * @return HasOne

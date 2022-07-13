@@ -1,10 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\AreaController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\User\CustomerController;
 use App\Http\Controllers\Admin\User\DriverController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,6 +29,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'admin', 'prefix' => 'admin', 'name' => 'admin' . '.'], function () {
         Route::resource('/user/customer', CustomerController::class)->name('*', 'customer');
         Route::resource('/user/driver', DriverController::class)->name('*', 'driver');
+        Route::resource('/area', AreaController::class)->name('*', 'area');
     });
 
     /*Customer Routes */

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataTables\User;
+namespace App\DataTables\Admin\User;
 
 use App\Models\Role;
 use App\Models\User;

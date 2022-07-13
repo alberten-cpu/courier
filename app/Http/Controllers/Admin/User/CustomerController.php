@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin\User;
 
-use App\DataTables\User\CustomerDataTable;
+use App\DataTables\Admin\User\CustomerDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Role;
@@ -43,6 +43,7 @@ class CustomerController extends Controller
     {
         $this->validator($request->all())->validate();
         $request->has('is_active') ? $is_active = true : $is_active = false;
+        //dd($request->all());
         $user = User::create([
             'name' => $request->first_name . ' ' . $request->last_name,
             'first_name' => $request->first_name,
@@ -55,9 +56,13 @@ class CustomerController extends Controller
         ]);
         $customer = Customer::create([
             'user_id' => $user->id,
+            'customer_id' => $request->cid,
+            'area_id' => $request->area_id,
+            'street_address_1' => $request->street_address_1,
+            'street_address_2' => $request->street_address_2,
         ]);
-        $customer->customer_id = $customer->createIncrementCustomerId($customer->id);
-        $customer->save();
+        //$customer->customer_id = $customer->createIncrementCustomerId($customer->id);
+        //$customer->save();
         return back()->with('success', 'Customer details is saved successfully');
     }
 
@@ -69,7 +74,7 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Contracts\Validation\Validator|\Illuminate\Validation\Validator
      **/
-    protected function validator(array $data, int $id = null)
+    protected function validator(array $data, int $id = null, int $customer_id = null)
     {
         \Validator::extend(
             'without_spaces',
@@ -78,19 +83,24 @@ class CustomerController extends Controller
             }
         );
 
+
         return Validator::make(
             $data,
             [
+                'cid' => ['required', 'string', 'unique:customers,customer_id,' .$customer_id],
                 'first_name' => ['required', 'string', 'max:250'],
                 'last_name' => ['required', 'string'],
                 'email' => ['required', 'string', 'unique:users,email,' . $id],
                 'mobile' => ['required', 'unique:users,mobile,' . $id],
+                'area_id' => ['required'],
+                'street_address_1' => ['required'],
+
             ]
         );
     }
 
     /**
-     * Show the form for creatidashboardng a new resource.
+     * Show the form for create dashboard a new resource.
      *
      * @return Application|Factory|View
      */
@@ -131,7 +141,7 @@ class CustomerController extends Controller
      */
     public function update(Request $request, User $customer): RedirectResponse
     {
-        $this->validator($request->all(), $customer->id)->validate();
+        $this->validator($request->all(), $customer->id, $customer->customer->id)->validate();
         $request->has('is_active') ? $is_active = true : $is_active = false;
         $customer->name = $request->first_name . ' ' . $request->last_name;
         $customer->first_name = $request->first_name;
@@ -139,10 +149,17 @@ class CustomerController extends Controller
         $customer->email = $request->email;
         $customer->mobile = $request->mobile;
         $customer->is_active = $is_active;
+        $customer_table = Customer::findOrFail($customer->customer->id);
+        $customer_table->customer_id = $request->cid;
+        $customer_table->area_id = $request->area_id;
+        $customer_table->street_address_1 = $request->street_address_1;
+        $customer_table->street_address_2 = $request->street_address_2;
+
         if (!$customer->isDirty()) {
             return back()->with('info', 'No changes have made.');
         }
         $customer->save();
+        $customer_table->save();
         return back()->with('success', 'Customer details updated successfully');
     }
 
