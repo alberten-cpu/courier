@@ -29,6 +29,27 @@ class AreaController extends Controller
         return $dataTable->render('template.admin.area.index_area');
     }
 
+    public function getAreas()
+    {
+        if (\request()->ajax()) {
+            $search = request()->search;
+            $areas = Area::select('id', 'area')->when(
+                $search,
+                function ($query) use ($search) {
+                    $query->where('area', 'like', '%' . $search . '%');
+                }
+            )->limit(15)->get();
+            $response = array();
+            foreach ($areas as $area) {
+                $response[] = array(
+                    "id" => $area->id,
+                    "text" => $area->area
+                );
+            }
+            return response()->json($response);
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *

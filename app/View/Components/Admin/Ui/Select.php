@@ -2,6 +2,9 @@
 
 namespace App\View\Components\Admin\Ui;
 
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
 class Select extends Component
@@ -19,7 +22,7 @@ class Select extends Component
      */
     public $id;
     /**
-     * @var array|null
+     * @var string|array|null
      */
     public $options;
     /**
@@ -50,12 +53,29 @@ class Select extends Component
     /**
      * Create a new component instance.
      *
-     * @return void
+     * @param string $label
+     * @param string $name
+     * @param string $id
+     * @param string|array|null $options
+     * @param string|null $addClass
+     * @param bool $required
+     * @param bool $disable
+     * @param bool $multiple
+     * @param string|null $value
+     * @param bool $default
      */
-    public function __construct(string $label, string $name, string $id ,array $options = [],string $addClass=null,
-                                bool $required = false , bool $disable = false , bool $multiple = false ,
-                                string $value = null,bool $default = false)
-    {
+    public function __construct(
+        string $label,
+        string $name,
+        string $id,
+        $options = null,
+        string $addClass = null,
+        bool   $required = false,
+        bool   $disable = false,
+        bool   $multiple = false,
+        string $value = null,
+        bool   $default = true
+    ) {
         $this->label = $label;
         $this->name = $name;
         $this->id = $id;
@@ -66,14 +86,12 @@ class Select extends Component
         $this->multiple = $multiple;
         $this->value = $value;
         $this->default = $default;
-
-
     }
 
     /**
      * Get the view / contents that represent the component.
      *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
+     * @return Application|Factory|View
      */
     public function render()
     {

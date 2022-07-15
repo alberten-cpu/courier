@@ -32,6 +32,27 @@ class CustomerController extends Controller
         return $dataTable->render('template.admin.user.customer.index_customer');
     }
 
+    public function getCustomers()
+    {
+        if (\request()->ajax()) {
+            $search = request()->search;
+            $customers = User::with('customer:company_name,user_id')->select('id', 'name', 'role_id')->when(
+                $search,
+                function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                }
+            )->where('role_id', Role::CUSTOMER)->limit(15)->get();
+            $response = array();
+            foreach ($customers as $customer) {
+                $response[] = array(
+                    "id" => $customer->id,
+                    "text" => $customer->name . ',' . $customer->customer->company_name
+                );
+            }
+            return response()->json($response);
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -87,7 +108,7 @@ class CustomerController extends Controller
         return Validator::make(
             $data,
             [
-                'cid' => ['required', 'string', 'unique:customers,customer_id,' .$customer_id],
+                'cid' => ['required', 'string', 'unique:customers,customer_id,' . $customer_id],
                 'first_name' => ['required', 'string', 'max:250'],
                 'last_name' => ['required', 'string'],
                 'email' => ['required', 'string', 'unique:users,email,' . $id],

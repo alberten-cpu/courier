@@ -52,7 +52,7 @@ class AreaDataTable extends DataTable
      */
     public function query(Area $model): \Illuminate\Database\Eloquent\Builder
     {
-        return $model->where('status', true);
+        return $model->select('*');
     }
 
     /**
