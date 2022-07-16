@@ -5,15 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\DataTables\Admin\AreaDataTable;
 use App\Http\Controllers\Admin\User\CustomerDataTable;
 use App\Http\Controllers\Controller;
+use App\Models\Area;
 use DataTables;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Models\Area;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AreaController extends Controller
@@ -26,24 +26,35 @@ class AreaController extends Controller
      */
     public function index(AreaDataTable $dataTable)
     {
-        return $dataTable->render('template.admin.user.area.index_area');
+        return $dataTable->render('template.admin.area.index_area');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function getAreas()
     {
-        return view('template.admin.user.area.create_area');
+        if (\request()->ajax()) {
+            $search = request()->search;
+            $areas = Area::select('id', 'area')->when(
+                $search,
+                function ($query) use ($search) {
+                    $query->where('area', 'like', '%' . $search . '%');
+                }
+            )->limit(15)->get();
+            $response = array();
+            foreach ($areas as $area) {
+                $response[] = array(
+                    "id" => $area->id,
+                    "text" => $area->area
+                );
+            }
+            return response()->json($response);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
@@ -66,7 +77,7 @@ class AreaController extends Controller
      *
      * @return \Illuminate\Contracts\Validation\Validator|\Illuminate\Validation\Validator
      **/
-    protected function validator(array $data, int $id = null )
+    protected function validator(array $data, int $id = null)
     {
         \Validator::extend(
             'without_spaces',
@@ -84,11 +95,22 @@ class AreaController extends Controller
             ]
         );
     }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Application|Factory|View|Response
+     */
+    public function create()
+    {
+        return view('template.admin.area.create_area');
+    }
+
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
     public function show($id)
     {
@@ -98,21 +120,20 @@ class AreaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $area
-     * @return \Illuminate\Http\Response
+     * @param int $area
+     * @return Application|Factory|View|Response
      */
     public function edit(Area $area)
     {
-        return view('template.admin.user.area.edit_area', compact('area'));
-
+        return view('template.admin.area.edit_area', compact('area'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     * @return RedirectResponse
      */
     public function update(Request $request, Area $area)
     {
@@ -126,16 +147,14 @@ class AreaController extends Controller
         }
         $area->save();
         return back()->with('success', 'Area details updated successfully');
-
     }
-
 
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
     public function destroy($id)
     {

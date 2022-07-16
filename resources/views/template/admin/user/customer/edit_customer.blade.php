@@ -18,7 +18,8 @@
                                                  offText="Inactive" value="{{ $customer->is_active }}"/>
                 </div>
                 <x-admin.ui.input label="Customer Id" type="text" name="cid" id="cid" add-class=""
-                                  placeholder="Enter Customer Id" required value="{{ $customer->customer->customer_id }}"/>
+                                  placeholder="Enter Customer Id" required
+                                  value="{{ $customer->customer->customer_id }}"/>
                 <x-admin.ui.input label="First Name" type="text" name="first_name" id="first_name" add-class=""
                                   placeholder="First Name" required value="{{ $customer->first_name }}"/>
                 <x-admin.ui.input label="Last Name" type="text" name="last_name" id="last_name" add-class=""
@@ -30,7 +31,7 @@
                                   add-class=""
                                   placeholder="Email"
                                   required
-                                  value="{{ $customer->email }}" />
+                                  value="{{ $customer->email }}"/>
                 <x-admin.ui.input label="Mobile"
                                   type="text"
                                   name="mobile"
@@ -52,7 +53,8 @@
                                    id="area_id"
                                    required
                                    value="{{ $customer->customer->area_id }}"
-                                   :options="App\Models\Area::getAreas()"
+                                   options="area.list"
+                                   add-class="area"
                 />
                 <x-admin.ui.Textarea label="Street Adress 1"
                                      name="street_address_1"

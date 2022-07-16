@@ -2,6 +2,9 @@
     <label for="{{ $id }}">{{ __($label) }} @if($required)
             <span class="text-danger">*</span>
         @endif</label>
-    <textarea name="{{ $name }}"  class="form-control" rows="3" placeholder="Enter ..." @if($required) required
-           @endif placeholder="{{ __($placeholder) }}">{{ $value  }}</textarea>
+    <textarea name="{{ $name }}" id="{{ $id }}" class="form-control" rows="3" @if($required) required
+              @endif placeholder="{{ __($placeholder) }}">{{ old($name,$value)  }}</textarea>
 </div>
+@push('scripts')
+    {{--    Custom-JS --}}
+@endpush

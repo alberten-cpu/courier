@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @method static create(array $array)
@@ -22,14 +22,22 @@ class Driver extends Model
     /**
      * @var string[]
      */
-    protected $fillable = ['user_id', 'driver_id','area_id','pager_number', 'street_address_1', 'street_address_2'];
+    protected $fillable = ['user_id', 'driver_id', 'area_id', 'pager_number', 'street_address_1', 'street_address_2'];
 
     /**
-     * @return HasOne
+     * @return BelongsTo
      */
-    public function user(): HasOne
+    public function user(): BelongsTo
     {
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function area(): BelongsTo
+    {
+        return $this->belongsTo(Area::class, 'area_id');
     }
 
     /**
