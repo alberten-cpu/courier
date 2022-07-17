@@ -29,8 +29,10 @@ Route::group(['middleware' => 'auth'], function () {
     /*Admin Routes */
     Route::group(['middleware' => 'admin', 'prefix' => 'admin', 'name' => 'admin' . '.'], function () {
         Route::resource('/user/customer', CustomerController::class)->name('*', 'customer');
+        Route::get('/list_customer', [CustomerController::class, 'getCustomers'])->name('customer.list');
         Route::resource('/user/driver', DriverController::class)->name('*', 'driver');
         Route::resource('/area', AreaController::class)->name('*', 'area');
+        Route::get('/list_area', [AreaController::class, 'getAreas'])->name('area.list');
         Route::resource('/job', JobController::class)->name('*', 'job');
     });
 

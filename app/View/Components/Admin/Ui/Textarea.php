@@ -2,6 +2,9 @@
 
 namespace App\View\Components\Admin\Ui;
 
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
 class Textarea extends Component
@@ -36,14 +39,14 @@ class Textarea extends Component
      *
      * @return void
      */
-    public function __construct(string $label,
-                                string $name,
-                                string $id,
-                                string $value = null,
-                                string $placeholder = null,
-                                bool   $required = false
-                                )
-    {
+    public function __construct(
+        string $label,
+        string $name,
+        string $id,
+        string $value = null,
+        string $placeholder = 'Type here',
+        bool   $required = false
+    ) {
         $this->label = $label;
         $this->name = $name;
         $this->id = $id;
@@ -55,7 +58,7 @@ class Textarea extends Component
     /**
      * Get the view / contents that represent the component.
      *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
+     * @return Application|Factory|View
      */
     public function render()
     {

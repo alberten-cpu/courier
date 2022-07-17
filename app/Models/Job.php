@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Job extends Model
 {
     use HasFactory;
+
     /**
      * @var string
      */
@@ -27,5 +28,6 @@ class Job extends Model
         'van_hire',
         'number_box',
         'job_increment_id',
-        'status_id'];
+        'status_id'
+    ];
 }

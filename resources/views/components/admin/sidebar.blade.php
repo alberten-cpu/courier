@@ -20,7 +20,7 @@
                                               menus='[{"label":"Customers","route":"customer.index","target":"0","new":"0","count":"0"},{"label":"Driver","route":"driver.index","target":"0","new":"0","count":"0"}]'/>
                     <x-admin.ui.menu name="Area" route="area.index" icon="fas fa-location-arrow" target="0"
                                      new="0" count="0"/>
-                    <x-admin.ui.menu name="Job" route="job.create" icon="fas fa-location-arrow" target="0"
+                    <x-admin.ui.menu name="Job" route="job.create" icon="fas fa-briefcase" target="0"
                                      new="0" count="0"/>
                 @elseif(auth()->user()->isCustomer())
 

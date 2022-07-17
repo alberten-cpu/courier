@@ -17,6 +17,7 @@ class CreateCustomersTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->string('customer_id')->nullable()->unique();
+            $table->string('company_name')->nullable();
             $table->foreignId('area_id')->constrained('areas');
             $table->string('street_address_1')->nullable();
             $table->string('street_address_2')->nullable();
