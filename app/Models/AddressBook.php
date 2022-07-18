@@ -12,7 +12,7 @@ class AddressBook extends Model
     /**
      * @var string
      */
-    protected $table = 'address_book';
+    protected $table = 'address_books';
 
     /**
      * @var string[]

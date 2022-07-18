@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AreaController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\TimeFrameController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\User\CustomerController;
 use App\Http\Controllers\Admin\User\DriverController;
@@ -33,6 +34,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('/user/driver', DriverController::class)->name('*', 'driver');
         Route::resource('/area', AreaController::class)->name('*', 'area');
         Route::get('/list_area', [AreaController::class, 'getAreas'])->name('area.list');
+        Route::get('/list_timeframe', [TimeFrameController::class, 'getTimeframe'])->name('timeframe.list');
         Route::resource('/job', JobController::class)->name('*', 'job');
     });
 

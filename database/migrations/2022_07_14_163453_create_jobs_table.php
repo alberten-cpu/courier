@@ -27,9 +27,9 @@ class CreateJobsTable extends Migration
             $table->integer('number_box')->nullable();
             $table->string('job_increment_id')->nullable();
             $table->foreignId('status_id')->nullable()->referances('id')->constrained('job_status');
-            $table->timestamps();
             $table->foreignId('created_by')->nullable()->referances('id')->constrained('users');
             $table->foreignId('updated_by')->nullable()->referances('id')->constrained('users');
+            $table->timestamps();
         });
     }
 
