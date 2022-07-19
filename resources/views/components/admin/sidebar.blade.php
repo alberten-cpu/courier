@@ -23,23 +23,16 @@
                                               "target":"0","new":"0","count":"0"}]'/>
                     <x-admin.ui.menu name="Area" route="area.index" icon="fas fa-location-arrow" target="0"
                                      new="0" count="0"/>
-                    <x-admin.ui.dropdown-menu name="Job" icon="fas fa-briefcase"
-                                              menus='[{"label":"Create Job","route":"job.create",
-                                              "target":"0","new":"0","count":"0"},
-                                              {"label":"View Job","route":"job.index",
-                                              "target":"0","new":"0","count":"0"}]'/>
-{{--                    <x-admin.ui.menu name="Job" route="job.create" icon="fas fa-briefcase" target="0"--}}
-{{--                                     new="0" count="0"/>--}}
+                    <x-admin.ui.menu name="Job" route="job.index" icon="fas fa-briefcase" target="0"
+                                     new="0" count="0"/>
                 @elseif(auth()->user()->isCustomer())
 
-                    <x-admin.ui.dropdown-menu name="Job" icon="fas fa-th"
-                                              menus='[{"label":"Job","route":"","target":"0",
-                                              "new":"0","count":"0"}]'/>
+                    <x-admin.ui.menu name="Job" route="jobs.index" icon="fas fa-briefcase" target="0"
+                                     new="0" count="0"/>
 
                 @elseif(auth()->user()->isDriver())
-                    <x-admin.ui.dropdown-menu name="View" icon="fas fa-th"
-                                              menus='[{"label":"View","route":"","target":"0",
-                                              "new":"0","count":"0"}]'/>
+                    <x-admin.ui.menu name="Jobs" route="myjob.index" icon="fas fa-briefcase" target="0"
+                                     new="0" count="0"/>
                 @endif
             </ul>
         </nav>

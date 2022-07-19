@@ -5,6 +5,8 @@ namespace App\Http;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\Authcheck;
 use App\Http\Middleware\Authenticate;
+use App\Http\Middleware\CustomerMiddleware;
+use App\Http\Middleware\DriverMiddleware;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use App\Http\Middleware\RedirectIfAuthenticated;

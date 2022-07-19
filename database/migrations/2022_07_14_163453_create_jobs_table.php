@@ -18,7 +18,7 @@ class CreateJobsTable extends Migration
             $table->foreignId('user_id')->nullable()->referances('id')->constrained('users');
             $table->string('customer_reference');
             $table->foreignId('from_address_id')->nullable()->referances('id')->constrained('address_books');
-            $table->string('to_address_id')->nullable()->referances('id')->constrained('address_books');
+            $table->foreignId('to_address_id')->nullable()->referances('id')->constrained('address_books');
             $table->foreignId('from_area_id')->nullable()->referances('id')->constrained('areas');
             $table->foreignId('to_area_id')->nullable()->referances('id')->constrained('areas');
             $table->foreignId('timeframe_id')->nullable()->referances('id')->constrained('time_frames');

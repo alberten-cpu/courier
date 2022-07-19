@@ -1,4 +1,4 @@
-@extends('layouts.admin.admin_layout',['title'=>'Create Customer'])
+@extends('layouts.admin.admin_layout',['title'=>'Update Customer'])
 @section('content')
 
     @push('styles')
@@ -8,10 +8,11 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
         <x-admin.title-and-breadcrumb title="Create Job"
-                                      breadcrumbs='{"Home":"admin.dashboard","Job":"job.index","Create Job":""}'/>
+                                      breadcrumbs='{"Home":"admin.dashboard","Job":"jobs.index","Update Job":""}'/>
         <!-- /.content-header -->
 
-        <x-admin.ui.card-form title="Job Details" form-route="job.store" form-id="create_job">
+        <x-admin.ui.card-form title="Job Details" form-route="job.update" form-route-id="{{ $job->id }}"
+                              form-id="create_job">
             <x-slot name="input">
                 <x-admin.ui.select label="Customer"
                                    name="customer"
