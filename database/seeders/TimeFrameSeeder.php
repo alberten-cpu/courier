@@ -6,7 +6,7 @@ use App\Models\TimeFrame;
 
 use Illuminate\Database\Seeder;
 
-class TimeFrames extends Seeder
+class TimeFrameSeeder extends Seeder
 {
     /**
      * Run the database seeds.
