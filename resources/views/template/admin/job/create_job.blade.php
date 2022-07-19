@@ -29,10 +29,10 @@
                         <p class="mb-1">Adress Selection</p>
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                             <label class="btn btn-secondary active">
-                                <input type="radio" name="options" id="option_a1" autocomplete="off" checked> FROM ME
+                                <input type="radio" name="options" id="option_a1" autocomplete="off" checked> From Customer
                             </label>
                             <label class="btn btn-secondary">
-                                <input type="radio" name="options" id="option_a2" autocomplete="off"> TO ME
+                                <input type="radio" name="options" id="option_a2" autocomplete="off"> To Customer
                             </label>
                             <label class="btn btn-secondary">
                                 <input type="radio" name="options" id="option_a3" autocomplete="off"> Neither
