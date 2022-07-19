@@ -5,19 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class job_assign extends Model
+class JobAssign extends Model
 {
     use HasFactory;
+
     /**
      * @var string
      */
-    protected $table = 'job_assign';
+    protected $table = 'job_assigns';
 
     /**
      * @var string[]
      */
     protected $fillable = ['job_id',
-        'driver_id',
+        'user_id',
         'status'
     ];
 }

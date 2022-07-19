@@ -17,7 +17,6 @@ class CreateDailyJobsTable extends Migration
             $table->id();
             $table->foreignId('job_id')->nullable()->referances('id')->constrained('jobs');
             $table->integer('job_number')->nullable();
-            $table->date('date')->nullable();
             $table->timestamps();
         });
     }

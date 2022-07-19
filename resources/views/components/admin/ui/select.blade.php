@@ -4,7 +4,9 @@
     <link rel="stylesheet" href="{{asset('admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
 @endpush
 <div class="form-group">
-    <label>{{__($label)}}</label>
+    <label>{{__($label)}} @if($required)
+            <span class="text-danger">*</span>
+        @endif</label>
     @if($multiple)
         <div class="select2-purple">
             @endif

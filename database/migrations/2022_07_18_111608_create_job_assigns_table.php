@@ -16,8 +16,8 @@ class CreateJobAssignsTable extends Migration
         Schema::create('job_assigns', function (Blueprint $table) {
             $table->id();
             $table->foreignId('job_id')->nullable()->referances('id')->constrained('jobs');
-            $table->foreignId('driver_id')->nullable()->referances('id')->constrained('drivers');
-            $table->foreignId('status')->nullable()->referances('id')->constrained('job_status');
+            $table->foreignId('user_id')->nullable()->referances('id')->constrained('users');
+            $table->boolean('status')->default(false);
             $table->timestamps();
         });
     }

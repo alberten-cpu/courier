@@ -29,6 +29,27 @@ class DriverController extends Controller
         return $dataTable->render('template.admin.user.driver.index_driver');
     }
 
+    public function getDrivers()
+    {
+        if (\request()->ajax()) {
+            $search = request()->search;
+            $drivers = User::select('id', 'name', 'role_id')->when(
+                $search,
+                function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                }
+            )->where('role_id', Role::DRIVER)->limit(15)->get();
+            $response = array();
+            foreach ($drivers as $driver) {
+                $response[] = array(
+                    "id" => $driver->id,
+                    "text" => $driver->name
+                );
+            }
+            return response()->json($response);
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -84,7 +105,7 @@ class DriverController extends Controller
         return Validator::make(
             $data,
             [
-                'did' => ['required', 'string', 'unique:drivers,driver_id,' .$driver_id],
+                'did' => ['required', 'string', 'unique:drivers,driver_id,' . $driver_id],
                 'first_name' => ['required', 'string', 'max:250'],
                 'last_name' => ['required', 'string'],
                 'email' => ['required', 'string', 'unique:users,email,' . $id],

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,10 +18,13 @@ class DailyJob extends Model
     /**
      * @var string[]
      */
-    protected $fillable = ['job_id',
-        'job_number',
-        'date',
+    protected $fillable = ['job_id', 'job_number'];
 
-    ];
-
+    /**
+     * @return int
+     */
+    public static function getTodaysJobCount(): int
+    {
+        return DailyJob::whereDate('created_at', Carbon\Carbon::today())->count();
+    }
 }

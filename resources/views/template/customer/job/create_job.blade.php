@@ -8,18 +8,11 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
         <x-admin.title-and-breadcrumb title="Create Job"
-                                      breadcrumbs='{"Home":"admin.dashboard","Job":"job.index","Create Job":""}'/>
+                                      breadcrumbs='{"Home":"admin.dashboard","Job":"jobs.index","Create Job":""}'/>
         <!-- /.content-header -->
 
-        <x-admin.ui.card-form title="Job Details" form-route="job.store" form-id="create_job">
+        <x-admin.ui.card-form title="Job Details" form-route="jobs.store" form-id="create_job">
             <x-slot name="input">
-                <x-admin.ui.select label="Customer"
-                                   name="customer"
-                                   id="customer"
-                                   required
-                                   options="customer.list"
-                                   add-class="customer"
-                />
                 <x-admin.ui.Textarea label="Customer Ref"
                                      name="customer_ref"
                                      id="customer_ref"
@@ -85,15 +78,6 @@
                                                              offText="No"/>
                             </label>
                         </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <x-admin.ui.select label="Assign Driver"
-                                           name="driver_id"
-                                           id="driver_id"
-                                           options="driver.list"
-                                           add-class="driver_id"
-
-                        />
                     </div>
                 </div>
             </x-slot>

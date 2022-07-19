@@ -1,15 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Customer;
 
-use App\DataTables\Admin\JobDataTable;
+use App\DataTables\Customer\JobDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\AddressBook;
 use App\Models\DailyJob;
 use App\Models\Job;
 use App\Models\JobAssign;
-use DataTables;
-use DB;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -18,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use DB;
 
 class JobController extends Controller
 {
@@ -29,7 +28,7 @@ class JobController extends Controller
      */
     public function index(JobDataTable $dataTable)
     {
-        return $dataTable->render('template.admin.job.index_job');
+        return $dataTable->render('template.customer.job.index_job');
     }
 
     /**
@@ -54,7 +53,7 @@ class JobController extends Controller
             $toAddress = $this->createNewAddress(Auth::id(), $request->to_address);
 
             $job_id = Job::create([
-                'user_id' => $request->customer,
+                'user_id' => Auth::id(),
                 'customer_reference' => $request->customer_ref,
                 'from_address_id' => $fromAddress,
                 'to_address_id' => $toAddress,
@@ -72,13 +71,6 @@ class JobController extends Controller
                 'job_id' => $job_id,
                 'job_number' => $dailyJobs,
             ]);
-            if ($request->has('driver_id')) {
-                JobAssign::create([
-                    'job_id' => $job_id,
-                    'user_id' => $request->driver_id,
-                    'status' => false,
-                ]);
-            }
             DB::commit();
             return back()->with('success', 'Job Created successfully');
         } catch (Exception $e) {
@@ -86,6 +78,7 @@ class JobController extends Controller
             return back()->with('error', $e->getMessage());
         }
     }
+
 
     /**
      * Validator for validate data in the request.
@@ -107,7 +100,6 @@ class JobController extends Controller
         return Validator::make(
             $data,
             [
-                'customer' => ['required', 'integer'],
                 'customer_ref' => ['string'],
                 'from_address' => ['required', 'string'],
                 'from_area_id' => ['required', 'integer'],
@@ -129,11 +121,11 @@ class JobController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Application|Factory|View
+     * @return Response
      */
     public function create()
     {
-        return view('template.admin.job.create_job');
+        return view('template.customer.job.create_job');
     }
 
     /**
@@ -151,11 +143,11 @@ class JobController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Job $job
-     * @return Application|Factory|View
+     * @return Application|Factory|View|Response
      */
     public function edit(Job $job)
     {
-        return view('template.admin.job.edit_job', compact('job'));
+        return view('template.customer.job.edit_job', compact('job'));
     }
 
     /**
