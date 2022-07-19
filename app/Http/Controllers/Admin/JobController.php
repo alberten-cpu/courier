@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Job;
+use DataTables;
 use App\Models\AddressBook;
 use App\Models\DailyJob;
 use Illuminate\Contracts\Foundation\Application;
@@ -26,6 +27,7 @@ class JobController extends Controller
      */
     public function index()
     {
+        return view('template.admin.job.edit_job');
     }
 
     /**
