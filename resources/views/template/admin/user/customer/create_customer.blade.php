@@ -19,6 +19,8 @@
                 </div>
                 <x-admin.ui.input label="Customer Id" type="text" name="cid" id="cid" add-class=""
                                   placeholder="Enter Customer Id" required/>
+                <x-admin.ui.input label="Company Name" type="text" name="company_name" id="company_name" add-class=""
+                                  placeholder="Company Name" required/>
                 <x-admin.ui.input label="First Name" type="text" name="first_name" id="first_name" add-class=""
                                   placeholder="First Name" required/>
                 <x-admin.ui.input label="Last Name" type="text" name="last_name" id="last_name" add-class=""
@@ -37,13 +39,6 @@
                                   add-class=""
                                   placeholder="Mobile"
                                   required/>
-                <x-admin.ui.input label="Phone"
-                                  type="text"
-                                  name="phone"
-                                  id="phone"
-                                  add-class=""
-                                  placeholder="Phone Number"
-                />
                 <x-admin.ui.select label="Street Area"
                                    name="area_id"
                                    id="area_id"

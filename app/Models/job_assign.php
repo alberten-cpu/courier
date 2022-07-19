@@ -5,22 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DailyJob extends Model
+class job_assign extends Model
 {
     use HasFactory;
-
     /**
      * @var string
      */
-    protected $table = 'daily_jobs';
+    protected $table = 'job_assign';
 
     /**
      * @var string[]
      */
     protected $fillable = ['job_id',
-        'job_number',
-        'date',
-
+        'driver_id',
+        'status'
     ];
-
 }

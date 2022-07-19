@@ -12,7 +12,7 @@ class Job extends Model
     /**
      * @var string
      */
-    protected $table = 'job';
+    protected $table = 'jobs';
 
     /**
      * @var string[]
@@ -28,6 +28,7 @@ class Job extends Model
         'van_hire',
         'number_box',
         'job_increment_id',
-        'status_id'
+        'status_id',
+        'created_by',
     ];
 }

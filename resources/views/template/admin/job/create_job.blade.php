@@ -13,6 +13,10 @@
 
         <x-admin.ui.card-form title="Job Details" form-route="job.store" form-id="create_job">
             <x-slot name="input">
+                <div class="mb-3">
+                    <x-admin.ui.bootstrap-switch name="van_hire" id="van_hire" label="Van Hire" onText="Yes"
+                                                 offText="No"/>
+                </div>
                 <x-admin.ui.select label="Customer"
                                    name="customer"
                                    id="customer"
@@ -21,20 +25,15 @@
                                    add-class="customer"
                 />
                 <x-admin.ui.Textarea label="Customer Ref"
-                                     name="street_address_2"
-                                     id="street_address_2"
+                                     name="customer_ref"
+                                     id="customer_ref"
                 />
                 <div class="container-fluid bg-light">
                     <div class="row">
                         <div class="col-lg-6">
                             <lable class="text-bold text-black-50">From Address</lable>
-                            <x-admin.ui.select label="Address"
-                                               name="from_address"
-                                               id="from_address"
-                                               required
-                                               options="area.list"
-                                               add-class="from_address"
-                            />
+                            <x-admin.ui.input label="From Address" type="text" name="from_address" id="from_address" add-class=""
+                                              placeholder="From Address" required/>
                             <x-admin.ui.select label="Area"
                                                name="from_area_id"
                                                id="from_area_id"
@@ -45,13 +44,8 @@
                         </div>
                         <div class="col-lg-6">
                             <lable class="text-bold text-black-50">To Address</lable>
-                            <x-admin.ui.select label="Address"
-                                               name="to_address"
-                                               id="to_address"
-                                               required
-                                               options="area.list"
-                                               add-class="to_address"
-                            />
+                            <x-admin.ui.input label="To Address" type="text" name="to_address" id="to_address" add-class=""
+                                              placeholder="To Address" required/>
                             <x-admin.ui.select label="Area"
                                                name="to_area_id"
                                                id="to_area_id"
@@ -61,10 +55,31 @@
                             />
                         </div>
                     </div>
+                    <x-admin.ui.Textarea label="Notes"
+                                         name="notes"
+                                         id="note"
+                    />
                 </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <x-admin.ui.select label="Time Frame"
+                                               name="timeframe_id"
+                                               id="timeframe_id"
+                                               required
+                                               options="timeframe.list"
+                                               add-class="timeframe_id"
+
+                            />
+                        </div>
+                        <div class="col-lg-6">
+                        <x-admin.ui.input label="Number of Boxes" type="number" name="number_box" id="number_box" add-class=""
+                                          placeholder="Number of Boxes" required/>
+                        </div>
+                    </div>
+
             </x-slot>
             <x-slot name="button">
-                <x-admin.ui.button type="submit" btn-name="Submit" name="customer_submit" id="customer_submit"/>
+                <x-admin.ui.button type="submit" btn-name="Submit" name="job_submit" id="job_submit"/>
             </x-slot>
         </x-admin.ui.card-form>
         <!-- /.content -->

@@ -77,6 +77,7 @@ class CustomerController extends Controller
         ]);
         $customer = Customer::create([
             'user_id' => $user->id,
+            'company_name' => $request->company_name,
             'customer_id' => $request->cid,
             'area_id' => $request->area_id,
             'street_address_1' => $request->street_address_1,
@@ -109,6 +110,7 @@ class CustomerController extends Controller
             $data,
             [
                 'cid' => ['required', 'string', 'unique:customers,customer_id,' . $customer_id],
+                'company_name' => ['required', 'string', 'max:250'],
                 'first_name' => ['required', 'string', 'max:250'],
                 'last_name' => ['required', 'string'],
                 'email' => ['required', 'string', 'unique:users,email,' . $id],
