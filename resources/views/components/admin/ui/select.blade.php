@@ -57,8 +57,8 @@
 
             });
 
-            {{--$('.{{$addClass}}').val({{old($name,$value)}}); // Select the option with a value of '1'--}}
-            {{--$('.{{$addClass}}').trigger('change'); // Notify any JS components that the value changed--}}
+            $('.{{$id}}').val({{old($name,$value)}}); // Select the option with a value of '1'
+            $('.{{$id}}').trigger('change'); // Notify any JS components that the value changed
             @else
             $('.{{$addClass}}').select2();
             @endif

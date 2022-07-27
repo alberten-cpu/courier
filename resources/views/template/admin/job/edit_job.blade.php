@@ -20,6 +20,7 @@
                                    required
                                    options="customer.list"
                                    add-class="customer"
+                                   :value="$job->user_id"
                 />
                 <x-admin.ui.Textarea label="Customer Ref"
                                      name="customer_ref"
