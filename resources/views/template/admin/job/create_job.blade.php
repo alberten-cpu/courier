@@ -25,6 +25,19 @@
                                      id="customer_ref"
                 />
                 <div class="container-fluid bg-light">
+                    <div class="card-body table-responsive pad">
+                        <p class="mb-1">Adress Selection</p>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-secondary active">
+                                <input type="radio" name="options" id="option_a1" autocomplete="off" checked> From Customer
+                            </label>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="options" id="option_a2" autocomplete="off"> To Customer
+                            </label>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="options" id="option_a3" autocomplete="off"> Neither
+                            </label>
+                        </div><br><br>
                     <div class="row">
                         <div class="col-lg-6">
                             <lable class="text-bold text-black-50">From Address</lable>
