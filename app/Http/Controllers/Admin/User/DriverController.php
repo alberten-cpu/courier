@@ -33,12 +33,15 @@ class DriverController extends Controller
     {
         if (\request()->ajax()) {
             $search = request()->search;
+            $id = request()->id;
             $drivers = User::select('id', 'name', 'role_id')->when(
                 $search,
                 function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%');
                 }
-            )->where('role_id', Role::DRIVER)->limit(15)->get();
+            )->when($id, function ($query) use ($id) {
+                $query->where('id', $id);
+            })->where('role_id', Role::DRIVER)->limit(15)->get();
             $response = array();
             foreach ($drivers as $driver) {
                 $response[] = array(

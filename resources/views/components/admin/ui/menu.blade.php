@@ -1,6 +1,6 @@
 <li class="nav-item">
     <a href="{{ Helper::getRoute($route) }}"
-       class="nav-link @if(request()->route()->getName()==$route) active @endif"
+       class="nav-link @if(request()->route()->getName()==$route || str_contains(request()->route()->getName(),Helper::getFirstRoute($route))) active @endif"
        target="{{ $target }}">
         <i class="nav-icon {{ $icon }}"></i>
         <p>

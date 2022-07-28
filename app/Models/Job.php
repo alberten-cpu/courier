@@ -92,7 +92,7 @@ class Job extends Model
 
     public function jobAssign()
     {
-        return $this->hasMany(JobAssign::class, 'job_id', 'id');
+        return $this->hasMany(JobAssign::class, 'job_id', 'id')->where('status', true);
     }
 
     /**

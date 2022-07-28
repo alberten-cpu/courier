@@ -33,12 +33,15 @@ class AreaController extends Controller
     {
         if (\request()->ajax()) {
             $search = request()->search;
+            $id = request()->id;
             $areas = Area::select('id', 'area')->when(
                 $search,
                 function ($query) use ($search) {
                     $query->where('area', 'like', '%' . $search . '%');
                 }
-            )->limit(15)->get();
+            )->when($id, function ($query) use ($id) {
+                $query->where('id', $id);
+            })->limit(15)->get();
             $response = array();
             foreach ($areas as $area) {
                 $response[] = array(

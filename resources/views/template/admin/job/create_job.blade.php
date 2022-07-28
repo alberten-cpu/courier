@@ -26,52 +26,52 @@
                 />
                 <div class="container-fluid bg-light">
                     <div class="card-body table-responsive pad">
-                        <p class="mb-1">Adress Selection</p>
-                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <div class="btn-group btn-group-toggle mb-3" data-toggle="buttons">
                             <label class="btn btn-secondary active">
-                                <input type="radio" name="options" id="option_a1" autocomplete="off" checked> From Customer
+                                <input type="radio" name="options" id="option_a1" autocomplete="off" checked>From
                             </label>
                             <label class="btn btn-secondary">
-                                <input type="radio" name="options" id="option_a2" autocomplete="off"> To Customer
+                                <input type="radio" name="options" id="option_a2" autocomplete="off">To
                             </label>
                             <label class="btn btn-secondary">
-                                <input type="radio" name="options" id="option_a3" autocomplete="off"> Neither
+                                <input type="radio" name="options" id="option_a3" autocomplete="off">Neither
                             </label>
-                        </div><br><br>
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <lable class="text-bold text-black-50">From Address</lable>
-                            <x-admin.ui.input label="Address" type="text" name="from_address" id="from_address"
-                                              add-class=""
-                                              placeholder="From Address" required/>
-                            <x-admin.ui.select label="Area"
-                                               name="from_area_id"
-                                               id="from_area_id"
-                                               required
-                                               options="area.list"
-                                               add-class="from_area"
-                                               required
-                            />
                         </div>
-                        <div class="col-lg-6">
-                            <lable class="text-bold text-black-50">To Address</lable>
-                            <x-admin.ui.input label="Address" type="text" name="to_address" id="to_address"
-                                              add-class=""
-                                              placeholder="To Address" required/>
-                            <x-admin.ui.select label="Area"
-                                               name="to_area_id"
-                                               id="to_area_id"
-                                               required
-                                               options="area.list"
-                                               add-class="to_area"
-                                               required
-                            />
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <lable class="text-bold text-black-50">From Address</lable>
+                                <x-admin.ui.input label="Address" type="text" name="from_address" id="from_address"
+                                                  add-class=""
+                                                  placeholder="From Address" required/>
+                                <x-admin.ui.select label="Area"
+                                                   name="from_area_id"
+                                                   id="from_area_id"
+                                                   required
+                                                   options="area.list"
+                                                   add-class="from_area"
+                                                   required
+                                />
+                            </div>
+                            <div class="col-lg-6">
+                                <lable class="text-bold text-black-50">To Address</lable>
+                                <x-admin.ui.input label="Address" type="text" name="to_address" id="to_address"
+                                                  add-class=""
+                                                  placeholder="To Address" required/>
+                                <x-admin.ui.select label="Area"
+                                                   name="to_area_id"
+                                                   id="to_area_id"
+                                                   required
+                                                   options="area.list"
+                                                   add-class="to_area"
+                                                   required
+                                />
+                            </div>
                         </div>
+                        <x-admin.ui.Textarea label="Notes"
+                                             name="notes"
+                                             id="note"
+                        />
                     </div>
-                    <x-admin.ui.Textarea label="Notes"
-                                         name="notes"
-                                         id="note"
-                    />
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
@@ -92,14 +92,6 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
-                        <div class="mt-4">
-                            <label for="van_hire">Do you need van?
-                                <x-admin.ui.bootstrap-switch name="van_hire" id="van_hire" onText="Yes"
-                                                             offText="No"/>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
                         <x-admin.ui.select label="Assign Driver"
                                            name="driver_id"
                                            id="driver_id"
@@ -107,6 +99,14 @@
                                            add-class="driver_id"
 
                         />
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mt-4">
+                            <label for="van_hire">Do you need van?
+                                <x-admin.ui.bootstrap-switch name="van_hire" id="van_hire" onText="Yes"
+                                                             offText="No" label="Need"/>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </x-slot>

@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class JobController extends Controller
 {
@@ -95,7 +96,7 @@ class JobController extends Controller
      *
      * @return \Illuminate\Contracts\Validation\Validator|\Illuminate\Validation\Validator
      **/
-    protected function validator(array $data, integer $id = null)
+    protected function validator(array $data, int $id = null)
     {
         \Validator::extend(
             'without_spaces',
@@ -119,11 +120,16 @@ class JobController extends Controller
 
     private function createNewAddress($user_id, $address)
     {
-        return AddressBook::create([
-            'user_id' => $user_id,
-            'address_line_1' => $address,
-            'status' => true,
-        ])->id;
+        $checkIfMatch = AddressBook::where('user_id', $user_id)->where('address_line_1', $address)->firstOrFail();
+        if (!$checkIfMatch) {
+            return AddressBook::create([
+                'user_id' => $user_id,
+                'address_line_1' => $address,
+                'status' => true,
+            ])->id;
+        } else {
+            return $checkIfMatch->id;
+        }
     }
 
     /**
@@ -163,11 +169,48 @@ class JobController extends Controller
      *
      * @param Request $request
      * @param Job $job
-     * @return Response
+     * @return RedirectResponse
+     * @throws ValidationException
      */
-    public function update(Request $request, Job $job)
+    public function update(Request $request, Job $job): RedirectResponse
     {
-        //
+//        dd($request->from_area_id);
+        $this->validator($request->all(), $job->id)->validate();
+        $request->has('van_hire') ? $vanHire = true : $vanHire = false;
+        DB::beginTransaction();
+        try {
+            $fromAddress = $this->createNewAddress(Auth::id(), $request->from_address);
+            $toAddress = $this->createNewAddress(Auth::id(), $request->to_address);
+            $job->user_id = $request->customer;
+            $job->customer_reference = $request->customer_ref;
+            $job->from_address_id = $fromAddress;
+            $job->to_address_id = $toAddress;
+            $job->from_area_id = $request->from_area_id;
+            $job->to_area_id = $request->to_area_id;
+            $job->timeframe_id = $request->timeframe_id;
+            $job->notes = $request->notes;
+            $job->van_hire = $vanHire;
+            $job->number_box = $request->number_box;
+            $job->save();
+
+            if ($request->has('driver_id')) {
+                $jobAssign = JobAssign::where('job_id', $job->id)->where('status', true)->firstOrFail();
+                if ($jobAssign->user_id != $request->driver_id) {
+                    $jobAssign->status = false;
+                    $jobAssign->save();
+                    JobAssign::create([
+                        'job_id' => $job->id,
+                        'user_id' => $request->driver_id,
+                        'status' => false,
+                    ]);
+                }
+            }
+            DB::commit();
+            return back()->with('success', 'Job Updated successfully');
+        } catch (Exception $e) {
+            DB::rollback();
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     /**

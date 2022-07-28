@@ -36,12 +36,15 @@ class CustomerController extends Controller
     {
         if (\request()->ajax()) {
             $search = request()->search;
+            $id = request()->id;
             $customers = User::with('customer:company_name,user_id')->select('id', 'name', 'role_id')->when(
                 $search,
                 function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%');
                 }
-            )->where('role_id', Role::CUSTOMER)->limit(15)->get();
+            )->when($id, function ($query) use ($id) {
+                $query->where('id', $id);
+            })->where('role_id', Role::CUSTOMER)->limit(15)->get();
             $response = array();
             foreach ($customers as $customer) {
                 $response[] = array(

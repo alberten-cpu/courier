@@ -1,7 +1,22 @@
 @push('styles')
-    <!-- Select2 -->
-    <link rel="stylesheet" href="{{asset('admin/plugins/select2/css/select2.min.css')}}">
-    <link rel="stylesheet" href="{{asset('admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
+    @once
+        <!-- Select2 -->
+        <link rel="stylesheet" href="{{asset('admin/plugins/select2/css/select2.min.css')}}">
+        <link rel="stylesheet" href="{{asset('admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
+        <style>
+            .select2-selection__rendered {
+                line-height: 31px !important;
+            }
+
+            .select2-container .select2-selection--single {
+                height: 38px !important;
+            }
+
+            .select2-selection__arrow {
+                height: 38px !important;
+            }
+        </style>
+    @endonce
 @endpush
 <div class="form-group">
     <label>{{__($label)}} @if($required)
@@ -30,8 +45,10 @@
 </div>
 <!-- /.form-group -->
 @push('scripts')
-    <!-- Select2 -->
-    <script src="{{asset('admin/plugins/select2/js/select2.full.min.js')}}"></script>
+    @once
+        <!-- Select2 -->
+        <script src="{{asset('admin/plugins/select2/js/select2.full.min.js')}}"></script>
+    @endonce
     <script>
         $(function () {
             //Initialize Select2 Elements
@@ -53,19 +70,29 @@
                         };
                     },
                     cache: true
+                },
+                initSelection: function (element, callback) {
+                    let id = null;
+                    @if(old($name,$value))
+                        id = {{old($name,$value)}};
+                    @endif
+                    if (id) {
+                        $.ajax("{{ Helper::getRoute($options) }}", {
+                            data: {id: id},
+                            dataType: "json"
+                        }).done(function (data) {
+                            callback(data);
+                        });
+                    }
                 }
-
             });
-
-            $('.{{$id}}').val({{old($name,$value)}}); // Select the option with a value of '1'
-            $('.{{$id}}').trigger('change'); // Notify any JS components that the value changed
             @else
             $('.{{$addClass}}').select2();
             @endif
             //Initialize Select2 Elements
-            $('.select2bs4').select2({
-                theme: 'bootstrap4'
-            })
+            // $('.select2bs4').select2({
+            //     theme: 'bootstrap4'
+            // })
         });
     </script>
 @endpush

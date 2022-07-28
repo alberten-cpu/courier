@@ -5,7 +5,7 @@
 </x-admin.head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
-{{--    <x-admin.preloader/>--}}
+    <x-admin.preloader/>
     <x-admin.header/>
     <x-admin.sidebar/>
     <!-- Content Wrapper. Contains page content -->
