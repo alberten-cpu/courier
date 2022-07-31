@@ -25,7 +25,7 @@ class JobDataTable extends DataTable
                 return $query->dailyJob->job_number;
             })
             ->editColumn('user_id', function ($query) {
-                return $query->user->name;
+                return $query->user->customer->company_name . ', ' . $query->user->customer->customer_id . ' - ' . $query->user->name;
             })
             ->editColumn('from_area_id', function ($query) {
                 return $query->fromArea->area;
@@ -73,7 +73,7 @@ class JobDataTable extends DataTable
      */
     public function query(Job $model)
     {
-        return $model->with('user:name,id', 'fromArea:area,id', 'toArea:area,id', 'timeFrame:time_frame,id', 'status:status,id', 'creator:name,id', 'editor:name,id', 'dailyJob:job_number,id,job_id')->select('*')->orderBy('jobs.created_at', 'desc');
+        return $model->with('user:name,id', 'user.customer:company_name,id,user_id,customer_id', 'fromArea:area,id', 'toArea:area,id', 'timeFrame:time_frame,id', 'status:status,id', 'creator:name,id', 'editor:name,id', 'dailyJob:job_number,id,job_id')->select('*')->orderBy('jobs.created_at', 'desc');
     }
 
     /**
@@ -111,7 +111,12 @@ class JobDataTable extends DataTable
         return [
             'job_increment_id',
             'daily_job_number',
-            'user_id',
+            'user_id' => new Column(
+                ['title' => 'Customer',
+                    'data' => 'user_id',
+                    'name' => 'user_id',
+                    'searchable' => true]
+            ),
             'from_area_id' => new Column(
                 ['title' => 'From',
                     'data' => 'from_area_id',
