@@ -232,6 +232,8 @@
                                     data: {id: id},
                                     dataType: "json"
                                 }).done(function (data) {
+                                    let newOption = new Option(data[0].text, data[0].id, true, true);
+                                    $('.{{$addClass}}').append(newOption).trigger('change');
                                     callback(data);
                                 });
                             }
