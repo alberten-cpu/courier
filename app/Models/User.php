@@ -76,7 +76,7 @@ class User extends Authenticatable implements
      */
     public function isSuperAdmin(): bool
     {
-        return $this->is_admin === 1;
+        return $this->is_admin == 1;
     }
 
     /**
@@ -84,7 +84,7 @@ class User extends Authenticatable implements
      */
     public function isAdmin(): bool
     {
-        return $this->role_id === Role::ADMIN;
+        return $this->role_id == Role::ADMIN;
     }
 
     /**
@@ -92,7 +92,7 @@ class User extends Authenticatable implements
      */
     public function isCustomer(): bool
     {
-        return $this->role_id === Role::CUSTOMER;
+        return $this->role_id == Role::CUSTOMER;
     }
 
     /**
@@ -100,7 +100,7 @@ class User extends Authenticatable implements
      */
     public function isDriver(): bool
     {
-        return $this->role_id === Role::DRIVER;
+        return $this->role_id == Role::DRIVER;
     }
 
     /**
