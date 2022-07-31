@@ -44,19 +44,10 @@
                                    id="area_id"
                                    required
                                    value="{{ $driver->driver->area_id }}"
-                                   :options="App\Models\Area::getAreas()"
+                                   options="area.list"
+                                   add-class="area"
                 />
-                <x-admin.ui.Textarea label="Street Adress 1"
-                                     name="street_address_1"
-                                     id="street_address_1"
-                                     required
-                                     value="{{ $driver->driver->street_address_1 }}"
-                />
-                <x-admin.ui.Textarea label="Street Adress 2"
-                                     name="street_address_2"
-                                     id="street_address_2"
-                                     value="{{ $driver->driver->street_address_2 }}"
-                />
+                <x-admin.address-autocomplete input-id="driver" :edit-data="$driver"/>
             </x-slot>
             <x-slot name="button">
                 <x-admin.ui.button type="submit" btn-name="Update" name="driver_update" id="driver_update"/>

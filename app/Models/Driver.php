@@ -22,7 +22,7 @@ class Driver extends Model
     /**
      * @var string[]
      */
-    protected $fillable = ['user_id', 'driver_id', 'area_id', 'pager_number', 'street_address_1', 'street_address_2'];
+    protected $fillable = ['user_id', 'driver_id', 'area_id', 'pager_number'];
 
     /**
      * @return BelongsTo

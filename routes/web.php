@@ -39,6 +39,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('/user/driver', DriverController::class)->name('*', 'driver');
         Route::resource('/area', AreaController::class)->name('*', 'area');
         Route::resource('/job', JobController::class)->name('*', 'job');
+        Route::post('/job/getAddress', [JobController::class, 'getAddress'])->name('job.getAddress');
+        Route::post('/job/getAddressBook', [JobController::class, 'getAddressBook'])->name('job.getAddressBook');
     });
 
     /*Customer Routes */

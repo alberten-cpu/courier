@@ -62,7 +62,7 @@ class Select extends Component
      * @param bool $disable
      * @param bool $multiple
      * @param string|null $value
-     * @param bool $default
+     * @param string $default
      */
     public function __construct(
         string $label,
@@ -74,7 +74,7 @@ class Select extends Component
         bool   $disable = false,
         bool   $multiple = false,
         string $value = null,
-        bool   $default = true
+        string $default = '-- select --'
     ) {
         $this->label = $label;
         $this->name = $name;

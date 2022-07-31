@@ -29,6 +29,13 @@ class Role extends Model
         'status'];
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = ['status' => 'boolean'];
+
+    /**
      * Get the user relationship.
      *
      * @return HasMany user data

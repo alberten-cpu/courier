@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\User;
 
 use App\DataTables\Admin\User\CustomerDataTable;
 use App\Http\Controllers\Controller;
+use App\Models\AddressBook;
 use App\Models\Customer;
 use App\Models\Role;
 use App\Models\User;
@@ -36,17 +37,25 @@ class CustomerController extends Controller
     {
         if (\request()->ajax()) {
             $search = request()->search;
-            $customers = User::with('customer:company_name,user_id')->select('id', 'name', 'role_id')->when(
+            $id = request()->id;
+            $customers = User::with('customer:company_name,user_id,customer_id')->select('id', 'name', 'role_id')->when(
                 $search,
                 function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%');
                 }
-            )->where('role_id', Role::CUSTOMER)->limit(15)->get();
+            )->when($id, function ($query) use ($id) {
+                $query->where('id', $id);
+            })->orWhereHas('customer', function ($query) use ($search) {
+                $query->when($search, function ($q) use ($search) {
+                    $q->where('company_name', 'like', '%' . $search . '%')
+                        ->oRwhere('customer_id', 'like', '%' . $search . '%');
+                });
+            })->where('role_id', Role::CUSTOMER)->limit(15)->get();
             $response = array();
             foreach ($customers as $customer) {
                 $response[] = array(
                     "id" => $customer->id,
-                    "text" => $customer->name . ',' . $customer->customer->company_name
+                    "text" => $customer->customer->company_name . ', ' . $customer->customer->customer_id . ' - ' . $customer->name
                 );
             }
             return response()->json($response);
@@ -64,7 +73,7 @@ class CustomerController extends Controller
     {
         $this->validator($request->all())->validate();
         $request->has('is_active') ? $is_active = true : $is_active = false;
-        //dd($request->all());
+//        dd($request->all());
         $user = User::create([
             'name' => $request->first_name . ' ' . $request->last_name,
             'first_name' => $request->first_name,
@@ -79,12 +88,9 @@ class CustomerController extends Controller
             'user_id' => $user->id,
             'company_name' => $request->company_name,
             'customer_id' => $request->cid,
-            'area_id' => $request->area_id,
-            'street_address_1' => $request->street_address_1,
-            'street_address_2' => $request->street_address_2,
+            'area_id' => $request->area_id
         ]);
-        //$customer->customer_id = $customer->createIncrementCustomerId($customer->id);
-        //$customer->save();
+        $this->addAddress($request->all(), 'customer', $user->id);
         return back()->with('success', 'Customer details is saved successfully');
     }
 
@@ -110,13 +116,22 @@ class CustomerController extends Controller
             $data,
             [
                 'cid' => ['required', 'string', 'unique:customers,customer_id,' . $customer_id],
-                'company_name' => ['required', 'string', 'max:250'],
+                'company_name' => ['required', 'string', 'max:250', 'unique:customers,company_name,' . $customer_id],
                 'first_name' => ['required', 'string', 'max:250'],
                 'last_name' => ['required', 'string'],
                 'email' => ['required', 'string', 'unique:users,email,' . $id],
                 'mobile' => ['required', 'unique:users,mobile,' . $id],
                 'area_id' => ['required'],
-                'street_address_1' => ['required'],
+                'street_address_customer' => ['required'],
+                'suburb_customer' => ['required'],
+                'city_customer' => ['required'],
+                'state_customer' => ['required'],
+                'zip_customer' => ['required'],
+                'country_customer' => ['required'],
+                'latitude_customer' => ['required'],
+                'longitude_customer' => ['required'],
+                'location_url_customer' => ['required'],
+                'json_response_customer' => ['required']
 
             ]
         );
@@ -130,6 +145,48 @@ class CustomerController extends Controller
     public function create()
     {
         return view('template.admin.user.customer.create_customer');
+    }
+
+    /**
+     * @param $address
+     * @param $input_id
+     * @param $user_id
+     * @param $update
+     * @return AddressBook
+     */
+    private function addAddress($address, $input_id, $user_id = null, $update = false): AddressBook
+    {
+        if (!$update) {
+            return AddressBook::create([
+                'user_id' => $user_id,
+                'street_address' => $address['street_address_' . $input_id],
+                'suburb' => $address['suburb_' . $input_id],
+                'city' => $address['city_' . $input_id],
+                'state' => $address['state_' . $input_id],
+                'zip' => $address['zip_' . $input_id],
+                'country' => $address['country_' . $input_id],
+                'latitude' => $address['latitude_' . $input_id],
+                'longitude' => $address['longitude_' . $input_id],
+                'location_url' => $address['location_url_' . $input_id],
+                'full_json_response' => $address['json_response_' . $input_id],
+                'status' => true,
+                'set_as_default' => true
+            ]);
+        } else {
+            $editAddress = AddressBook::findOrFail($user_id->defaultAddress->id);
+            $editAddress->street_address = $address['street_address_' . $input_id];
+            $editAddress->suburb = $address['suburb_' . $input_id];
+            $editAddress->city = $address['city_' . $input_id];
+            $editAddress->state = $address['state_' . $input_id];
+            $editAddress->zip = $address['zip_' . $input_id];
+            $editAddress->country = $address['country_' . $input_id];
+            $editAddress->latitude = $address['latitude_' . $input_id];
+            $editAddress->longitude = $address['longitude_' . $input_id];
+            $editAddress->location_url = $address['location_url_' . $input_id];
+            $editAddress->full_json_response = $address['json_response_' . $input_id];
+            $editAddress->save();
+            return $editAddress;
+        }
     }
 
     /**
@@ -175,15 +232,13 @@ class CustomerController extends Controller
         $customer_table = Customer::findOrFail($customer->customer->id);
         $customer_table->customer_id = $request->cid;
         $customer_table->area_id = $request->area_id;
-        $customer_table->street_address_1 = $request->street_address_1;
-        $customer_table->street_address_2 = $request->street_address_2;
-
-        if (!$customer->isDirty()) {
-            return back()->with('info', 'No changes have made.');
-        }
+        $address = $this->addAddress($request->all(), 'customer', $customer, true);
         $customer->save();
         $customer_table->save();
-        return back()->with('success', 'Customer details updated successfully');
+        if ($customer->wasChanged() || $customer_table->wasChanged() || $address->wasChanged()) {
+            return back()->with('success', 'Customer details updated successfully');
+        }
+        return back()->with('info', 'No changes have made.');
     }
 
     /**

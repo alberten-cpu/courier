@@ -5,12 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Wildside\Userstamps\Userstamps;
 
 class Job extends Model
 {
     use HasFactory;
     use Userstamps;
+
+    public const JOB_ID_PREFIX = 'JOB';
 
     /**
      * @var string
@@ -90,9 +94,29 @@ class Job extends Model
         return $this->belongsTo(JobStatus::class, 'status_id');
     }
 
-    public function jobAssign()
+    /**
+     * @return HasMany
+     */
+    public function jobAssign(): HasMany
     {
-        return $this->hasMany(JobAssign::class, 'job_id', 'id');
+        return $this->hasMany(JobAssign::class, 'job_id', 'id')->where('status', true);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function dailyJob(): HasOne
+    {
+        return $this->HasOne(DailyJob::class);
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function createIncrementJobId(int $id): string
+    {
+        return self::JOB_ID_PREFIX . str_pad($id, 5, 0, STR_PAD_LEFT);
     }
 
     /**

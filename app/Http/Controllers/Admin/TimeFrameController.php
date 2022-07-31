@@ -6,13 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\getTimeframe;
 use App\Models\TimeFrame;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class TimeFrameController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -22,7 +23,7 @@ class TimeFrameController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -32,8 +33,8 @@ class TimeFrameController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -43,8 +44,8 @@ class TimeFrameController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\TimeFrame  $timeFrame
-     * @return \Illuminate\Http\Response
+     * @param TimeFrame $timeFrame
+     * @return Response
      */
     public function show(TimeFrame $timeFrame)
     {
@@ -54,8 +55,8 @@ class TimeFrameController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\TimeFrame  $timeFrame
-     * @return \Illuminate\Http\Response
+     * @param TimeFrame $timeFrame
+     * @return Response
      */
     public function edit(TimeFrame $timeFrame)
     {
@@ -65,9 +66,9 @@ class TimeFrameController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\TimeFrame  $timeFrame
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param TimeFrame $timeFrame
+     * @return Response
      */
     public function update(Request $request, TimeFrame $timeFrame)
     {
@@ -77,8 +78,8 @@ class TimeFrameController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\TimeFrame  $timeFrame
-     * @return \Illuminate\Http\Response
+     * @param TimeFrame $timeFrame
+     * @return Response
      */
     public function destroy(TimeFrame $timeFrame)
     {
@@ -89,12 +90,15 @@ class TimeFrameController extends Controller
     {
         if (\request()->ajax()) {
             $search = request()->search;
+            $id = request()->id;
             $areas = Timeframe::select('id', 'time_frame')->when(
                 $search,
                 function ($query) use ($search) {
                     $query->where('time_frame', 'like', '%' . $search . '%');
                 }
-            )->limit(15)->get();
+            )->when($id, function ($query) use ($id) {
+                $query->where('id', $id);
+            })->limit(15)->get();
             $response = array();
             foreach ($areas as $area) {
                 $response[] = array(

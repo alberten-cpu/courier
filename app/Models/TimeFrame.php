@@ -20,4 +20,11 @@ class TimeFrame extends Model
     protected $fillable = ['time_frame',
         'status'
     ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = ['status' => 'boolean'];
 }

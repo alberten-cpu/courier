@@ -43,17 +43,10 @@
                                    name="area_id"
                                    id="area_id"
                                    required
-                                   :options="App\Models\Area::getAreas()"
+                                   options="area.list"
+                                   add-class="area"
                 />
-                <x-admin.ui.Textarea label="Street Adress 1"
-                                     name="street_address_1"
-                                     id="street_address_1"
-                                     required
-                />
-                <x-admin.ui.Textarea label="Street Adress 2"
-                                     name="street_address_2"
-                                     id="street_address_2"
-                />
+                <x-admin.address-autocomplete input-id="driver"/>
             </x-slot>
             <x-slot name="button">
                 <x-admin.ui.button type="submit" btn-name="Submit" name="driver_submit" id="driver_submit"/>

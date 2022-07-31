@@ -1,9 +1,10 @@
 @push('styles')
-    {{-- Custom Style --}}
-    <!-- DataTables -->
-    <link rel="stylesheet" href="{{asset('admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
-    <link rel="stylesheet"
-          href="{{asset('admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
+    @once
+        <!-- DataTables -->
+        <link rel="stylesheet" href="{{asset('admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
+        <link rel="stylesheet"
+              href="{{asset('admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
+    @endonce
 @endpush
 
 <!-- Content Header (Page header) -->
@@ -45,26 +46,28 @@
     {{--    </div>--}}
     <!-- Modal end -->
     @push('scripts')
-        {{--        <script type="text/javascript">--}}
-        {{--            $('.{{ $triggerClass }}').click(function () {--}}
-        {{--                let action = $(this).data('action');--}}
-        {{--                $('#modal-form-{{ $modalId }}').attr('action', action);--}}
-        {{--            })--}}
-        {{--            $('#{{ $modalId }}').modal('hide');--}}
-        {{--        </script>--}}
+        @once
+            {{--        <script type="text/javascript">--}}
+            {{--            $('.{{ $triggerClass }}').click(function () {--}}
+            {{--                let action = $(this).data('action');--}}
+            {{--                $('#modal-form-{{ $modalId }}').attr('action', action);--}}
+            {{--            })--}}
+            {{--            $('#{{ $modalId }}').modal('hide');--}}
+            {{--        </script>--}}
 
-        <!-- DataTables  & Plugins -->
-        <script src="{{asset('admin/plugins/datatables/jquery.dataTables.min.js')}}"></script>
-        <script src="{{asset('admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
-        <script src="{{asset('admin/plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
-        <script src="{{asset('admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
-        <script src="{{asset('admin/plugins/datatables-buttons/js/dataTables.buttons.min.js')}}"></script>
-        <script src="{{asset('admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js')}}"></script>
-        <script src="{{asset('admin/plugins/jszip/jszip.min.js')}}"></script>
-        <script src="{{asset('admin/plugins/pdfmake/pdfmake.min.js')}}"></script>
-        <script src="{{asset('admin/plugins/pdfmake/vfs_fonts.js')}}"></script>
-        <script src="{{asset('admin/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
-        <script src="{{asset('admin/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
-        <script src="{{asset('admin/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
+            <!-- DataTables  & Plugins -->
+            <script src="{{asset('admin/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+            <script src="{{asset('admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+            <script src="{{asset('admin/plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
+            <script src="{{asset('admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
+            <script src="{{asset('admin/plugins/datatables-buttons/js/dataTables.buttons.min.js')}}"></script>
+            <script src="{{asset('admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js')}}"></script>
+            <script src="{{asset('admin/plugins/jszip/jszip.min.js')}}"></script>
+            <script src="{{asset('admin/plugins/pdfmake/pdfmake.min.js')}}"></script>
+            <script src="{{asset('admin/plugins/pdfmake/vfs_fonts.js')}}"></script>
+            <script src="{{asset('admin/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
+            <script src="{{asset('admin/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
+            <script src="{{asset('admin/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
+@endonce
 {!! $dataTable->scripts() !!}
 @endpush

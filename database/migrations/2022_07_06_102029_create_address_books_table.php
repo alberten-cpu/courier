@@ -16,13 +16,16 @@ class CreateAddressBooksTable extends Migration
         Schema::create('address_books', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
-            $table->integer('type')->nullable();
-            $table->string('address_line_1');
-            $table->string('address_line_2')->nullable();
+            $table->string('street_address')->nullable();
+            $table->string('suburb')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('zip')->nullable();
             $table->string('country')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
+            $table->string('location_url')->nullable();
+            $table->text('full_json_response')->nullable();
             $table->boolean('status')->default(true);
             $table->boolean('set_as_default')->default(false);
             $table->timestamps();

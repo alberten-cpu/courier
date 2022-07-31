@@ -21,4 +21,11 @@ class JobAssign extends Model
         'user_id',
         'status'
     ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = ['status' => 'boolean'];
 }
