@@ -23,6 +23,13 @@ class Area extends Model
         'dispatch',
         'status'];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = ['status' => 'boolean'];
+
     public static function getAreas()
     {
         return Area::where('status', true)->pluck('area', 'id')->toArray();

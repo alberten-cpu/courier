@@ -29,5 +29,9 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-
+    'google_api' => [
+        'key' => env('GOOGLE_API_KEY'),
+        'params' => env('GOOGLE_API_PARAMS'),
+        'countries' => env('GOOGLE_API_COUNTRIES'),
+    ]
 ];

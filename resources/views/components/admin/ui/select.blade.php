@@ -29,7 +29,7 @@
                     id="{{$id}}" @if($required)required @endif @if($disable)disabled
                     @endif style="width: 100%;" style="width: 100%;">
                 @if($default)
-                    <option value="" selected disabled>--Select--</option>
+                    <option value="" selected disabled>{{ $default }}</option>
                 @endif
                 @if(is_array($options))
                     @forelse($options as $optionValue => $option)
@@ -54,6 +54,8 @@
             //Initialize Select2 Elements
             @if(!is_array($options))
             $('.{{$addClass}}').select2({
+                placeholder: '{{ $default }}',
+                triggerChange: true,
                 ajax: {
                     url: "{{ Helper::getRoute($options) }}",
                     type: "get",
@@ -71,20 +73,25 @@
                     },
                     cache: true
                 },
+                allowClear: true,
+                formatSelection: function (data) {
+                    return data.text;
+                }@if(old($name,$value)),
                 initSelection: function (element, callback) {
-                    let id = null;
-                    @if(old($name,$value))
-                        id = {{old($name,$value)}};
-                    @endif
+                    let id = {{ old($name,$value) }};
                     if (id) {
                         $.ajax("{{ Helper::getRoute($options) }}", {
                             data: {id: id},
                             dataType: "json"
                         }).done(function (data) {
+                            console.log(data);
+                            let newOption = new Option(data[0].text, data[0].id, true, true);
+                            console.log(newOption);
+                            $('.{{$addClass}}').append(newOption).trigger('change');
                             callback(data);
                         });
                     }
-                }
+                }@endif
             });
             @else
             $('.{{$addClass}}').select2();

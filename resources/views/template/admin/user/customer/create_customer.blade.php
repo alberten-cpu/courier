@@ -18,7 +18,7 @@
                                                  offText="Inactive"/>
                 </div>
                 <x-admin.ui.input label="Customer Id" type="text" name="cid" id="cid" add-class=""
-                                  placeholder="Enter Customer Id" required/>
+                                  placeholder="Enter Customer ID" required/>
                 <x-admin.ui.input label="Company Name" type="text" name="company_name" id="company_name" add-class=""
                                   placeholder="Company Name" required/>
                 <x-admin.ui.input label="First Name" type="text" name="first_name" id="first_name" add-class=""
@@ -46,18 +46,7 @@
                                    options="area.list"
                                    add-class="area"
                 />
-                <x-admin.ui.Textarea label="Street Adress 1"
-                                     name="street_address_1"
-                                     id="street_address_1"
-                                     required
-
-                />
-                <x-admin.ui.Textarea label="Street Adress 2"
-                                     name="street_address_2"
-                                     id="street_address_2"
-
-
-                />
+                <x-admin.address-autocomplete input-id="customer"/>
             </x-slot>
             <x-slot name="button">
                 <x-admin.ui.button type="submit" btn-name="Submit" name="customer_submit" id="customer_submit"/>

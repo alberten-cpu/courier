@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class JobStatus extends Model
 {
     use HasFactory;
+
     /**
      * @var string
      */
@@ -19,5 +20,4 @@ class JobStatus extends Model
     protected $fillable = ['status',
         'identifier'
     ];
-
 }

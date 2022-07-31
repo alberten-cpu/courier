@@ -21,6 +21,9 @@ class JobDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
+            ->addColumn('daily_job_number', function ($query) {
+                return $query->dailyJob->job_number;
+            })
             ->editColumn('user_id', function ($query) {
                 return $query->user->name;
             })
@@ -29,9 +32,6 @@ class JobDataTable extends DataTable
             })
             ->editColumn('to_area_id', function ($query) {
                 return $query->toArea->area;
-            })
-            ->editColumn('timeframe_id', function ($query) {
-                return $query->timeFrame->time_frame;
             })
             ->editColumn('van_hire', function ($query) {
                 if ($query->van_hire) {
@@ -73,7 +73,7 @@ class JobDataTable extends DataTable
      */
     public function query(Job $model)
     {
-        return $model->with('user:name,id', 'fromArea:area,id', 'toArea:area,id', 'timeFrame:time_frame,id', 'status:status,id', 'creator:name,id', 'editor:name,id')->select('*')->orderBy('jobs.created_at', 'desc');
+        return $model->with('user:name,id', 'fromArea:area,id', 'toArea:area,id', 'timeFrame:time_frame,id', 'status:status,id', 'creator:name,id', 'editor:name,id', 'dailyJob:job_number,id,job_id')->select('*')->orderBy('jobs.created_at', 'desc');
     }
 
     /**
@@ -110,13 +110,28 @@ class JobDataTable extends DataTable
     {
         return [
             'job_increment_id',
+            'daily_job_number',
             'user_id',
-            'from_area_id',
-            'to_area_id',
-            'timeframe_id',
+            'from_area_id' => new Column(
+                ['title' => 'From',
+                    'data' => 'from_area_id',
+                    'name' => 'from_area_id',
+                    'searchable' => true]
+            ),
+            'to_area_id' => new Column(
+                ['title' => 'To',
+                    'data' => 'to_area_id',
+                    'name' => 'to_area_id',
+                    'searchable' => true]
+            ),
             'van_hire',
             'number_box',
-            'status_id',
+            'status_id' => new Column(
+                ['title' => 'Status',
+                    'data' => 'status_id',
+                    'name' => 'status_id',
+                    'searchable' => true]
+            ),
             'created_at',
             'created_by' => new Column(
                 ['title' => 'Created By',

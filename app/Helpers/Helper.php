@@ -18,6 +18,7 @@
 
 namespace App\Helpers;
 
+use App\Models\AddressBook;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class Helper
@@ -99,5 +100,10 @@ class Helper
             report($e);
             return false;
         }
+    }
+
+    public static function getAddressBook($user_id)
+    {
+        return AddressBook::where('user_id', $user_id)->get();
     }
 }

@@ -46,7 +46,9 @@ class User extends Authenticatable implements
         'email',
         'mobile',
         'password',
-        'role_id'
+        'role_id',
+        'is_admin',
+        'is_active'
     ];
 
     /**
@@ -55,7 +57,7 @@ class User extends Authenticatable implements
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'is_admin'
     ];
 
     /**
@@ -65,6 +67,8 @@ class User extends Authenticatable implements
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_admin' => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     /**
@@ -118,10 +122,18 @@ class User extends Authenticatable implements
     /**
      * @return HasOne
      */
-    
+
     public function driver(): HasOne
     {
         return $this->hasOne(Driver::class);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function defaultAddress(): HasOne
+    {
+        return $this->hasOne(AddressBook::class)->where('status', true)->where('set_as_default', true);
     }
 
     /**

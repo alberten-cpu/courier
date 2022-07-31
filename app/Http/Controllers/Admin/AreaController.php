@@ -145,11 +145,11 @@ class AreaController extends Controller
         $area->area = $request->area;
         $area->zone_id = $request->zone_id;
         $area->status = $status;
-        if (!$area->isDirty()) {
-            return back()->with('info', 'No changes have made.');
-        }
         $area->save();
-        return back()->with('success', 'Area details updated successfully');
+        if ($area->wasChanged()) {
+            return back()->with('success', 'Area details updated successfully');
+        }
+        return back()->with('info', 'No changes have made.');
     }
 
 

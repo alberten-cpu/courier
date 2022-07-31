@@ -19,8 +19,6 @@ class CreateDriversTable extends Migration
             $table->string('driver_id')->nullable()->unique();
             $table->foreignId('area_id')->constrained('areas');
             $table->string('pager_number')->nullable();
-            $table->string('street_address_1')->nullable();
-            $table->string('street_address_2')->nullable();
             $table->timestamps();
         });
     }

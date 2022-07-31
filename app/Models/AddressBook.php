@@ -19,15 +19,25 @@ class AddressBook extends Model
      * @var string[]
      */
     protected $fillable = ['user_id',
-        'type',
-        'address_line_1',
-        'address_line_2',
+        'street_address',
+        'suburb',
         'city',
         'state',
         'zip',
         'country',
+        'latitude',
+        'longitude',
+        'location_url',
+        'full_json_response',
         'status',
-        'set_us_default'];
+        'set_as_default'];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = ['status' => 'boolean', 'set_as_default' => 'boolean'];
 
     /**
      * @return BelongsTo

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\User;
 
 use App\DataTables\Admin\User\DriverDataTable;
 use App\Http\Controllers\Controller;
+use App\Models\AddressBook;
 use App\Models\Driver;
 use App\Models\Role;
 use App\Models\User;
@@ -79,10 +80,9 @@ class DriverController extends Controller
             'user_id' => $user->id,
             'driver_id' => $request->did,
             'area_id' => $request->area_id,
-            'pager_number' => $request->pager_number,
-            'street_address_1' => $request->street_address_1,
-            'street_address_2' => $request->street_address_2,
+            'pager_number' => $request->pager_number
         ]);
+        $this->addAddress($request->all(), 'driver', $user->id);
 //        $driver->driver_id = $driver->createIncrementDriverId($driver->id);
 //        $driver->save();
         return back()->with('success', 'Driver details is saved successfully');
@@ -114,7 +114,16 @@ class DriverController extends Controller
                 'email' => ['required', 'string', 'unique:users,email,' . $id],
                 'mobile' => ['required', 'unique:users,mobile,' . $id],
                 'area_id' => ['required'],
-                'street_address_1' => ['required'],
+                'street_address_driver' => ['required'],
+                'suburb_driver' => ['required'],
+                'city_driver' => ['required'],
+                'state_driver' => ['required'],
+                'zip_driver' => ['required'],
+                'country_driver' => ['required'],
+                'latitude_driver' => ['required'],
+                'longitude_driver' => ['required'],
+                'location_url_driver' => ['required'],
+                'json_response_driver' => ['required']
             ]
         );
     }
@@ -127,6 +136,48 @@ class DriverController extends Controller
     public function create()
     {
         return view('template.admin.user.driver.create_driver');
+    }
+
+    /**
+     * @param $address
+     * @param $input_id
+     * @param null $user_id
+     * @param bool $update
+     * @return AddressBook
+     */
+    private function addAddress($address, $input_id, $user_id = null, $update = false): AddressBook
+    {
+        if (!$update) {
+            return AddressBook::create([
+                'user_id' => $user_id,
+                'street_address' => $address['street_address_' . $input_id],
+                'suburb' => $address['suburb_' . $input_id],
+                'city' => $address['city_' . $input_id],
+                'state' => $address['state_' . $input_id],
+                'zip' => $address['zip_' . $input_id],
+                'country' => $address['country_' . $input_id],
+                'latitude' => $address['latitude_' . $input_id],
+                'longitude' => $address['longitude_' . $input_id],
+                'location_url' => $address['location_url_' . $input_id],
+                'full_json_response' => $address['json_response_' . $input_id],
+                'status' => true,
+                'set_as_default' => true
+            ]);
+        } else {
+            $editAddress = AddressBook::findOrFail($user_id->defaultAddress->id);
+            $editAddress->street_address = $address['street_address_' . $input_id];
+            $editAddress->suburb = $address['suburb_' . $input_id];
+            $editAddress->city = $address['city_' . $input_id];
+            $editAddress->state = $address['state_' . $input_id];
+            $editAddress->zip = $address['zip_' . $input_id];
+            $editAddress->country = $address['country_' . $input_id];
+            $editAddress->latitude = $address['latitude_' . $input_id];
+            $editAddress->longitude = $address['longitude_' . $input_id];
+            $editAddress->location_url = $address['location_url_' . $input_id];
+            $editAddress->full_json_response = $address['json_response_' . $input_id];
+            $editAddress->save();
+            return $editAddress;
+        }
     }
 
     /**
@@ -173,15 +224,13 @@ class DriverController extends Controller
         $driver_table->driver_id = $request->did;
         $driver_table->area_id = $request->area_id;
         $driver_table->pager_number = $request->pager_number;
-        $driver_table->street_address_1 = $request->street_address_1;
-        $driver_table->street_address_2 = $request->street_address_2;
-
-        if (!$driver->isDirty()) {
-            return back()->with('info', 'No changes have made.');
-        }
+        $address = $this->addAddress($request->all(), 'driver', $driver, true);
         $driver->save();
         $driver_table->save();
-        return back()->with('success', 'Driver details updated successfully');
+        if ($driver->wasChanged() || $driver_table->wasChanged() || $address->wasChanged()) {
+            return back()->with('success', 'Driver details updated successfully');
+        }
+        return back()->with('info', 'No changes have made.');
     }
 
     /**
