@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AddressBook;
 use App\Models\DailyJob;
 use App\Models\Job;
+use App\Models\JobAddress;
 use App\Models\JobAssign;
 use App\Models\User;
 use DataTables;
@@ -74,14 +75,16 @@ class JobController extends Controller
         }
         DB::beginTransaction();
         try {
-            $fromAddress = $this->makeNewAddress($request->customer, $request->all(), 'from');
-            $toAddress = $this->makeNewAddress($request->customer, $request->all(), 'to');
+            if ($request->from_add_to_address_book) {
+                $this->makeNewAddress($request->customer, $request->all(), 'from');
+            }
+            if ($request->to_add_to_address_book) {
+                $this->makeNewAddress($request->customer, $request->all(), 'to');
+            }
 
             $job = Job::create([
                 'user_id' => $request->customer,
                 'customer_reference' => $request->customer_ref,
-                'from_address_id' => $fromAddress->id,
-                'to_address_id' => $toAddress->id,
                 'from_area_id' => $request->from_area_id,
                 'to_area_id' => $request->to_area_id,
                 'timeframe_id' => $request->timeframe_id,
@@ -90,6 +93,9 @@ class JobController extends Controller
                 'number_box' => $request->number_box,
                 'status_id' => '1'
             ]);
+
+            $this->makeNewJobAddress($job->id, $request->all(), 'from');
+            $this->makeNewJobAddress($job->id, $request->all(), 'to');
 
             $job->job_increment_id = $job->createIncrementJobId($job->id);
             $job->save();
@@ -165,27 +171,27 @@ class JobController extends Controller
      * @param $user_id
      * @param $address
      * @param $input_id
-     * @return AddressBook
+     * @return void
      */
-    private function makeNewAddress($user_id, $address, $input_id): AddressBook
+    private function makeNewAddress($user_id, $address, $input_id)
     {
-        if (isset($address[$input_id . '_address_id'])) {
-            $newAddress = AddressBook::findOrFail($address[$input_id . '_address_id']);
+        $newAddress = AddressBook::where('place_id', $address['place_id_' . $input_id])->first();
+        if ($newAddress) {
             $newAddress->street_address = $address['street_address_' . $input_id];
             $newAddress->suburb = $address['suburb_' . $input_id];
             $newAddress->city = $address['city_' . $input_id];
             $newAddress->state = $address['state_' . $input_id];
             $newAddress->zip = $address['zip_' . $input_id];
             $newAddress->country = $address['country_' . $input_id];
+            $newAddress->place_id = $address['place_id_' . $input_id];
             $newAddress->latitude = $address['latitude_' . $input_id];
             $newAddress->longitude = $address['longitude_' . $input_id];
             $newAddress->location_url = $address['location_url_' . $input_id];
             $newAddress->full_json_response = $address['json_response_' . $input_id];
             if (!$newAddress->isDirty()) {
                 $newAddress->save();
-                return $newAddress;
             } else {
-                return AddressBook::create([
+                AddressBook::create([
                     'user_id' => $user_id,
                     'street_address' => $address['street_address_' . $input_id],
                     'suburb' => $address['suburb_' . $input_id],
@@ -193,6 +199,7 @@ class JobController extends Controller
                     'state' => $address['state_' . $input_id],
                     'zip' => $address['zip_' . $input_id],
                     'country' => $address['country_' . $input_id],
+                    'place_id' => $address['place_id_' . $input_id],
                     'latitude' => $address['latitude_' . $input_id],
                     'longitude' => $address['longitude_' . $input_id],
                     'location_url' => $address['location_url_' . $input_id],
@@ -202,7 +209,7 @@ class JobController extends Controller
                 ]);
             }
         } else {
-            return AddressBook::create([
+            AddressBook::create([
                 'user_id' => $user_id,
                 'street_address' => $address['street_address_' . $input_id],
                 'suburb' => $address['suburb_' . $input_id],
@@ -210,6 +217,7 @@ class JobController extends Controller
                 'state' => $address['state_' . $input_id],
                 'zip' => $address['zip_' . $input_id],
                 'country' => $address['country_' . $input_id],
+                'place_id' => $address['place_id_' . $input_id],
                 'latitude' => $address['latitude_' . $input_id],
                 'longitude' => $address['longitude_' . $input_id],
                 'location_url' => $address['location_url_' . $input_id],
@@ -229,6 +237,47 @@ class JobController extends Controller
     public function create()
     {
         return view('template.admin.job.create_job');
+    }
+
+    /**
+     * @param $user_id
+     * @param $address
+     * @param $input_id
+     * @return void
+     */
+    private function makeNewJobAddress($job_id, $address, $type)
+    {
+        $newAddress = JobAddress::where('job_id', $job_id)->where('type', $type)->first();
+        if ($newAddress) {
+            $newAddress->street_address = $address['street_address_' . $type];
+            $newAddress->suburb = $address['suburb_' . $type];
+            $newAddress->city = $address['city_' . $type];
+            $newAddress->state = $address['state_' . $type];
+            $newAddress->zip = $address['zip_' . $type];
+            $newAddress->country = $address['country_' . $type];
+            $newAddress->place_id = $address['place_id_' . $type];
+            $newAddress->latitude = $address['latitude_' . $type];
+            $newAddress->longitude = $address['longitude_' . $type];
+            $newAddress->location_url = $address['location_url_' . $type];
+            $newAddress->full_json_response = $address['json_response_' . $type];
+            $newAddress->save();
+        } else {
+            return JobAddress::create([
+                'job_id' => $job_id,
+                'type' => $type,
+                'street_address' => $address['street_address_' . $type],
+                'suburb' => $address['suburb_' . $type],
+                'city' => $address['city_' . $type],
+                'state' => $address['state_' . $type],
+                'zip' => $address['zip_' . $type],
+                'country' => $address['country_' . $type],
+                'place_id' => $address['place_id_' . $type],
+                'latitude' => $address['latitude_' . $type],
+                'longitude' => $address['longitude_' . $type],
+                'location_url' => $address['location_url_' . $type],
+                'full_json_response' => $address['json_response_' . $type]
+            ]);
+        }
     }
 
     /**
@@ -263,17 +312,18 @@ class JobController extends Controller
      */
     public function update(Request $request, Job $job): RedirectResponse
     {
-//        dd($request->from_area_id);
         $this->validator($request->all(), $job->id)->validate();
         $request->has('van_hire') ? $vanHire = true : $vanHire = false;
         DB::beginTransaction();
         try {
-            $fromAddress = $this->makeNewAddress($request->customer, $request->all(), 'from');
-            $toAddress = $this->makeNewAddress($request->customer, $request->all(), 'to');
+            if ($request->from_add_to_address_book) {
+                $this->makeNewAddress($request->customer, $request->all(), 'from');
+            }
+            if ($request->to_add_to_address_book) {
+                $this->makeNewAddress($request->customer, $request->all(), 'to');
+            }
             $job->user_id = $request->customer;
             $job->customer_reference = $request->customer_ref;
-            $job->from_address_id = $fromAddress->id;
-            $job->to_address_id = $toAddress->id;
             $job->from_area_id = $request->from_area_id;
             $job->to_area_id = $request->to_area_id;
             $job->timeframe_id = $request->timeframe_id;
@@ -281,6 +331,9 @@ class JobController extends Controller
             $job->van_hire = $vanHire;
             $job->number_box = $request->number_box;
             $job->save();
+
+            $this->makeNewJobAddress($job->id, $request->all(), 'from');
+            $this->makeNewJobAddress($job->id, $request->all(), 'to');
 
             if ($request->has('driver_id')) {
                 $jobAssign = JobAssign::where('job_id', $job->id)->where('status', true)->firstOrFail();
@@ -306,10 +359,14 @@ class JobController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Job $job
-     * @return Response
+     * @return RedirectResponse
      */
     public function destroy(Job $job)
     {
-        //
+        DailyJob::where('job_id', $job->id)->delete();
+        JobAssign::where('job_id', $job->id)->delete();
+        JobAddress::where('job_id', $job->id)->delete();
+        $job->delete();
+        return back()->with('success', 'Job Deleted successfully');
     }
 }

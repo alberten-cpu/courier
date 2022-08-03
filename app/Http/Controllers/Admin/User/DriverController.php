@@ -156,6 +156,7 @@ class DriverController extends Controller
                 'state' => $address['state_' . $input_id],
                 'zip' => $address['zip_' . $input_id],
                 'country' => $address['country_' . $input_id],
+                'place_id' => $address['place_id' . $input_id],
                 'latitude' => $address['latitude_' . $input_id],
                 'longitude' => $address['longitude_' . $input_id],
                 'location_url' => $address['location_url_' . $input_id],
@@ -171,6 +172,7 @@ class DriverController extends Controller
             $editAddress->state = $address['state_' . $input_id];
             $editAddress->zip = $address['zip_' . $input_id];
             $editAddress->country = $address['country_' . $input_id];
+            $editAddress->place_id = $address['place_id_' . $input_id];
             $editAddress->latitude = $address['latitude_' . $input_id];
             $editAddress->longitude = $address['longitude_' . $input_id];
             $editAddress->location_url = $address['location_url_' . $input_id];
