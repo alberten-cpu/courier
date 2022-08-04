@@ -13,5 +13,8 @@
         @method('DELETE')
     </form>
 @endif
-
+@if($assign)
+    <a href="#" class="btn btn-xs btn-success"><i
+            class="glyphicon glyphicon-edit" role="button"></i> {{__('Assign')}}</a>
+@endif
 

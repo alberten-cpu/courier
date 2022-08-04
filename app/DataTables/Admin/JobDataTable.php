@@ -21,6 +21,9 @@ class JobDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
+            ->addColumn('#', function () {
+                return '<input type="checkbox" name="job_no" class="form-control">';
+            })
             ->addColumn('daily_job_number', function ($query) {
                 return $query->dailyJob->job_number;
             })
@@ -59,10 +62,11 @@ class JobDataTable extends DataTable
                 return view(
                     'components.admin.datatable.button',
                     ['edit' => Helper::getRoute('job.edit', $query->id),
-                        'delete' => Helper::getRoute('job.destroy', $query->id), 'id' => $query->id]
+                        'delete' => Helper::getRoute('job.destroy', $query->id), 'id' => $query->id,
+                        'assign' => Helper::getRoute('job.destroy', $query->id), 'id' => $query->id]
                 );
             })
-            ->rawColumns(['van_hire', 'action']);
+            ->rawColumns(['#', 'van_hire', 'action']);
     }
 
     /**
@@ -97,7 +101,15 @@ class JobDataTable extends DataTable
                     'action' => 'function( e, dt, button, config){
                          window.location = "' . Helper::getRoute('job.create') . '";
                      }'
-                ],]
+                ], [
+                    'text' => 'Mass Assign',
+                    'className' => 'bg-success mb-lg-0 mb-3 disabled',
+                    'action' => '#'
+                ], [
+                    'text' => 'Notify Drivers',
+                    'className' => 'bg-info mb-lg-0 mb-3',
+                    'action' => '#'
+                ]]
             ]);
     }
 
@@ -109,6 +121,7 @@ class JobDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            '#',
             'job_increment_id',
             'daily_job_number',
             'user_id' => new Column(
