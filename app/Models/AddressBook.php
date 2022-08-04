@@ -25,6 +25,7 @@ class AddressBook extends Model
         'state',
         'zip',
         'country',
+        'place_id',
         'latitude',
         'longitude',
         'location_url',

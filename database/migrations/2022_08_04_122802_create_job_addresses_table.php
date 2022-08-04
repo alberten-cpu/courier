@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAddressBooksTable extends Migration
+class CreateJobAddressesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateAddressBooksTable extends Migration
      */
     public function up()
     {
-        Schema::create('address_books', function (Blueprint $table) {
+        Schema::create('job_addresses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('job_id')->constrained('jobs');
+            $table->string('type')->nullable();
             $table->string('street_address')->nullable();
             $table->string('suburb')->nullable();
             $table->string('city')->nullable();
@@ -27,8 +28,6 @@ class CreateAddressBooksTable extends Migration
             $table->string('longitude')->nullable();
             $table->string('location_url')->nullable();
             $table->text('full_json_response')->nullable();
-            $table->boolean('status')->default(true);
-            $table->boolean('set_as_default')->default(false);
             $table->timestamps();
         });
     }
@@ -40,6 +39,6 @@ class CreateAddressBooksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('address_books');
+        Schema::dropIfExists('job_addresses');
     }
 }

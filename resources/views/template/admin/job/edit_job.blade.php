@@ -49,8 +49,11 @@
                                 </a>
                                 <x-admin.address-autocomplete input-id="from" :edit-data="$job"
                                                               relations="fromAddress"/>
-                                <input type="hidden" name="from_address_id" id="from_address_id"
-                                       value="{{ old('from_address_id',$job->fromAddress->id) }}">
+                                <label for="van_hire" class="float-right">Add to address book
+                                    <x-admin.ui.bootstrap-switch name="from_add_to_address_book"
+                                                                 id="from_add_to_address_book" onText="Yes"
+                                                                 offText="No" label="Add"/>
+                                </label>
                                 <x-admin.ui.select label="Area"
                                                    name="from_area_id"
                                                    id="from_area_id"
@@ -68,8 +71,11 @@
                                 </a>
                                 <x-admin.address-autocomplete input-id="to" :edit-data="$job"
                                                               relations="toAddress"/>
-                                <input type="hidden" name="to_address_id" id="to_address_id"
-                                       value="{{ old('to_address_id',$job->toAddress->id) }}">
+                                <label for="van_hire" class="float-right">Add to address book
+                                    <x-admin.ui.bootstrap-switch name="to_add_to_address_book"
+                                                                 id="to_add_to_address_book" onText="Yes"
+                                                                 offText="No" label="Add"/>
+                                </label>
                                 <x-admin.ui.select label="Area"
                                                    name="to_area_id"
                                                    id="to_area_id"
@@ -183,11 +189,11 @@
                     $('#state_' + type).val(data.state).change();
                     $('#country_' + type).val(data.country).change();
                     $('#zip_' + type).val(data.zip).change();
+                    $('#place_id_' + type).val(data.place_id).change();
                     $('#latitude_' + type).val(data.latitude).change();
                     $('#longitude_' + type).val(data.longitude).change();
                     $('#location_url_' + type).val(data.location_url).change();
                     $('#json_response_' + type).val(data.full_json_response).change();
-                    $('#' + type + '_address_id').val(data.id).change();
                 }
 
                 function unSetAddressData(type) {
@@ -197,11 +203,11 @@
                     $('#state_' + type).val('').change();
                     $('#country_' + type).val('').change();
                     $('#zip_' + type).val('').change();
+                    $('#place_id_' + type).val('').change();
                     $('#latitude_' + type).val('').change();
                     $('#longitude_' + type).val('').change();
                     $('#location_url_' + type).val('').change();
                     $('#json_response_' + type).val('').change();
-                    $('#' + type + '_address_id').val('').change();
                     $('#' + type + '_area_id').val('').change();
                 }
 
@@ -313,6 +319,7 @@
                                         <dd class="col-sm-8">${address.country}</dd>
                                     </dl>
                                 </div>
+                                <div class="card-footer"><a href="#" class="btn btn-link"><i class="fa fa-edit"></i>Edit</a></div>
                                 <!-- /.card-body -->
                             </div>
                             <!-- /.card -->

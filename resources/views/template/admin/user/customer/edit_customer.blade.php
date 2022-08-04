@@ -58,7 +58,7 @@
                                    options="area.list"
                                    add-class="area"
                 />
-                <x-admin.address-autocomplete input-id="customer" :edit-data="$customer"/>
+                <x-admin.address-autocomplete input-id="customer" :edit-data="$customer" relations="defaultAddress"/>
             </x-slot>
             <x-slot name="button">
                 <x-admin.ui.button type="submit" btn-name="Update" name="customer_update" id="customer_update"/>

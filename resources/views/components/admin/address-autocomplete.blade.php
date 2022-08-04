@@ -40,6 +40,8 @@
                   add-class=""
                   placeholder="Post Code"
                   required :value="$editData->$relations->zip ?? ''"/>
+<input type="hidden" name="place_id_{{ $inputId }}" id="place_id_{{ $inputId }}" required
+       value="{{ old('latitude_'.$inputId,$editData->$relations->place_id ?? '') }}">
 <input type="hidden" name="latitude_{{ $inputId }}" id="latitude_{{ $inputId }}" required
        value="{{ old('latitude_'.$inputId,$editData->$relations->latitude ?? '') }}">
 <input type="hidden" name="longitude_{{ $inputId }}" id="longitude_{{ $inputId }}" required
@@ -71,6 +73,7 @@
                 $('#state_{{ $inputId }}').val('').change();
                 $('#country_{{ $inputId }}').val('').change();
                 $('#zip_{{ $inputId }}').val('').change();
+                $('#place_id_{{ $inputId }}').val('').change();
                 $('#latitude_{{ $inputId }}').val('').change();
                 $('#longitude_{{ $inputId }}').val('').change();
                 $('#location_url_{{ $inputId }}').val('').change();
@@ -96,6 +99,7 @@
                         $('#zip_{{ $inputId }}').val(address_component.long_name).change();
                     }
                 });
+                $('#place_id_{{ $inputId }}').val(near_place.place_id).change();
                 $('#latitude_{{ $inputId }}').val(near_place.geometry.location.lat()).change();
                 $('#longitude_{{ $inputId }}').val(near_place.geometry.location.lng()).change();
                 $('#location_url_{{ $inputId }}').val(near_place.url).change();

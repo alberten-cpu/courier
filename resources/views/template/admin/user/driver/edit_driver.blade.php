@@ -47,7 +47,7 @@
                                    options="area.list"
                                    add-class="area"
                 />
-                <x-admin.address-autocomplete input-id="driver" :edit-data="$driver"/>
+                <x-admin.address-autocomplete input-id="driver" :edit-data="$driver" relations="defaultAddress"/>
             </x-slot>
             <x-slot name="button">
                 <x-admin.ui.button type="submit" btn-name="Update" name="driver_update" id="driver_update"/>

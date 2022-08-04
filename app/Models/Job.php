@@ -26,8 +26,6 @@ class Job extends Model
      */
     protected $fillable = ['user_id',
         'customer_reference',
-        'from_address_id',
-        'to_address_id',
         'from_area_id',
         'to_area_id',
         'timeframe_id',
@@ -47,19 +45,19 @@ class Job extends Model
     }
 
     /**
-     * @return BelongsTo
+     * @return HasOne
      */
-    public function fromAddress(): BelongsTo
+    public function fromAddress(): HasOne
     {
-        return $this->belongsTo(AddressBook::class, 'from_address_id');
+        return $this->hasOne(JobAddress::class)->where('type', 'from');
     }
 
     /**
-     * @return BelongsTo
+     * @return HasOne
      */
-    public function toAddress(): BelongsTo
+    public function toAddress(): HasOne
     {
-        return $this->belongsTo(AddressBook::class, 'to_address_id');
+        return $this->hasOne(JobAddress::class)->where('type', 'to');
     }
 
     /**
