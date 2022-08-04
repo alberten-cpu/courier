@@ -106,4 +106,9 @@ class Helper
     {
         return AddressBook::where('user_id', $user_id)->get();
     }
+
+    public static function isJson($string)
+    {
+        return is_string($string) && is_array(json_decode($string, true)) ? true : false;
+    }
 }
