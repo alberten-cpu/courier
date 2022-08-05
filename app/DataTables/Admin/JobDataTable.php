@@ -21,8 +21,8 @@ class JobDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('#', function () {
-                return '<input type="checkbox" name="job_no" class="form-control">';
+            ->addColumn('#', function ($query) {
+                return '<input type="checkbox" name="job_no" class="form-control mass-assign-checkbox" value="' . $query->id . '">';
             })
             ->addColumn('daily_job_number', function ($query) {
                 return $query->dailyJob->job_number;
@@ -45,6 +45,9 @@ class JobDataTable extends DataTable
             })
             ->editColumn('status_id', function ($query) {
                 return $query->status->status;
+            })
+            ->addColumn('assigned_to', function ($query) {
+                return $query->jobAssign->user->name ?? 'Not Assigned';
             })
             ->editColumn('created_at', function ($query) {
                 return $query->created_at->diffForHumans();
@@ -77,7 +80,7 @@ class JobDataTable extends DataTable
      */
     public function query(Job $model)
     {
-        return $model->with('user:name,id', 'user.customer:company_name,id,user_id,customer_id', 'fromArea:area,id', 'toArea:area,id', 'timeFrame:time_frame,id', 'status:status,id', 'creator:name,id', 'editor:name,id', 'dailyJob:job_number,id,job_id')->select('*')->orderBy('jobs.created_at', 'desc');
+        return $model->with('user:name,id', 'user.customer:company_name,id,user_id,customer_id', 'fromArea:area,id', 'toArea:area,id', 'timeFrame:time_frame,id', 'status:status,id', 'creator:name,id', 'editor:name,id', 'dailyJob:job_number,id,job_id', 'jobAssign:job_id,user_id,id', 'jobAssign.user:name,id')->select('*')->orderBy('jobs.created_at', 'desc');
     }
 
     /**
@@ -103,8 +106,7 @@ class JobDataTable extends DataTable
                      }'
                 ], [
                     'text' => 'Mass Assign',
-                    'className' => 'bg-success mb-lg-0 mb-3 disabled',
-                    'action' => '#'
+                    'className' => 'bg-success mb-lg-0 mb-3 disabled mass-assign'
                 ], [
                     'text' => 'Notify Drivers',
                     'className' => 'bg-info mb-lg-0 mb-3',
@@ -150,6 +152,7 @@ class JobDataTable extends DataTable
                     'name' => 'status_id',
                     'searchable' => true]
             ),
+            'assigned_to',
             'created_at',
             'created_by' => new Column(
                 ['title' => 'Created By',

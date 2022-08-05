@@ -93,11 +93,11 @@ class Job extends Model
     }
 
     /**
-     * @return HasMany
+     * @return HasOne
      */
-    public function jobAssign(): HasMany
+    public function jobAssign(): HasOne
     {
-        return $this->hasMany(JobAssign::class, 'job_id', 'id')->where('status', true);
+        return $this->hasOne(JobAssign::class, 'job_id', 'id');
     }
 
     /**

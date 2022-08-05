@@ -19,7 +19,9 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -36,6 +38,10 @@ class JobController extends Controller
         return $dataTable->render('template.admin.job.index_job');
     }
 
+    /**
+     * @param Request $request
+     * @return Collection|void
+     */
     public function getAddress(Request $request)
     {
         if ($request->ajax()) {
@@ -50,11 +56,70 @@ class JobController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return void
+     */
     public function getAddressBook(Request $request)
     {
         if ($request->ajax()) {
             return Helper::getAddressBook($request->user_id);
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return bool|string
+     */
+    public function assignDriver(Request $request)
+    {
+        if (\App\Helpers\Helper::isJSON($request->job_id)) {
+            $job_ids = json_decode($request->job_id, true);
+            if (is_array($job_ids)) {
+                foreach ($job_ids as $job_id) {
+                    $jobAssign = JobAssign::where('job_id', $job_id)->first();
+                    if (end($job_ids)) {
+                    }
+                    if ($jobAssign) {
+                        $jobAssign->user_id = $request->driver_id;
+                        $jobAssign->save();
+                        $result = back()->with('success', 'Mas jobs assigned updated successfully');
+                    } else {
+                        JobAssign::create([
+                            'job_id' => $job_id,
+                            'user_id' => $request->driver_id,
+                            'status' => false,
+                        ]);
+                        $result = back()->with('success', 'Mass jobs Assigned successfully');
+                    }
+                }
+                return $result;
+            }
+        } else {
+            $jobAssign = JobAssign::where('job_id', $request->job_id)->first();
+            if ($jobAssign) {
+                $jobAssign->user_id = $request->driver_id;
+                $jobAssign->save();
+                return back()->with('success', 'Job Assigned updated successfully');
+            } else {
+                JobAssign::create([
+                    'job_id' => $request->job_id,
+                    'user_id' => $request->driver_id,
+                    'status' => false,
+                ]);
+                return back()->with('success', 'Job Assigned successfully');
+            }
+        }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Application|Factory|View
+     */
+    public function create()
+    {
+        return view('template.admin.job.create_job');
     }
 
     /**
@@ -147,6 +212,7 @@ class JobController extends Controller
                 'state_from' => ['required'],
                 'zip_from' => ['required'],
                 'country_from' => ['required'],
+                'place_id_from' => ['required'],
                 'latitude_from' => ['required'],
                 'longitude_from' => ['required'],
                 'location_url_from' => ['required'],
@@ -158,6 +224,7 @@ class JobController extends Controller
                 'state_to' => ['required'],
                 'zip_to' => ['required'],
                 'country_to' => ['required'],
+                'place_id_to' => ['required'],
                 'latitude_to' => ['required'],
                 'longitude_to' => ['required'],
                 'location_url_to' => ['required'],
@@ -228,24 +295,13 @@ class JobController extends Controller
         }
     }
 
-
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Application|Factory|View
-     */
-    public function create()
-    {
-        return view('template.admin.job.create_job');
-    }
-
-    /**
-     * @param $user_id
+     * @param $job_id
      * @param $address
-     * @param $input_id
+     * @param $type
      * @return void
      */
-    private function makeNewJobAddress($job_id, $address, $type)
+    private function makeNewJobAddress($job_id, $address, $type): void
     {
         $newAddress = JobAddress::where('job_id', $job_id)->where('type', $type)->first();
         if ($newAddress) {
@@ -262,7 +318,7 @@ class JobController extends Controller
             $newAddress->full_json_response = $address['json_response_' . $type];
             $newAddress->save();
         } else {
-            return JobAddress::create([
+            JobAddress::create([
                 'job_id' => $job_id,
                 'type' => $type,
                 'street_address' => $address['street_address_' . $type],
@@ -361,7 +417,7 @@ class JobController extends Controller
      * @param Job $job
      * @return RedirectResponse
      */
-    public function destroy(Job $job)
+    public function destroy(Job $job): RedirectResponse
     {
         DailyJob::where('job_id', $job->id)->delete();
         JobAssign::where('job_id', $job->id)->delete();

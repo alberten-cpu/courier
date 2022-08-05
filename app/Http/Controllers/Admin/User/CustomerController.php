@@ -128,6 +128,7 @@ class CustomerController extends Controller
                 'state_customer' => ['required'],
                 'zip_customer' => ['required'],
                 'country_customer' => ['required'],
+                'place_id_customer' => ['required'],
                 'latitude_customer' => ['required'],
                 'longitude_customer' => ['required'],
                 'location_url_customer' => ['required'],
