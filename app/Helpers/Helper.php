@@ -50,10 +50,10 @@ class Helper
 
     /**
      * @param string $route
-     * @param int|null $route_id
+     * @param int|string|null $route_id
      * @return string
      */
-    public static function getRoute(string $route, int $route_id = null)
+    public static function getRoute(string $route, $route_id = null)
     {
         try {
             return route($route, $route_id);

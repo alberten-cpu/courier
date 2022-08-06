@@ -16,7 +16,7 @@ class CreateJobsTable extends Migration
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->referances('id')->constrained('users');
-            $table->string('customer_reference');
+            $table->foreignId('customer_contact_id')->nullable()->referances('id')->constrained('customer_contacts');
             $table->foreignId('from_area_id')->nullable()->referances('id')->constrained('areas');
             $table->foreignId('to_area_id')->nullable()->referances('id')->constrained('areas');
             $table->foreignId('timeframe_id')->nullable()->referances('id')->constrained('time_frames');
