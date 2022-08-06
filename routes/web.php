@@ -42,6 +42,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/job/getAddress', [JobController::class, 'getAddress'])->name('job.getAddress');
         Route::post('/job/getAddressBook', [JobController::class, 'getAddressBook'])->name('job.getAddressBook');
         Route::post('/job/assignDriver', [JobController::class, 'assignDriver'])->name('job.assignDriver');
+        Route::post('/job/getCustomerContact', [JobController::class,
+            'getCustomerContact'])->name('job.getCustomerContact');
     });
 
     /*Customer Routes */

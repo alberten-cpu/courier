@@ -25,7 +25,7 @@ class Job extends Model
      * @var string[]
      */
     protected $fillable = ['user_id',
-        'customer_reference',
+        'customer_contact_id',
         'from_area_id',
         'to_area_id',
         'timeframe_id',
@@ -106,6 +106,14 @@ class Job extends Model
     public function dailyJob(): HasOne
     {
         return $this->HasOne(DailyJob::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function customerContact(): BelongsTo
+    {
+        return $this->belongsTo(CustomerContact::class, 'customer_contact_id');
     }
 
     /**

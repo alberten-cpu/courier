@@ -47,7 +47,15 @@ class JobDataTable extends DataTable
                 return $query->status->status;
             })
             ->addColumn('assigned_to', function ($query) {
-                return $query->jobAssign->user->name ?? 'Not Assigned';
+                if (isset($query->jobAssign->status)) {
+                    if ($query->jobAssign->status == true) {
+                        return '<span class="text-success">' . $query->jobAssign->user->name . '</span>';
+                    } elseif ($query->jobAssign->status == false) {
+                        return '<span class="text-info">' . $query->jobAssign->user->name . '</span>';
+                    }
+                } else {
+                    return '<span class="text-warning">Notify</span>';
+                }
             })
             ->editColumn('created_at', function ($query) {
                 return $query->created_at->diffForHumans();
@@ -69,7 +77,7 @@ class JobDataTable extends DataTable
                         'assign' => Helper::getRoute('job.destroy', $query->id), 'id' => $query->id]
                 );
             })
-            ->rawColumns(['#', 'van_hire', 'action']);
+            ->rawColumns(['#', 'assigned_to', 'van_hire', 'action']);
     }
 
     /**
@@ -80,7 +88,7 @@ class JobDataTable extends DataTable
      */
     public function query(Job $model)
     {
-        return $model->with('user:name,id', 'user.customer:company_name,id,user_id,customer_id', 'fromArea:area,id', 'toArea:area,id', 'timeFrame:time_frame,id', 'status:status,id', 'creator:name,id', 'editor:name,id', 'dailyJob:job_number,id,job_id', 'jobAssign:job_id,user_id,id', 'jobAssign.user:name,id')->select('*')->orderBy('jobs.created_at', 'desc');
+        return $model->with('user:name,id', 'user.customer:company_name,id,user_id,customer_id', 'fromArea:area,id', 'toArea:area,id', 'timeFrame:time_frame,id', 'status:status,id', 'creator:name,id', 'editor:name,id', 'dailyJob:job_number,id,job_id', 'jobAssign:job_id,user_id,id,status', 'jobAssign.user:name,id')->select('*')->orderBy('jobs.created_at', 'desc');
     }
 
     /**
@@ -110,7 +118,9 @@ class JobDataTable extends DataTable
                 ], [
                     'text' => 'Notify Drivers',
                     'className' => 'bg-info mb-lg-0 mb-3',
-                    'action' => '#'
+                    'action' => 'function( e, dt, button, config){
+                         window.location = "' . Helper::getRoute('job.show', 'notify') . '";
+                     }'
                 ]]
             ]);
     }

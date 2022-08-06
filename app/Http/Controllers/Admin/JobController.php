@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\DataTables\Admin\JobDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\AddressBook;
+use App\Models\CustomerContact;
 use App\Models\DailyJob;
 use App\Models\Job;
 use App\Models\JobAddress;
@@ -56,6 +57,30 @@ class JobController extends Controller
         }
     }
 
+    public function getCustomerContact()
+    {
+        if (\request()->ajax()) {
+            $search = request()->search;
+            $id = request()->id;
+            $customerContacts = CustomerContact::when(
+                $search,
+                function ($query) use ($search) {
+                    $query->where('customer_contact', 'like', '%' . $search . '%');
+                }
+            )->when($id, function ($query) use ($id) {
+                $query->where('user_id', $id);
+            })->limit(15)->get();
+            $response = array();
+            foreach ($customerContacts as $customerContact) {
+                $response[] = array(
+                    "id" => $customerContact->id,
+                    "text" => $customerContact->customer_contact
+                );
+            }
+            return response()->json($response);
+        }
+    }
+
     /**
      * @param Request $request
      * @return void
@@ -83,14 +108,14 @@ class JobController extends Controller
                     if ($jobAssign) {
                         $jobAssign->user_id = $request->driver_id;
                         $jobAssign->save();
-                        $result = back()->with('success', 'Mas jobs assigned updated successfully');
+                        $result = back()->with('success', 'Mass jobs assigned updated successfully');
                     } else {
                         JobAssign::create([
                             'job_id' => $job_id,
                             'user_id' => $request->driver_id,
                             'status' => false,
                         ]);
-                        $result = back()->with('success', 'Mass jobs Assigned successfully');
+                        $result = back()->with('success', 'Mass jobs assigned successfully');
                     }
                 }
                 return $result;
@@ -149,7 +174,7 @@ class JobController extends Controller
 
             $job = Job::create([
                 'user_id' => $request->customer,
-                'customer_reference' => $request->customer_ref,
+                'customer_contact_id' => $this->updateOrCreate($request->customer, $request->customer_contact),
                 'from_area_id' => $request->from_area_id,
                 'to_area_id' => $request->to_area_id,
                 'timeframe_id' => $request->timeframe_id,
@@ -205,7 +230,7 @@ class JobController extends Controller
             $data,
             [
                 'customer' => ['required', 'integer'],
-                'customer_ref' => ['string'],
+                'customer_contact' => ['string'],
                 'street_address_from' => ['required'],
                 'suburb_from' => ['required'],
                 'city_from' => ['required'],
@@ -296,6 +321,24 @@ class JobController extends Controller
     }
 
     /**
+     * @param int $user_id
+     * @param string $customer_contact
+     * @return int
+     */
+    private function updateOrCreate(int $user_id, string $customer_contact): int
+    {
+        return CustomerContact::updateOrCreate(
+            ['user_id' => $user_id,
+                'customer_contact' => $customer_contact
+            ],
+            [
+                'user_id' => $user_id,
+                'customer_contact' => $customer_contact
+            ]
+        )->id;
+    }
+
+    /**
      * @param $job_id
      * @param $address
      * @param $type
@@ -339,23 +382,20 @@ class JobController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Job $job
-     * @return Response
+     * @param $job
+     * @return RedirectResponse
      */
-    public function show(Job $job)
+    public function show($job): RedirectResponse
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Job $job
-     * @return Application|Factory|View
-     */
-    public function edit(Job $job)
-    {
-        return view('template.admin.job.edit_job', compact('job'));
+        if ($job == 'notify') {
+            $jobNotify = JobAssign::where('status', false)->update(['status' => true]);
+            if ($jobNotify) {
+                return back()->with('success', 'Jobs notified successfully');
+            } else {
+                return back()->with('info', 'All drivers are notified');
+            }
+        }
+        return back()->with('error', 'Invalid param!!!');
     }
 
     /**
@@ -379,7 +419,7 @@ class JobController extends Controller
                 $this->makeNewAddress($request->customer, $request->all(), 'to');
             }
             $job->user_id = $request->customer;
-            $job->customer_reference = $request->customer_ref;
+            $job->customer_contact_id = $this->updateOrCreate($request->customer, $request->customer_contact);
             $job->from_area_id = $request->from_area_id;
             $job->to_area_id = $request->to_area_id;
             $job->timeframe_id = $request->timeframe_id;
@@ -409,6 +449,17 @@ class JobController extends Controller
             DB::rollback();
             return back()->with('error', $e->getMessage());
         }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param Job $job
+     * @return Application|Factory|View
+     */
+    public function edit(Job $job)
+    {
+        return view('template.admin.job.edit_job', compact('job'));
     }
 
     /**
