@@ -97,6 +97,9 @@
                                 <a class="btn btn-link text-sm address-book float-right" data-toggle="modal"
                                    data-target="#modal-xl" data-id="from">Select From Address Book
                                 </a>
+                                <x-admin.ui.input label="Company Name" type="text" name="from_company_name" id="from_company_name"
+                                                  add-class=""
+                                                  placeholder="Company Name" required autocomplete/>
                                 <x-admin.address-autocomplete input-id="from"/>
                                 <label for="van_hire" class="float-right">Add to address book
                                     <x-admin.ui.bootstrap-switch name="from_add_to_address_book"
@@ -117,6 +120,9 @@
                                 <a class="btn btn-link text-sm address-book float-right" data-toggle="modal"
                                    data-target="#modal-xl" data-id="to">Select From Address Book
                                 </a>
+                                <x-admin.ui.input label="Company Name" type="text" name="to_company_name" id="to_company_name"
+                                                  add-class=""
+                                                  placeholder="Company Name" required autocomplete/>
                                 <x-admin.address-autocomplete input-id="to"/>
                                 <label for="van_hire" class="float-right">Add to address book
                                     <x-admin.ui.bootstrap-switch name="to_add_to_address_book"
@@ -222,13 +228,15 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function (result) {
+                            console.log(result);
                             setAddressData(checkedAddress, result);
-                            setAreaAddress(checkedAddress, result[0].id)
+                            setAreaAddress(checkedAddress, result[1]['area'].id)
                         }
                     })
                 }
 
                 function setAddressData(type, data) {
+                    $('#company_name' + type).val(data.company_name).change();
                     $('#street_address_' + type).val(data.street_address).change();
                     $('#suburb_' + type).val(data.suburb).change();
                     $('#city_' + type).val(data.city).change();
