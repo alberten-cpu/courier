@@ -47,9 +47,10 @@ class JobController extends Controller
     {
         if ($request->ajax()) {
             if ($request->user_id) {
-                $user = User::with('defaultAddress', 'customer.area')->findOrFail($request->user_id);
+                $user = User::with('defaultAddress','customer:company_name,user_id,id,area_id','customer.area')->findOrFail($request->user_id);
                 $data = collect($user->defaultAddress);
-                return $data->push($user->customer->area);
+                $data->push(['customer_name'=>$user->customer->company_name]);
+                return $data->push(['area'=>$user->customer->area]);
             }
             if ($request->id) {
                 return AddressBook::findOrFail($request->id);
@@ -231,6 +232,8 @@ class JobController extends Controller
             [
                 'customer' => ['required', 'integer'],
                 'customer_contact' => ['string'],
+                'from_company_name' => ['required'],
+                'to_company_name' => ['required'],
                 'street_address_from' => ['required'],
                 'suburb_from' => ['required'],
                 'city_from' => ['required'],
@@ -348,6 +351,7 @@ class JobController extends Controller
     {
         $newAddress = JobAddress::where('job_id', $job_id)->where('type', $type)->first();
         if ($newAddress) {
+            $newAddress->company_name = $address[$type.'_company_name'];
             $newAddress->street_address = $address['street_address_' . $type];
             $newAddress->suburb = $address['suburb_' . $type];
             $newAddress->city = $address['city_' . $type];
@@ -364,7 +368,8 @@ class JobController extends Controller
             JobAddress::create([
                 'job_id' => $job_id,
                 'type' => $type,
-                'street_address' => $address['street_address_' . $type],
+                'street_address' => $address[$type.'_company_name'],
+                'company_name' => $address['street_address_' . $type],
                 'suburb' => $address['suburb_' . $type],
                 'city' => $address['city_' . $type],
                 'state' => $address['state_' . $type],

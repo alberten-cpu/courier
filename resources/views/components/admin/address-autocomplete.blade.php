@@ -5,6 +5,13 @@
                   add-class=""
                   placeholder="Street Address"
                   required :value="$editData->$relations->street_address ?? ''"/>
+<x-admin.ui.input label="Street Number"
+                  type="text"
+                  name="street_number_{{ $inputId }}"
+                  id="street_number_{{ $inputId }}"
+                  add-class=""
+                  placeholder="Street Number"
+                  required :value="$editData->$relations->street_number ?? ''"/>
 <x-admin.ui.input label="Suburb"
                   type="text"
                   name="suburb_{{ $inputId }}"
@@ -67,6 +74,7 @@
             });
             google.maps.event.addListener(autocomplete_{{ $inputId }}, 'place_changed', function () {
                 var near_place = autocomplete_{{ $inputId }}.getPlace();
+                $('#street_number_{{ $inputId }}').val('').change();
                 $('#street_address_{{ $inputId }}').val('').change();
                 $('#suburb_{{ $inputId }}').val('').change();
                 $('#city_{{ $inputId }}').val('').change();
@@ -80,13 +88,16 @@
                 $('#json_response_{{ $inputId }}').val('').change();
                 $.each(near_place.address_components, function (index, address_component) {
                     console.log(address_component);
+                    if (address_component.types[0] == "street_number") {
+                        $('#street_number_{{ $inputId }}').val(address_component.long_name).change();
+                    }
                     if (address_component.types[0] == "route") {
                         $('#street_address_{{ $inputId }}').val(address_component.long_name).change();
                     }
-                    if (address_component.types[0] == "administrative_area_level_3" || address_component.types[0] == "neighborhood" || address_component.types[0] == "sublocality_level_1" || address_component.types[0] == "sublocality_level_2" || address_component.types[0] == "locality") {
+                    if (address_component.types[0] == "administrative_area_level_3" || address_component.types[0] == "neighborhood" || address_component.types[0] == "sublocality_level_1" || address_component.types[0] == "sublocality_level_2" ) {
                         $('#suburb_{{ $inputId }}').val(address_component.long_name).change();
                     }
-                    if (address_component.types[0] == "administrative_area_level_2") {
+                    if (address_component.types[0] == "administrative_area_level_2" || address_component.types[0] == "locality") {
                         $('#city_{{ $inputId }}').val(address_component.long_name).change();
                     }
                     if (address_component.types[0] == "administrative_area_level_1") {

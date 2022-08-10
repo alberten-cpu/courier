@@ -17,6 +17,7 @@ class CreateJobAddressesTable extends Migration
             $table->id();
             $table->foreignId('job_id')->constrained('jobs');
             $table->string('type')->nullable();
+            $table->string('company_name')->nullable();
             $table->string('street_address')->nullable();
             $table->string('suburb')->nullable();
             $table->string('city')->nullable();

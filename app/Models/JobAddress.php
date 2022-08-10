@@ -16,6 +16,7 @@ class JobAddress extends Model
     protected $fillable = [
         'job_id',
         'type',
+        'company_name',
         'street_address',
         'suburb',
         'city',
