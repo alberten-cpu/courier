@@ -12,15 +12,14 @@
                 <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
 
-                <x-admin.ui.menu name="Dashboard" route="dashboard" icon="fas fa-tachometer-alt" target="0"
+                <x-admin.ui.menu name="Dashboard" route="dashboard" icon="fas fa-home" target="0"
                                  new="0" count="0"/>
                 {{--Admin Menus--}}
                 @if(auth()->user()->isAdmin())
-                    <x-admin.ui.dropdown-menu name="Users" icon="fas fa-th"
-                                              menus='[{"label":"Customers","route":"customer.index",
-                                              "target":"0","new":"0","count":"0"},
-                                              {"label":"Driver","route":"driver.index",
-                                              "target":"0","new":"0","count":"0"}]'/>
+                    <x-admin.ui.menu name="Customers" route="customer.index" icon="fas fa-users" target="0"
+                                     new="0" count="0"/>
+                    <x-admin.ui.menu name="Driver" route="driver.index" icon="fas fa-truck" target="0"
+                                     new="0" count="0"/>
                     <x-admin.ui.menu name="Area" route="area.index" icon="fas fa-location-arrow" target="0"
                                      new="0" count="0"/>
                     <x-admin.ui.menu name="Job" route="job.index" icon="fas fa-briefcase" target="0"

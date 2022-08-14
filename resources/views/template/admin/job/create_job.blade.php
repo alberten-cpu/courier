@@ -97,9 +97,11 @@
                                 <a class="btn btn-link text-sm address-book float-right" data-toggle="modal"
                                    data-target="#modal-xl" data-id="from">Select From Address Book
                                 </a>
-                                <x-admin.ui.input label="Company Name" type="text" name="from_company_name" id="from_company_name"
-                                                  add-class=""
-                                                  placeholder="Company Name" required autocomplete/>
+                                <x-admin.ui.input label="Company Name" type="text" name="company_name_from"
+                                                  id="company_name_from"
+                                                  add-class="company_name"
+                                                  placeholder="Company Name" required autocomplete
+                                                  other="data-type=from"/>
                                 <x-admin.address-autocomplete input-id="from"/>
                                 <label for="van_hire" class="float-right">Add to address book
                                     <x-admin.ui.bootstrap-switch name="from_add_to_address_book"
@@ -120,9 +122,11 @@
                                 <a class="btn btn-link text-sm address-book float-right" data-toggle="modal"
                                    data-target="#modal-xl" data-id="to">Select From Address Book
                                 </a>
-                                <x-admin.ui.input label="Company Name" type="text" name="to_company_name" id="to_company_name"
-                                                  add-class=""
-                                                  placeholder="Company Name" required autocomplete/>
+                                <x-admin.ui.input label="Company Name" type="text" name="company_name_to"
+                                                  id="company_name_to"
+                                                  add-class="company_name"
+                                                  placeholder="Company Name" required autocomplete
+                                                  other="data-type=to"/>
                                 <x-admin.address-autocomplete input-id="to"/>
                                 <label for="van_hire" class="float-right">Add to address book
                                     <x-admin.ui.bootstrap-switch name="to_add_to_address_book"
@@ -216,6 +220,7 @@
                     let checkedAddress = $('input[name="default_address"]:checked').val();
                     getAddressData(customerId, checkedAddress);
                     customerContactAutocomplete(customerId);
+                    customerCompanyName(customerId);
                 });
 
                 function getAddressData(customerId, checkedAddress, id = null) {
@@ -236,8 +241,9 @@
                 }
 
                 function setAddressData(type, data) {
-                    $('#company_name' + type).val(data.company_name).change();
+                    $('#company_name_' + type).val(data.company_name);
                     $('#street_address_' + type).val(data.street_address).change();
+                    $('#street_number_' + type).val(data.street_number).change();
                     $('#suburb_' + type).val(data.suburb).change();
                     $('#city_' + type).val(data.city).change();
                     $('#state_' + type).val(data.state).change();
@@ -251,7 +257,9 @@
                 }
 
                 function unSetAddressData(type) {
+                    $('#company_name_' + type).val('').change();
                     $('#street_address_' + type).val('').change();
+                    $('#street_number_' + type).val('').change();
                     $('#suburb_' + type).val('').change();
                     $('#city_' + type).val('').change();
                     $('#state_' + type).val('').change();
@@ -361,6 +369,10 @@
                                 <!-- /.card-header -->
                                 <div class="card-body">
                                     <dl class="row">
+                                        <dt class="col-sm-4">Company Name</dt>
+                                        <dd class="col-sm-8">${address.company_name}</dd>
+                                        <dt class="col-sm-4">Street Number</dt>
+                                        <dd class="col-sm-8">${address.street_number}</dd>
                                         <dt class="col-sm-4">Suburb</dt>
                                         <dd class="col-sm-8">${address.suburb}</dd>
                                         <dt class="col-sm-4">City</dt>
@@ -406,6 +418,7 @@
 
                 $(document).ready(function () {
                     customerContactAutocomplete();
+                    customerCompanyName();
                 })
 
                 function customerContactAutocomplete(customerId = null) {
@@ -434,6 +447,55 @@
                     });
                 }
 
+                function customerCompanyName(userId = null) {
+                    $(".company_name").autocomplete({
+                        source: function (request, response) {
+                            $.ajax({
+                                url: "{{ Helper::getRoute('job.getAddress') }}",
+                                type: 'post',
+                                data: {
+                                    search: request.term,
+                                    id: userId
+                                },
+                                dataType: "json",
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                success: function (data) {
+                                    var resp = $.map(data, function (obj) {
+                                        return obj.text;
+                                    });
+                                    response(resp);
+                                }
+                            });
+                        },
+                        minLength: 1
+                    });
+                }
+
+                $("body").on('change', '.company_name', function () {
+                    let type = $(this).data('type');
+                    let company_name = $(this).val();
+                    if (company_name) {
+                        getAddressByCompanyName(company_name, type);
+                    }
+                })
+
+                function getAddressByCompanyName(company_name, type) {
+                    $.ajax({
+                        url: '{{ Helper::getRoute('job.getAddress') }}',
+                        type: 'post',
+                        data: {company_name: company_name},
+                        dataType: 'json',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (result) {
+                            console.log(result);
+                            setAddressData(type, result);
+                        }
+                    })
+                }
             </script>
     @endpush
 

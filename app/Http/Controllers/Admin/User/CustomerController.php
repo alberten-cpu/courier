@@ -91,7 +91,7 @@ class CustomerController extends Controller
             'area_id' => $request->area_id
         ]);
         $this->addAddress($request->all(), 'customer', $user->id);
-        return back()->with('success', 'Customer details is saved successfully');
+        return redirect()->route('customer.index')->with('success', 'Customer details is saved successfully');
     }
 
     /**
@@ -119,10 +119,11 @@ class CustomerController extends Controller
                 'company_name' => ['required', 'string', 'max:250', 'unique:customers,company_name,' . $customer_id],
                 'first_name' => ['required', 'string', 'max:250'],
                 'last_name' => ['required', 'string'],
-                'email' => ['required', 'string', 'unique:users,email,' . $id],
+                'email' => ['required', 'email', 'unique:users,email,' . $id],
                 'mobile' => ['required', 'unique:users,mobile,' . $id],
                 'area_id' => ['required'],
                 'street_address_customer' => ['required'],
+                'street_number_customer' => ['required'],
                 'suburb_customer' => ['required'],
                 'city_customer' => ['required'],
                 'state_customer' => ['required'],
@@ -160,7 +161,9 @@ class CustomerController extends Controller
         if (!$update) {
             return AddressBook::create([
                 'user_id' => $user_id,
+                'company_name' => $address['company_name'],
                 'street_address' => $address['street_address_' . $input_id],
+                'street_number' => $address['street_number_' . $input_id],
                 'suburb' => $address['suburb_' . $input_id],
                 'city' => $address['city_' . $input_id],
                 'state' => $address['state_' . $input_id],
@@ -176,7 +179,9 @@ class CustomerController extends Controller
             ]);
         } else {
             $editAddress = AddressBook::findOrFail($user_id->defaultAddress->id);
+            $editAddress->company_name = $address['company_name'];
             $editAddress->street_address = $address['street_address_' . $input_id];
+            $editAddress->street_number = $address['street_number_' . $input_id];
             $editAddress->suburb = $address['suburb_' . $input_id];
             $editAddress->city = $address['city_' . $input_id];
             $editAddress->state = $address['state_' . $input_id];

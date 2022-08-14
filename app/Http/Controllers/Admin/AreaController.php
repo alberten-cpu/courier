@@ -10,6 +10,7 @@ use DataTables;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -69,7 +70,7 @@ class AreaController extends Controller
             'zone_id' => $request->zone_id,
             'status' => $status,
         ]);
-        return back()->with('success', 'Area details are saved successfully');
+        return redirect()->route('area.index')->with('success', 'Area details are saved successfully');
     }
 
     /**
@@ -156,11 +157,16 @@ class AreaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     * @return Response
+     * @param Area $area
+     * @return RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(Area $area): RedirectResponse
     {
-        //
+        try {
+            $area->delete();
+            return back()->with('success', 'Area deleted successfully');
+        } catch (QueryException $e) {
+            return back()->with('error', 'Something went wrong!!!, Error:' . $e->getMessage());
+        }
     }
 }

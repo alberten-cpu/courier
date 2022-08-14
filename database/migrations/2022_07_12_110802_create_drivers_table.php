@@ -19,6 +19,8 @@ class CreateDriversTable extends Migration
             $table->string('driver_id')->nullable()->unique();
             $table->foreignId('area_id')->constrained('areas');
             $table->string('pager_number')->nullable();
+            $table->string('company_email')->nullable();
+            $table->boolean('company_driver')->default(false);
             $table->timestamps();
         });
     }
