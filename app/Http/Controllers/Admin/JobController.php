@@ -132,6 +132,7 @@ class JobController extends Controller
                     }
                     if ($jobAssign) {
                         $jobAssign->user_id = $request->driver_id;
+                        $jobAssign->status = false;
                         $jobAssign->save();
                         $result = back()->with('success', 'Mass jobs assigned updated successfully');
                     } else {
@@ -149,6 +150,7 @@ class JobController extends Controller
             $jobAssign = JobAssign::where('job_id', $request->job_id)->first();
             if ($jobAssign) {
                 $jobAssign->user_id = $request->driver_id;
+                $jobAssign->status = false;
                 $jobAssign->save();
                 return back()->with('success', 'Job Assigned updated successfully');
             } else {
