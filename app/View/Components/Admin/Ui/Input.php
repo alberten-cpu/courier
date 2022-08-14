@@ -53,6 +53,10 @@ class Input extends Component
      * @var mixed|null
      */
     public $value;
+    /**
+     * @var string|null
+     */
+    public $other;
 
     /**
      * Create a new component instance.
@@ -69,23 +73,26 @@ class Input extends Component
      * @param bool $disable
      * @param bool $autocomplete
      */
-    public function __construct(string $label,
-                                string $type,
-                                string $name,
-                                string $id,
-                                       $value = null,
-                                string $addClass = null,
-                                string $placeholder = null,
-                                bool   $required = false,
-                                bool   $readonly = false,
-                                bool   $disable = false,
-                                bool   $autocomplete = false)
-    {
+    public function __construct(
+        string $label,
+        string $type,
+        string $name,
+        string $id,
+        $value = null,
+        string $other = null,
+        string $addClass = null,
+        string $placeholder = null,
+        bool   $required = false,
+        bool   $readonly = false,
+        bool   $disable = false,
+        bool   $autocomplete = false
+    ) {
         $this->label = $label;
         $this->type = $type;
         $this->name = $name;
         $this->id = $id;
         $this->value = $value;
+        $this->other = $other;
         $this->addClass = $addClass;
         $this->placeholder = $placeholder;
         $this->required = $required;

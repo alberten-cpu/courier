@@ -19,7 +19,9 @@ class AddressBook extends Model
      * @var string[]
      */
     protected $fillable = ['user_id',
+        'company_name',
         'street_address',
+        'street_number',
         'suburb',
         'city',
         'state',

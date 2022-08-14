@@ -22,8 +22,15 @@ class Driver extends Model
     /**
      * @var string[]
      */
-    protected $fillable = ['user_id', 'driver_id', 'area_id', 'pager_number'];
+    protected $fillable = ['user_id', 'driver_id', 'area_id', 'pager_number', 'company_email', 'company_driver'];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = ['company_driver' => 'boolean'];
+    
     /**
      * @return BelongsTo
      */

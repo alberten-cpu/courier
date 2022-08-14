@@ -65,6 +65,7 @@ class DriverController extends Controller
     {
         $this->validator($request->all())->validate();
         $request->has('is_active') ? $is_active = true : $is_active = false;
+        $request->has('is_company_driver') ? $is_company_driver = true : $is_company_driver = false;
         $user = User::create([
 
             'name' => $request->first_name . ' ' . $request->last_name,
@@ -80,12 +81,14 @@ class DriverController extends Controller
             'user_id' => $user->id,
             'driver_id' => $request->did,
             'area_id' => $request->area_id,
-            'pager_number' => $request->pager_number
+            'pager_number' => $request->pager_number,
+            'company_driver' => $is_company_driver,
+            'company_email' => $request->company_email
         ]);
         $this->addAddress($request->all(), 'driver', $user->id);
 //        $driver->driver_id = $driver->createIncrementDriverId($driver->id);
 //        $driver->save();
-        return back()->with('success', 'Driver details is saved successfully');
+        return redirect()->route('driver.index')->with('success', 'Driver details is saved successfully');
     }
 
     /**
@@ -111,10 +114,11 @@ class DriverController extends Controller
                 'did' => ['required', 'string', 'unique:drivers,driver_id,' . $driver_id],
                 'first_name' => ['required', 'string', 'max:250'],
                 'last_name' => ['required', 'string'],
-                'email' => ['required', 'string', 'unique:users,email,' . $id],
+                'email' => ['required', 'email', 'unique:users,email,' . $id],
                 'mobile' => ['required', 'unique:users,mobile,' . $id],
                 'area_id' => ['required'],
                 'street_address_driver' => ['required'],
+                'street_number_driver' => ['required'],
                 'suburb_driver' => ['required'],
                 'city_driver' => ['required'],
                 'state_driver' => ['required'],
@@ -124,7 +128,9 @@ class DriverController extends Controller
                 'latitude_driver' => ['required'],
                 'longitude_driver' => ['required'],
                 'location_url_driver' => ['required'],
-                'json_response_driver' => ['required']
+                'json_response_driver' => ['required'],
+                'is_company_driver' => ['filled'],
+                'company_email' => ['nullable', 'email']
             ]
         );
     }
@@ -152,6 +158,7 @@ class DriverController extends Controller
             return AddressBook::create([
                 'user_id' => $user_id,
                 'street_address' => $address['street_address_' . $input_id],
+                'street_number' => $address['street_number_' . $input_id],
                 'suburb' => $address['suburb_' . $input_id],
                 'city' => $address['city_' . $input_id],
                 'state' => $address['state_' . $input_id],
@@ -168,6 +175,7 @@ class DriverController extends Controller
         } else {
             $editAddress = AddressBook::findOrFail($user_id->defaultAddress->id);
             $editAddress->street_address = $address['street_address_' . $input_id];
+            $editAddress->street_number = $address['street_number_' . $input_id];
             $editAddress->suburb = $address['suburb_' . $input_id];
             $editAddress->city = $address['city_' . $input_id];
             $editAddress->state = $address['state_' . $input_id];
@@ -217,6 +225,7 @@ class DriverController extends Controller
     {
         $this->validator($request->all(), $driver->id, $driver->driver->id)->validate();
         $request->has('is_active') ? $is_active = true : $is_active = false;
+        $request->has('is_company_driver') ? $is_company_driver = true : $is_company_driver = false;
         $driver->name = $request->first_name . ' ' . $request->last_name;
         $driver->first_name = $request->first_name;
         $driver->last_name = $request->last_name;
@@ -227,6 +236,8 @@ class DriverController extends Controller
         $driver_table->driver_id = $request->did;
         $driver_table->area_id = $request->area_id;
         $driver_table->pager_number = $request->pager_number;
+        $driver_table->company_driver = $is_company_driver;
+        $driver_table->company_email = $request->company_email;
         $address = $this->addAddress($request->all(), 'driver', $driver, true);
         $driver->save();
         $driver_table->save();

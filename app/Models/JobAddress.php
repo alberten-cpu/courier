@@ -18,6 +18,7 @@ class JobAddress extends Model
         'type',
         'company_name',
         'street_address',
+        'street_number',
         'suburb',
         'city',
         'state',

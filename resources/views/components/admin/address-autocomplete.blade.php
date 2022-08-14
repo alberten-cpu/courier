@@ -94,7 +94,7 @@
                     if (address_component.types[0] == "route") {
                         $('#street_address_{{ $inputId }}').val(address_component.long_name).change();
                     }
-                    if (address_component.types[0] == "administrative_area_level_3" || address_component.types[0] == "neighborhood" || address_component.types[0] == "sublocality_level_1" || address_component.types[0] == "sublocality_level_2" ) {
+                    if (address_component.types[0] == "administrative_area_level_3" || address_component.types[0] == "neighborhood" || address_component.types[0] == "sublocality_level_1" || address_component.types[0] == "sublocality_level_2") {
                         $('#suburb_{{ $inputId }}').val(address_component.long_name).change();
                     }
                     if (address_component.types[0] == "administrative_area_level_2" || address_component.types[0] == "locality") {

@@ -31,18 +31,6 @@ class DriverDataTable extends DataTable
             ->editColumn('driver.driver_id', function ($query) {
                 return $query->driver->driver_id;
             })
-            ->editColumn('created_at', function ($query) {
-                return $query->created_at->diffForHumans();
-            })
-            ->editColumn('creator.name', function ($query) {
-                return $query->creator->name;
-            })
-            ->editColumn('updated_at', function ($query) {
-                return $query->updated_at->diffForHumans();
-            })
-            ->editColumn('editor.name', function ($query) {
-                return $query->editor->name;
-            })
             ->editColumn('is_active', function ($query) {
                 if ($query->is_active) {
                     return '<span class="text-success">Active</span>';
@@ -114,20 +102,6 @@ class DriverDataTable extends DataTable
             'last_name',
             'email',
             'mobile',
-            'created_at',
-            'created_by' => new Column(
-                ['title' => 'Created By',
-                    'data' => 'creator.name',
-                    'name' => 'creator.name',
-                    'searchable' => false]
-            ),
-            'updated_at',
-            'updated_by' => new Column(
-                ['title' => 'Updated By',
-                    'data' => 'editor.name',
-                    'name' => 'editor.name',
-                    'searchable' => false]
-            ),
             'status' => new Column(
                 ['title' => 'Status',
                     'data' => 'is_active',

@@ -51,7 +51,7 @@ class JobDataTable extends DataTable
                     if ($query->jobAssign->status == true) {
                         return '<span class="text-success">' . $query->jobAssign->user->name . '</span>';
                     } elseif ($query->jobAssign->status == false) {
-                        return '<span class="text-info">' . $query->jobAssign->user->name . '</span>';
+                        return '<span class="text-danger">' . $query->jobAssign->user->name . '</span>';
                     }
                 } else {
                     return '<span class="text-warning">Notify</span>';

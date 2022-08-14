@@ -17,6 +17,7 @@ use Helper;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -41,16 +42,39 @@ class JobController extends Controller
 
     /**
      * @param Request $request
-     * @return Collection|void
+     * @return JsonResponse|Collection
      */
     public function getAddress(Request $request)
     {
         if ($request->ajax()) {
+            if ($request->search) {
+                $search = $request->search;
+                $id = $request->id;
+                $addressBooks = AddressBook::when(
+                    $search,
+                    function ($query) use ($search) {
+                        $query->where('company_name', 'like', '%' . $search . '%');
+                    }
+                )->when($id, function ($query) use ($id) {
+                    $query->where('user_id', $id);
+                })->limit(15)->get();
+                $response = array();
+                foreach ($addressBooks as $addressBook) {
+                    $response[] = array(
+                        "id" => $addressBook->id,
+                        "text" => $addressBook->company_name
+                    );
+                }
+                return response()->json($response);
+            }
             if ($request->user_id) {
-                $user = User::with('defaultAddress','customer:company_name,user_id,id,area_id','customer.area')->findOrFail($request->user_id);
+                $user = User::with('defaultAddress', 'customer:company_name,user_id,id,area_id', 'customer.area')->findOrFail($request->user_id);
                 $data = collect($user->defaultAddress);
-                $data->push(['customer_name'=>$user->customer->company_name]);
-                return $data->push(['area'=>$user->customer->area]);
+                $data->push(['customer_name' => $user->customer->company_name]);
+                return $data->push(['area' => $user->customer->area]);
+            }
+            if ($request->company_name) {
+                return AddressBook::where('company_name', $request->company_name)->latest()->first();
             }
             if ($request->id) {
                 return AddressBook::findOrFail($request->id);
@@ -153,6 +177,7 @@ class JobController extends Controller
      *
      * @param Request $request
      * @return RedirectResponse
+     * @throws ValidationException
      */
     public function store(Request $request)
     {
@@ -203,7 +228,7 @@ class JobController extends Controller
                 ]);
             }
             DB::commit();
-            return back()->with('success', 'Job Created successfully');
+            return redirect()->route('job.index')->with('success', 'Job Created successfully');
         } catch (Exception $e) {
             DB::rollback();
             return back()->with('error', $e->getMessage());
@@ -232,9 +257,10 @@ class JobController extends Controller
             [
                 'customer' => ['required', 'integer'],
                 'customer_contact' => ['string'],
-                'from_company_name' => ['required'],
-                'to_company_name' => ['required'],
+                'company_name_from' => ['required'],
+                'company_name_to' => ['required'],
                 'street_address_from' => ['required'],
+                'street_number_from' => ['required'],
                 'suburb_from' => ['required'],
                 'city_from' => ['required'],
                 'state_from' => ['required'],
@@ -247,6 +273,7 @@ class JobController extends Controller
                 'json_response_from' => ['required'],
                 'from_area_id' => ['required', 'integer'],
                 'street_address_to' => ['required'],
+                'street_number_to' => ['required'],
                 'suburb_to' => ['required'],
                 'city_to' => ['required'],
                 'state_to' => ['required'],
@@ -272,7 +299,9 @@ class JobController extends Controller
     {
         $newAddress = AddressBook::where('place_id', $address['place_id_' . $input_id])->first();
         if ($newAddress) {
+            $newAddress->company_name = $address['company_name_' . $input_id];
             $newAddress->street_address = $address['street_address_' . $input_id];
+            $newAddress->street_number = $address['street_number_' . $input_id];
             $newAddress->suburb = $address['suburb_' . $input_id];
             $newAddress->city = $address['city_' . $input_id];
             $newAddress->state = $address['state_' . $input_id];
@@ -288,7 +317,9 @@ class JobController extends Controller
             } else {
                 AddressBook::create([
                     'user_id' => $user_id,
+                    'company_name' => $address['company_name_' . $input_id],
                     'street_address' => $address['street_address_' . $input_id],
+                    'street_number' => $address['street_number_' . $input_id],
                     'suburb' => $address['suburb_' . $input_id],
                     'city' => $address['city_' . $input_id],
                     'state' => $address['state_' . $input_id],
@@ -306,7 +337,9 @@ class JobController extends Controller
         } else {
             AddressBook::create([
                 'user_id' => $user_id,
+                'company_name' => $address['company_name_' . $input_id],
                 'street_address' => $address['street_address_' . $input_id],
+                'street_number' => $address['street_number_' . $input_id],
                 'suburb' => $address['suburb_' . $input_id],
                 'city' => $address['city_' . $input_id],
                 'state' => $address['state_' . $input_id],
@@ -351,8 +384,9 @@ class JobController extends Controller
     {
         $newAddress = JobAddress::where('job_id', $job_id)->where('type', $type)->first();
         if ($newAddress) {
-            $newAddress->company_name = $address[$type.'_company_name'];
+            $newAddress->company_name = $address['company_name_' . $type];
             $newAddress->street_address = $address['street_address_' . $type];
+            $newAddress->street_number = $address['street_number_' . $type];
             $newAddress->suburb = $address['suburb_' . $type];
             $newAddress->city = $address['city_' . $type];
             $newAddress->state = $address['state_' . $type];
@@ -368,8 +402,9 @@ class JobController extends Controller
             JobAddress::create([
                 'job_id' => $job_id,
                 'type' => $type,
-                'street_address' => $address[$type.'_company_name'],
-                'company_name' => $address['street_address_' . $type],
+                'company_name' => $address['company_name_' . $type],
+                'street_address' => $address['street_address_' . $type],
+                'street_number' => $address['street_number_' . $type],
                 'suburb' => $address['suburb_' . $type],
                 'city' => $address['city_' . $type],
                 'state' => $address['state_' . $type],
@@ -449,7 +484,7 @@ class JobController extends Controller
                 }
             }
             DB::commit();
-            return back()->with('success', 'Job Updated successfully');
+            return redirect()->route('job.index')->with('success', 'Job Updated successfully');
         } catch (Exception $e) {
             DB::rollback();
             return back()->with('error', $e->getMessage());

@@ -6,7 +6,8 @@
            id="{{ $id }}"
            placeholder="{{ __($placeholder) }}" value="{{ old($name,$value) }}" @if($required) required
            @endif @if($disable) disabled @endif
-           @if($readonly) readonly @endif @if($autocomplete) autocomplete="on" @else autocomplete="off" @endif>
+           @if($readonly) readonly @endif @if($autocomplete) autocomplete="on"
+           @else autocomplete="off" @endif {{ $other }}>
     @error($name)
     <span class="invalid-feedback" role="alert">
         <strong>{{ __($message) }}</strong>

@@ -28,20 +28,8 @@ class CustomerDataTable extends DataTable
             ->editColumn('mobile', function ($query) {
                 return '<a href="tel:' . $query->mobile . '">' . $query->mobile . '</a>';
             })
-            ->editColumn('customer.customer_id', function ($query) {
-                return $query->customer->customer_id;
-            })
-            ->editColumn('created_at', function ($query) {
-                return $query->created_at->diffForHumans();
-            })
-            ->editColumn('creator.name', function ($query) {
-                return $query->creator->name;
-            })
-            ->editColumn('updated_at', function ($query) {
-                return $query->updated_at->diffForHumans();
-            })
-            ->editColumn('editor.name', function ($query) {
-                return $query->editor->name;
+            ->editColumn('area', function ($query) {
+                return $query->customer->area->area;
             })
             ->editColumn('is_active', function ($query) {
                 if ($query->is_active) {
@@ -68,7 +56,7 @@ class CustomerDataTable extends DataTable
      */
     public function query(User $model): \Illuminate\Database\Eloquent\Builder
     {
-        return $model->with('customer:user_id,customer_id')->where('role_id', Role::CUSTOMER);
+        return $model->with('customer:user_id,customer_id,area_id', 'customer.area')->where('role_id', Role::CUSTOMER);
     }
 
     /**
@@ -114,18 +102,10 @@ class CustomerDataTable extends DataTable
             'last_name',
             'email',
             'mobile',
-            'created_at',
-            'created_by' => new Column(
-                ['title' => 'Created By',
-                    'data' => 'creator.name',
-                    'name' => 'creator.name',
-                    'searchable' => false]
-            ),
-            'updated_at',
-            'updated_by' => new Column(
-                ['title' => 'Updated By',
-                    'data' => 'editor.name',
-                    'name' => 'editor.name',
+            'area' => new Column(
+                ['title' => 'Area',
+                    'data' => 'area',
+                    'name' => 'area',
                     'searchable' => false]
             ),
             'status' => new Column(

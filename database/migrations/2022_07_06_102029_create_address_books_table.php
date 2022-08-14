@@ -16,7 +16,9 @@ class CreateAddressBooksTable extends Migration
         Schema::create('address_books', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
+            $table->string('company_name')->nullable();
             $table->string('street_address')->nullable();
+            $table->string('street_number')->nullable();
             $table->string('suburb')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();

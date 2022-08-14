@@ -19,6 +19,7 @@ class CreateJobAddressesTable extends Migration
             $table->string('type')->nullable();
             $table->string('company_name')->nullable();
             $table->string('street_address')->nullable();
+            $table->string('street_number')->nullable();
             $table->string('suburb')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
