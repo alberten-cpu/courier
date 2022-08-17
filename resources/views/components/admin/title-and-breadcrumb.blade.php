@@ -22,4 +22,7 @@
             @endif
         </div>
     </div>
+    <div>
+        <hr class="bg-black">
+    </div>
 </section>

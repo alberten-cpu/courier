@@ -73,19 +73,20 @@ class CardForm extends Component
      * @param bool $autocomplete
      * @param string $formClass
      */
-    public function __construct(string $title,
-                                string $formId,
-                                string $formName = null,
-                                string $smallTitle = null,
-                                string $formRoute = null,
-                                int    $formRouteId = null,
-                                string $titleBgClass = 'card-primary',
-                                string $formMethod = 'POST',
-                                bool   $enctype = false,
-                                bool   $autocomplete = false,
-                                string $formClass = 'col-md-12',
-                                string $other = null)
-    {
+    public function __construct(
+        string $title,
+        string $formId,
+        string $formName = null,
+        string $smallTitle = null,
+        string $formRoute = null,
+        int    $formRouteId = null,
+        string $titleBgClass = 'card-primary',
+        string $formMethod = 'POST',
+        bool   $enctype = false,
+        bool   $autocomplete = false,
+        string $formClass = 'col-md-8',
+        string $other = null
+    ) {
         $this->title = $title;
         $this->formId = $formId;
         $this->formName = $formName;

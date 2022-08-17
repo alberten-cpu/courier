@@ -1,7 +1,7 @@
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
-        <div class="row">
+        <div class="row justify-content-center">
             <!-- left column -->
             <div class="{{ $formClass }}">
                 <!-- jquery validation -->

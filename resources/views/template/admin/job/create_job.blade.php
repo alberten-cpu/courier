@@ -65,103 +65,114 @@
 
         <x-admin.ui.card-form title="Job Details" form-route="job.store" form-id="create_job" autocomplete>
             <x-slot name="input">
-                <x-admin.ui.select label="Customer"
-                                   name="customer"
-                                   id="customer"
-                                   required
-                                   options="customer.list"
-                                   add-class="customer"
-                />
-                <x-admin.ui.input label="Customer Contact" type="text" name="customer_contact" id="customer_contact"
-                                  add-class=""
-                                  placeholder="Customer Contact" required autocomplete/>
-                <div class="container-fluid bg-light">
-                    <div class="card-body table-responsive pad">
+                <div class="row px-3">
+                    <div class="col-12">
+                        <x-admin.ui.select label="Customer"
+                                           name="customer"
+                                           id="customer"
+                                           required
+                                           options="customer.list"
+                                           add-class="customer"
+                        />
+                    </div>
+                    <div class="col-12">
+                        <x-admin.ui.input label="Customer Contact" type="text" name="customer_contact"
+                                          id="customer_contact"
+                                          add-class=""
+                                          placeholder="Customer Contact" required autocomplete/>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="card-body pt-2">
                         <div class="btn-group btn-group-toggle mb-3" data-toggle="buttons">
-                            <label class="btn btn-secondary active">
+                            <label class="btn btn-primary job-radio active">
                                 <input type="radio" name="default_address" id="from" value="from" autocomplete="off"
-                                       checked class="default_address">From
+                                       checked class="default_address">Pick up from
                             </label>
-                            <label class="btn btn-secondary">
+                            <label class="btn btn-primary job-radio">
                                 <input type="radio" name="default_address" id="to" value="to" autocomplete="off"
-                                       class="default_address">To
+                                       class="default_address">Deliver to
                             </label>
-                            <label class="btn btn-secondary">
+                            <label class="btn btn-primary job-radio">
                                 <input type="radio" name="default_address" id="neither" value="neither"
-                                       autocomplete="off" class="default_address">Neither
+                                       autocomplete="off" class="default_address">Custom
                             </label>
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
-                                <lable class="text-bold text-black-50">From Address</lable>
-                                <a class="btn btn-link text-sm address-book float-right" data-toggle="modal"
-                                   data-target="#modal-xl" data-id="from">Select From Address Book
-                                </a>
-                                <x-admin.ui.input label="Company Name" type="text" name="company_name_from"
-                                                  id="company_name_from"
-                                                  add-class="company_name"
-                                                  placeholder="Company Name" required autocomplete
-                                                  other="data-type=from"/>
-                                <x-admin.address-autocomplete input-id="from"/>
-                                <label for="van_hire" class="float-right">Add to address book
+                                <div class="col-12 bg-custom p-3">
+                                    <lable class="text-bold text-black-50">From Address</lable>
+                                    <a class="btn btn-link text-sm address-book float-right" data-toggle="modal"
+                                       data-target="#modal-xl" data-id="from">Select From Address Book
+                                    </a>
+                                    <x-admin.ui.input label="Company Name" type="text" name="company_name_from"
+                                                      id="company_name_from"
+                                                      add-class="company_name"
+                                                      placeholder="Company Name" required autocomplete
+                                                      other="data-type=from"/>
+                                    <x-admin.address-autocomplete input-id="from"/>
+                                    <x-admin.ui.select label="Area"
+                                                       name="from_area_id"
+                                                       id="from_area_id"
+                                                       required
+                                                       options="area.list"
+                                                       add-class="from_area"
+                                                       required
+                                    />
+                                    <label for="from_add_to_address_book">Add to address
+                                        book</label><br>
                                     <x-admin.ui.bootstrap-switch name="from_add_to_address_book"
                                                                  id="from_add_to_address_book" onText="Yes"
-                                                                 offText="No" label="Add" :value="true"/>
-                                </label>
-                                <x-admin.ui.select label="Area"
-                                                   name="from_area_id"
-                                                   id="from_area_id"
-                                                   required
-                                                   options="area.list"
-                                                   add-class="from_area"
-                                                   required
-                                />
+                                                                 offText="No" label="" :value="true"/>
+
+                                </div>
                             </div>
                             <div class="col-lg-6">
-                                <lable class="text-bold text-black-50">To Address</lable>
-                                <a class="btn btn-link text-sm address-book float-right" data-toggle="modal"
-                                   data-target="#modal-xl" data-id="to">Select From Address Book
-                                </a>
-                                <x-admin.ui.input label="Company Name" type="text" name="company_name_to"
-                                                  id="company_name_to"
-                                                  add-class="company_name"
-                                                  placeholder="Company Name" required autocomplete
-                                                  other="data-type=to"/>
-                                <x-admin.address-autocomplete input-id="to"/>
-                                <label for="van_hire" class="float-right">Add to address book
+                                <div class="col-12 bg-custom p-3">
+                                    <lable class="text-bold text-black-50">To Address</lable>
+                                    <a class="btn btn-link text-sm address-book float-right" data-toggle="modal"
+                                       data-target="#modal-xl" data-id="to">Select From Address Book
+                                    </a>
+                                    <x-admin.ui.input label="Company Name" type="text" name="company_name_to"
+                                                      id="company_name_to"
+                                                      add-class="company_name"
+                                                      placeholder="Company Name" required autocomplete
+                                                      other="data-type=to"/>
+                                    <x-admin.address-autocomplete input-id="to"/>
+                                    <x-admin.ui.select label="Area"
+                                                       name="to_area_id"
+                                                       id="to_area_id"
+                                                       required
+                                                       options="area.list"
+                                                       add-class="to_area"
+                                                       required
+                                    />
+                                    <label for="to_add_to_address_book">Add to address book</label><br>
                                     <x-admin.ui.bootstrap-switch name="to_add_to_address_book"
                                                                  id="to_add_to_address_book" onText="Yes"
-                                                                 offText="No" label="Add" :value="true"/>
-                                </label>
-                                <x-admin.ui.select label="Area"
-                                                   name="to_area_id"
-                                                   id="to_area_id"
-                                                   required
-                                                   options="area.list"
-                                                   add-class="to_area"
-                                                   required
-                                />
+                                                                 offText="No" label="" :value="true"/>
+
+                                </div>
                             </div>
                         </div>
-                        <x-admin.ui.Textarea label="Notes"
-                                             name="notes"
-                                             id="note"
-                        />
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-6">
+                <div class="row px-3">
+                    <div class="col-12">
                         <x-admin.ui.input label="Number of Boxes" type="number" name="number_box" id="number_box"
                                           add-class=""
                                           placeholder="Number of Boxes" required/>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="mt-4">
-                            <label for="van_hire">Do you need van?
-                                <x-admin.ui.bootstrap-switch name="van_hire" id="van_hire" onText="Yes"
-                                                             offText="No" label="Need"/>
-                            </label>
-                        </div>
+                    <div class="col-12">
+                        <label for="van_hire">Do you need van?</label><br>
+                        <x-admin.ui.bootstrap-switch name="van_hire" id="van_hire" onText="Yes"
+                                                     offText="No" label="Need"/>
+                    </div>
+                    <div class="col-12">
+                        <x-admin.ui.Textarea label="Notes"
+                                             name="notes"
+                                             id="note"
+                        />
                     </div>
                 </div>
                 {{--                <div class="row">--}}
@@ -187,7 +198,15 @@
                 {{--                </div>--}}
             </x-slot>
             <x-slot name="button">
-                <x-admin.ui.button type="submit" btn-name="Submit" name="job_submit" id="job_submit"/>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <x-admin.ui.button type="reset" btn-name="Cancel" name="job_cancel" id="job_cancel"
+                                           class="btn-secondary"/>
+                    </div>
+                    <div>
+                        <x-admin.ui.button type="submit" btn-name="Submit" name="job_submit" id="job_submit"/>
+                    </div>
+                </div>
             </x-slot>
         </x-admin.ui.card-form>
 

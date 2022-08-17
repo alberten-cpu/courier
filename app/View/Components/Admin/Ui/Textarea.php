@@ -48,7 +48,7 @@ class Textarea extends Component
         string $name,
         string $id,
         string $value = null,
-        string $placeholder = 'Type here',
+        string $placeholder = '',
         bool   $required = false,
         string $addClass = null
     ) {
