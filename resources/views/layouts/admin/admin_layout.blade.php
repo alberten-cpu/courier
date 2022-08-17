@@ -13,13 +13,13 @@
         @yield('content')
     </div>
 </div>
-    <!-- /.content-wrapper -->
-    <x-admin.footer/>
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-    </aside>
-    <!-- /.control-sidebar -->
+<!-- /.content-wrapper -->
+<x-admin.footer/>
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+</aside>
+<!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
 <x-admin.foot>

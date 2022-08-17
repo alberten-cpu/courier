@@ -17,7 +17,7 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-            {!! $dataTable->table() !!}
+            {!! $dataTable->table(['class' => 'table table-striped'], true) !!}
         </div>
         <!-- /.card-body -->
     </div>

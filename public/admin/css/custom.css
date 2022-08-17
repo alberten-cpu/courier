@@ -1,0 +1,12 @@
+.bg-custom {
+    background-color: #D4F1F4;
+}
+
+.job-radio.active {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+.bootstrap-switch {
+    background-color: #ffffff !important;
+}

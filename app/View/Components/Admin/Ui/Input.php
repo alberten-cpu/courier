@@ -94,7 +94,7 @@ class Input extends Component
         $this->value = $value;
         $this->other = $other;
         $this->addClass = $addClass;
-        $this->placeholder = $placeholder;
+        $this->placeholder = null;
         $this->required = $required;
         $this->readonly = $readonly;
         $this->disable = $disable;
