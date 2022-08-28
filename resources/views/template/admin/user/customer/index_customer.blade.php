@@ -7,7 +7,7 @@
     <x-admin.ui.datatable :data-table="$dataTable" title="">
         <x-slot name="breadcrumb">
             <x-admin.title-and-breadcrumb title="Customers"
-                                          breadcrumbs='{"Home":"admin.dashboard","Customers":""}'/>
+                                          breadcrumbs='{"Home":"dashboard","Customers":""}'/>
         </x-slot>
     </x-admin.ui.datatable>
     @push('scripts')

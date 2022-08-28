@@ -81,6 +81,10 @@
         });
         @endif
     });
+
+    function redirectBack() {
+        location.href = '{{ url()->previous() }}';
+    }
 </script>
 
 {{ $slot }}

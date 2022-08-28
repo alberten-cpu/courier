@@ -1,5 +1,22 @@
 <?php
 
+/**
+ * PHP Version 7.4.25
+ * Laravel Framework 8.83.18
+ *
+ * @category Controller
+ *
+ * @package Laravel
+ *
+ * @author CWSPS154 <codewithsps154@gmail.com>
+ *
+ * @license MIT License https://opensource.org/licenses/MIT
+ *
+ * @link https://github.com/CWSPS154
+ *
+ * Date 28/08/22
+ * */
+
 namespace App\Http\Controllers\Admin;
 
 use App\DataTables\Admin\JobDataTable;
@@ -10,6 +27,7 @@ use App\Models\DailyJob;
 use App\Models\Job;
 use App\Models\JobAddress;
 use App\Models\JobAssign;
+use App\Models\JobStatus;
 use App\Models\User;
 use DataTables;
 use DB;
@@ -20,10 +38,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -68,7 +83,8 @@ class JobController extends Controller
                 return response()->json($response);
             }
             if ($request->user_id) {
-                $user = User::with('defaultAddress', 'customer:company_name,user_id,id,area_id', 'customer.area')->findOrFail($request->user_id);
+                $user = User::with('defaultAddress', 'customer:company_name,user_id,id,area_id', 'customer.area')
+                    ->findOrFail($request->user_id);
                 $data = collect($user->defaultAddress);
                 $data->push(['customer_name' => $user->customer->company_name]);
                 return $data->push(['area' => $user->customer->area]);
@@ -82,6 +98,9 @@ class JobController extends Controller
         }
     }
 
+    /**
+     * @return JsonResponse|void
+     */
     public function getCustomerContact()
     {
         if (\request()->ajax()) {
@@ -119,7 +138,7 @@ class JobController extends Controller
 
     /**
      * @param Request $request
-     * @return bool|string
+     * @return RedirectResponse|void
      */
     public function assignDriver(Request $request)
     {
@@ -130,16 +149,16 @@ class JobController extends Controller
                     $jobAssign = JobAssign::where('job_id', $job_id)->first();
                     if (end($job_ids)) {
                     }
-                    if ($jobAssign) {
+                    if ($jobAssign && ($jobAssign->status == JobAssign::NOT_ASSIGNED || $jobAssign->status == JobAssign::JOB_REJECTED || $jobAssign->status == JobAssign::ASSIGNED)) {
                         $jobAssign->user_id = $request->driver_id;
-                        $jobAssign->status = false;
+                        $jobAssign->status = JobAssign::NOT_ASSIGNED;
                         $jobAssign->save();
                         $result = back()->with('success', 'Mass jobs assigned updated successfully');
                     } else {
                         JobAssign::create([
                             'job_id' => $job_id,
                             'user_id' => $request->driver_id,
-                            'status' => false,
+                            'status' => JobAssign::NOT_ASSIGNED,
                         ]);
                         $result = back()->with('success', 'Mass jobs assigned successfully');
                     }
@@ -148,16 +167,16 @@ class JobController extends Controller
             }
         } else {
             $jobAssign = JobAssign::where('job_id', $request->job_id)->first();
-            if ($jobAssign) {
+            if ($jobAssign && ($jobAssign->status == JobAssign::NOT_ASSIGNED || $jobAssign->status == JobAssign::JOB_REJECTED || $jobAssign->status == JobAssign::ASSIGNED)) {
                 $jobAssign->user_id = $request->driver_id;
-                $jobAssign->status = false;
+                $jobAssign->status = JobAssign::NOT_ASSIGNED;
                 $jobAssign->save();
                 return back()->with('success', 'Job Assigned updated successfully');
             } else {
                 JobAssign::create([
                     'job_id' => $request->job_id,
                     'user_id' => $request->driver_id,
-                    'status' => false,
+                    'status' => JobAssign::NOT_ASSIGNED,
                 ]);
                 return back()->with('success', 'Job Assigned successfully');
             }
@@ -181,7 +200,7 @@ class JobController extends Controller
      * @return RedirectResponse
      * @throws ValidationException
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $this->validator($request->all())->validate();
         $request->has('van_hire') ? $vanHire = true : $vanHire = false;
@@ -209,7 +228,7 @@ class JobController extends Controller
                 'notes' => $request->notes,
                 'van_hire' => $vanHire,
                 'number_box' => $request->number_box,
-                'status_id' => '1'
+                'status_id' => JobStatus::ORDER_PLACED
             ]);
 
             $this->makeNewJobAddress($job->id, $request->all(), 'from');
@@ -226,7 +245,7 @@ class JobController extends Controller
                 JobAssign::create([
                     'job_id' => $job->id,
                     'user_id' => $request->driver_id,
-                    'status' => false,
+                    'status' => JobAssign::NOT_ASSIGNED,
                 ]);
             }
             DB::commit();
@@ -380,9 +399,9 @@ class JobController extends Controller
      * @param $job_id
      * @param $address
      * @param $type
-     * @return void
+     * @return mixed
      */
-    private function makeNewJobAddress($job_id, $address, $type): void
+    private function makeNewJobAddress($job_id, $address, $type)
     {
         $newAddress = JobAddress::where('job_id', $job_id)->where('type', $type)->first();
         if ($newAddress) {
@@ -400,8 +419,9 @@ class JobController extends Controller
             $newAddress->location_url = $address['location_url_' . $type];
             $newAddress->full_json_response = $address['json_response_' . $type];
             $newAddress->save();
+            return $newAddress;
         } else {
-            JobAddress::create([
+            return JobAddress::create([
                 'job_id' => $job_id,
                 'type' => $type,
                 'company_name' => $address['company_name_' . $type],
@@ -430,7 +450,7 @@ class JobController extends Controller
     public function show($job): RedirectResponse
     {
         if ($job == 'notify') {
-            $jobNotify = JobAssign::where('status', false)->update(['status' => true]);
+            $jobNotify = JobAssign::where('status', JobAssign::NOT_ASSIGNED)->update(['status' => JobAssign::ASSIGNED]);
             if ($jobNotify) {
                 return back()->with('success', 'Jobs notified successfully');
             } else {
@@ -470,23 +490,26 @@ class JobController extends Controller
             $job->number_box = $request->number_box;
             $job->save();
 
-            $this->makeNewJobAddress($job->id, $request->all(), 'from');
-            $this->makeNewJobAddress($job->id, $request->all(), 'to');
+            $fromJobAddress = $this->makeNewJobAddress($job->id, $request->all(), 'from');
+            $toJobAddress = $this->makeNewJobAddress($job->id, $request->all(), 'to');
 
             if ($request->has('driver_id')) {
-                $jobAssign = JobAssign::where('job_id', $job->id)->where('status', true)->firstOrFail();
+                $jobAssign = JobAssign::where('job_id', $job->id)->where('status', JobAssign::ASSIGNED)->firstOrFail();
                 if ($jobAssign->user_id != $request->driver_id) {
-                    $jobAssign->status = false;
+                    $jobAssign->status = JobAssign::NOT_ASSIGNED;
                     $jobAssign->save();
                     JobAssign::create([
                         'job_id' => $job->id,
                         'user_id' => $request->driver_id,
-                        'status' => false,
+                        'status' => JobAssign::NOT_ASSIGNED,
                     ]);
                 }
             }
             DB::commit();
-            return redirect()->route('job.index')->with('success', 'Job Updated successfully');
+            if ($job->wasChanged() || $fromJobAddress->wasChanged() || $toJobAddress->wasChanged()) {
+                return redirect()->route('job.index')->with('success', 'Job Updated successfully');
+            }
+            return back()->with('info', 'No changes have made.');
         } catch (Exception $e) {
             DB::rollback();
             return back()->with('error', $e->getMessage());

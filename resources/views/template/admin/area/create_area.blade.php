@@ -8,7 +8,7 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
         <x-admin.title-and-breadcrumb title="Create Area"
-                                      breadcrumbs='{"Home":"admin.dashboard","Area":"area.index","Create Area":""}'/>
+                                      breadcrumbs='{"Home":"dashboard","Area":"area.index","Create Area":""}'/>
         <!-- /.content-header -->
 
         <x-admin.ui.card-form title="Area Details" form-route="area.store" form-id="create_area">

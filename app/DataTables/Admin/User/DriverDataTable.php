@@ -1,5 +1,22 @@
 <?php
 
+/**
+ * PHP Version 7.4.25
+ * Laravel Framework 8.83.18
+ *
+ * @category DataTable
+ *
+ * @package Laravel
+ *
+ * @author CWSPS154 <codewithsps154@gmail.com>
+ *
+ * @license MIT License https://opensource.org/licenses/MIT
+ *
+ * @link https://github.com/CWSPS154
+ *
+ * Date 28/08/22
+ * */
+
 namespace App\DataTables\Admin\User;
 
 use App\Models\Role;
@@ -56,7 +73,7 @@ class DriverDataTable extends DataTable
      */
     public function query(User $model): \Illuminate\Database\Eloquent\Builder
     {
-        return $model->with('driver:user_id,driver_id')->where('role_id', Role::DRIVER);
+        return $model->with('driver:user_id,driver_id')->where('role_id', Role::DRIVER)->orderBy('created_at', 'desc');
     }
 
     /**

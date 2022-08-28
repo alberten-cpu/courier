@@ -1,94 +1,38 @@
 <?php
 
+/**
+ * PHP Version 7.4.25
+ * Laravel Framework 8.83.18
+ *
+ * @category Controller
+ *
+ * @package Laravel
+ *
+ * @author CWSPS154 <codewithsps154@gmail.com>
+ *
+ * @license MIT License https://opensource.org/licenses/MIT
+ *
+ * @link https://github.com/CWSPS154
+ *
+ * Date 28/08/22
+ * */
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\getTimeframe;
 use App\Models\TimeFrame;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
+use function request;
 
 class TimeFrameController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
+     * @return JsonResponse|void
      */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param TimeFrame $timeFrame
-     * @return Response
-     */
-    public function show(TimeFrame $timeFrame)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param TimeFrame $timeFrame
-     * @return Response
-     */
-    public function edit(TimeFrame $timeFrame)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param TimeFrame $timeFrame
-     * @return Response
-     */
-    public function update(Request $request, TimeFrame $timeFrame)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param TimeFrame $timeFrame
-     * @return Response
-     */
-    public function destroy(TimeFrame $timeFrame)
-    {
-        //
-    }
-
     public function getTimeframe()
     {
-        if (\request()->ajax()) {
+        if (request()->ajax()) {
             $search = request()->search;
             $id = request()->id;
             $areas = Timeframe::select('id', 'time_frame')->when(

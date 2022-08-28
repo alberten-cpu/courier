@@ -1,8 +1,26 @@
 <?php
 
+/**
+ * PHP Version 7.4.25
+ * Laravel Framework 8.83.18
+ *
+ * @category DataTable
+ *
+ * @package Laravel
+ *
+ * @author CWSPS154 <codewithsps154@gmail.com>
+ *
+ * @license MIT License https://opensource.org/licenses/MIT
+ *
+ * @link https://github.com/CWSPS154
+ *
+ * Date 28/08/22
+ * */
+
 namespace App\DataTables\Driver;
 
 use App\Models\Job;
+use App\Models\JobAssign;
 use Helper;
 use Yajra\DataTables\DataTableAbstract;
 use Yajra\DataTables\Html\Builder;
@@ -18,21 +36,18 @@ class AcceptedJobDataTable extends DataTable
      * @param mixed $query Results from query() method.
      * @return DataTableAbstract
      */
-    public function dataTable($query)
+    public function dataTable($query): DataTableAbstract
     {
         return datatables()
             ->eloquent($query)
             ->editColumn('user.id', function ($query) {
-                return $query->user->name;
+                return $query->user->customer->company_name . ', ' . $query->user->customer->customer_id . ' - ' . $query->user->name;
             })
-            ->editColumn('from_area', function ($query) {
+            ->editColumn('from_area_id', function ($query) {
                 return $query->fromArea->area;
             })
-            ->editColumn('to_area', function ($query) {
+            ->editColumn('to_area_id', function ($query) {
                 return $query->toArea->area;
-            })
-            ->editColumn('time_frame', function ($query) {
-                return $query->timeFrame->time_frame;
             })
             ->editColumn('van_hire', function ($query) {
                 if ($query->van_hire) {
@@ -50,7 +65,7 @@ class AcceptedJobDataTable extends DataTable
                     ['view' => Helper::getRoute('myjob.show', $query->id)]
                 );
             })
-            ->rawColumns(['van_hire', 'action']);
+            ->rawColumns(['van_hire', 'status', 'action']);
     }
 
     /**
@@ -59,11 +74,12 @@ class AcceptedJobDataTable extends DataTable
      * @param Job $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Job $model)
+    public function query(Job $model): \Illuminate\Database\Eloquent\Builder
     {
-        return $model->with('user:name,id', 'fromArea:area,id', 'toArea:area,id', 'timeFrame:time_frame,id')->whereHas('jobAssign', function ($q) {
-            $q->where('user_id', Auth::id())->where('status', true);
-        })->select('jobs.*')->orderBy('jobs.created_at', 'desc');
+        return $model->with('user:name,id', 'fromArea:area,id', 'toArea:area,id', 'timeFrame:time_frame,id')
+            ->whereHas('jobAssign', function ($q) {
+                $q->where('user_id', Auth::id())->where('status', JobAssign::JOB_ACCEPTED);
+            })->select('jobs.*')->orderBy('jobs.created_at', 'desc');
     }
 
     /**
@@ -71,14 +87,15 @@ class AcceptedJobDataTable extends DataTable
      *
      * @return Builder
      */
-    public function html()
+    public function html(): Builder
     {
         return $this->builder()
             ->setTableId('id')
             ->columns($this->getColumns())
             ->minifiedAjax()
+            ->responsive()
             ->orderBy(1)
-            ->searching(false);
+            ->searching(true);
     }
 
     /**
@@ -86,10 +103,15 @@ class AcceptedJobDataTable extends DataTable
      *
      * @return array
      */
-    protected function getColumns()
+    protected function getColumns(): array
     {
         return [
-            'job_increment_id',
+            'job_increment_id' => new Column(
+                ['title' => 'Increment ID',
+                    'data' => 'job_increment_id',
+                    'name' => 'job_increment_id',
+                    'searchable' => true]
+            ),
             'user_id' => new Column(
                 ['title' => 'Customer',
                     'data' => 'user.id',
@@ -97,22 +119,16 @@ class AcceptedJobDataTable extends DataTable
                     'searchable' => false]
             ),
             'from_area_id' => new Column(
-                ['title' => 'From Area',
-                    'data' => 'from_area',
-                    'name' => 'from_area',
-                    'searchable' => false]
+                ['title' => 'From',
+                    'data' => 'from_area_id',
+                    'name' => 'from_area_id',
+                    'searchable' => true]
             ),
             'to_area_id' => new Column(
-                ['title' => 'To Area',
-                    'data' => 'to_area',
-                    'name' => 'to_area',
-                    'searchable' => false]
-            ),
-            'timeframe_id' => new Column(
-                ['title' => 'Time Frame',
-                    'data' => 'time_frame',
-                    'name' => 'time_frame',
-                    'searchable' => false]
+                ['title' => 'To',
+                    'data' => 'to_area_id',
+                    'name' => 'to_area_id',
+                    'searchable' => true]
             ),
             'van_hire',
             'number_box',
@@ -131,7 +147,7 @@ class AcceptedJobDataTable extends DataTable
      *
      * @return string
      */
-    protected function filename()
+    protected function filename(): string
     {
         return 'Driver/AcceptedJob__' . date('YmdHis');
     }

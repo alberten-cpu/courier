@@ -8,7 +8,7 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
         <x-admin.title-and-breadcrumb title="Create Driver"
-                                      breadcrumbs='{"Home":"admin.dashboard","Driver":"driver.index","Create Driver":""}'/>
+                                      breadcrumbs='{"Home":"dashboard","Driver":"driver.index","Create Driver":""}'/>
         <!-- /.content-header -->
 
         <x-admin.ui.card-form title="Driver Details" form-route="driver.store" form-id="create_drive">

@@ -1,5 +1,22 @@
 <?php
 
+/**
+ * PHP Version 7.4.25
+ * Laravel Framework 8.83.18
+ *
+ * @category Component
+ *
+ * @package Laravel
+ *
+ * @author CWSPS154 <codewithsps154@gmail.com>
+ *
+ * @license MIT License https://opensource.org/licenses/MIT
+ *
+ * @link https://github.com/CWSPS154
+ *
+ * Date 28/08/22
+ * */
+
 namespace App\View\Components\Admin\Ui;
 
 use Illuminate\Contracts\Foundation\Application;
@@ -69,18 +86,19 @@ class BootstrapSwitch extends Component
      * @param bool $readonly
      * @param string|null $other
      */
-    public function __construct(string $name,
-                                string $id,
-                                string $onText = 'ON',
-                                string $offText = 'OFF',
-                                string $label = '&nbsp;',
-                                string $onColor = 'primary',
-                                string $offColor = 'default',
-                                bool   $value = false,
-                                bool   $disable = false,
-                                bool   $readonly = false,
-                                string $other = null)
-    {
+    public function __construct(
+        string $name,
+        string $id,
+        string $onText = 'ON',
+        string $offText = 'OFF',
+        string $label = '&nbsp;',
+        string $onColor = 'primary',
+        string $offColor = 'default',
+        bool   $value = false,
+        bool   $disable = false,
+        bool   $readonly = false,
+        string $other = null
+    ) {
         $this->name = $name;
         $this->id = $id;
         $this->onText = $onText;

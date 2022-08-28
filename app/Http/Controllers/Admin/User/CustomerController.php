@@ -1,5 +1,22 @@
 <?php
 
+/**
+ * PHP Version 7.4.25
+ * Laravel Framework 8.83.18
+ *
+ * @category Controller
+ *
+ * @package Laravel
+ *
+ * @author CWSPS154 <codewithsps154@gmail.com>
+ *
+ * @license MIT License https://opensource.org/licenses/MIT
+ *
+ * @link https://github.com/CWSPS154
+ *
+ * Date 28/08/22
+ * */
+
 namespace App\Http\Controllers\Admin\User;
 
 use App\DataTables\Admin\User\CustomerDataTable;
@@ -12,6 +29,7 @@ use DataTables;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,6 +51,9 @@ class CustomerController extends Controller
         return $dataTable->render('template.admin.user.customer.index_customer');
     }
 
+    /**
+     * @return JsonResponse|void
+     */
     public function getCustomers()
     {
         if (\request()->ajax()) {
@@ -73,7 +94,6 @@ class CustomerController extends Controller
     {
         $this->validator($request->all())->validate();
         $request->has('is_active') ? $is_active = true : $is_active = false;
-//        dd($request->all());
         $user = User::create([
             'name' => $request->first_name . ' ' . $request->last_name,
             'first_name' => $request->first_name,
@@ -90,7 +110,7 @@ class CustomerController extends Controller
             'customer_id' => $request->cid,
             'area_id' => $request->area_id
         ]);
-        $this->addAddress($request->all(), 'customer', $user->id);
+        $this->addAddress($request->all(), $user->id);
         return redirect()->route('customer.index')->with('success', 'Customer details is saved successfully');
     }
 
@@ -110,7 +130,6 @@ class CustomerController extends Controller
                 return preg_match('/^\S*$/u', $value);
             }
         );
-
 
         return Validator::make(
             $data,
@@ -151,61 +170,49 @@ class CustomerController extends Controller
 
     /**
      * @param $address
-     * @param $input_id
      * @param $user_id
-     * @param $update
+     * @param bool $update
      * @return AddressBook
      */
-    private function addAddress($address, $input_id, $user_id = null, $update = false): AddressBook
+    private function addAddress($address, $user_id = null, bool $update = false): AddressBook
     {
         if (!$update) {
             return AddressBook::create([
                 'user_id' => $user_id,
                 'company_name' => $address['company_name'],
-                'street_address' => $address['street_address_' . $input_id],
-                'street_number' => $address['street_number_' . $input_id],
-                'suburb' => $address['suburb_' . $input_id],
-                'city' => $address['city_' . $input_id],
-                'state' => $address['state_' . $input_id],
-                'zip' => $address['zip_' . $input_id],
-                'country' => $address['country_' . $input_id],
-                'place_id' => $address['place_id_' . $input_id],
-                'latitude' => $address['latitude_' . $input_id],
-                'longitude' => $address['longitude_' . $input_id],
-                'location_url' => $address['location_url_' . $input_id],
-                'full_json_response' => $address['json_response_' . $input_id],
+                'street_address' => $address['street_address_' . 'customer'],
+                'street_number' => $address['street_number_' . 'customer'],
+                'suburb' => $address['suburb_' . 'customer'],
+                'city' => $address['city_' . 'customer'],
+                'state' => $address['state_' . 'customer'],
+                'zip' => $address['zip_' . 'customer'],
+                'country' => $address['country_' . 'customer'],
+                'place_id' => $address['place_id_' . 'customer'],
+                'latitude' => $address['latitude_' . 'customer'],
+                'longitude' => $address['longitude_' . 'customer'],
+                'location_url' => $address['location_url_' . 'customer'],
+                'full_json_response' => $address['json_response_' . 'customer'],
                 'status' => true,
                 'set_as_default' => true
             ]);
         } else {
             $editAddress = AddressBook::findOrFail($user_id->defaultAddress->id);
             $editAddress->company_name = $address['company_name'];
-            $editAddress->street_address = $address['street_address_' . $input_id];
-            $editAddress->street_number = $address['street_number_' . $input_id];
-            $editAddress->suburb = $address['suburb_' . $input_id];
-            $editAddress->city = $address['city_' . $input_id];
-            $editAddress->state = $address['state_' . $input_id];
-            $editAddress->zip = $address['zip_' . $input_id];
-            $editAddress->country = $address['country_' . $input_id];
-            $editAddress->place_id = $address['place_id_' . $input_id];
-            $editAddress->latitude = $address['latitude_' . $input_id];
-            $editAddress->longitude = $address['longitude_' . $input_id];
-            $editAddress->location_url = $address['location_url_' . $input_id];
-            $editAddress->full_json_response = $address['json_response_' . $input_id];
+            $editAddress->street_address = $address['street_address_' . 'customer'];
+            $editAddress->street_number = $address['street_number_' . 'customer'];
+            $editAddress->suburb = $address['suburb_' . 'customer'];
+            $editAddress->city = $address['city_' . 'customer'];
+            $editAddress->state = $address['state_' . 'customer'];
+            $editAddress->zip = $address['zip_' . 'customer'];
+            $editAddress->country = $address['country_' . 'customer'];
+            $editAddress->place_id = $address['place_id_' . 'customer'];
+            $editAddress->latitude = $address['latitude_' . 'customer'];
+            $editAddress->longitude = $address['longitude_' . 'customer'];
+            $editAddress->location_url = $address['location_url_' . 'customer'];
+            $editAddress->full_json_response = $address['json_response_' . 'customer'];
             $editAddress->save();
             return $editAddress;
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param User $customer
-     * @return Response
-     */
-    public function show(User $customer)
-    {
-        //
     }
 
     /**
@@ -240,11 +247,11 @@ class CustomerController extends Controller
         $customer_table = Customer::findOrFail($customer->customer->id);
         $customer_table->customer_id = $request->cid;
         $customer_table->area_id = $request->area_id;
-        $address = $this->addAddress($request->all(), 'customer', $customer, true);
+        $address = $this->addAddress($request->all(), $customer, true);
         $customer->save();
         $customer_table->save();
         if ($customer->wasChanged() || $customer_table->wasChanged() || $address->wasChanged()) {
-            return back()->with('success', 'Customer details updated successfully');
+            return redirect()->route('customer.index')->with('success', 'Customer details updated successfully');
         }
         return back()->with('info', 'No changes have made.');
     }
@@ -257,7 +264,16 @@ class CustomerController extends Controller
      */
     public function destroy(User $customer): RedirectResponse
     {
-        $customer->delete();
-        return back()->with('success', 'Customer details deleted successfully');
+        try {
+            $customer->defaultAddress()->delete();
+            $customer->customer()->delete();
+            $customer->forceDelete();
+            return back()->with('success', 'Customer details deleted successfully');
+        } catch (QueryException $e) {
+            return back()->with(
+                'error',
+                'You Can not delete this customer due  to data integrity violation, Error:' . $e->getMessage()
+            );
+        }
     }
 }

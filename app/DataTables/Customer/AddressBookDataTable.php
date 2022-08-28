@@ -17,17 +17,17 @@
  * Date 28/08/22
  * */
 
-namespace App\DataTables\Admin\User;
+namespace App\DataTables\Customer;
 
-use App\Models\Role;
-use App\Models\User;
+use App\Models\AddressBook;
 use Helper;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTableAbstract;
-use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
 
-class CustomerDataTable extends DataTable
+class AddressBookDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -39,17 +39,15 @@ class CustomerDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->editColumn('email', function ($query) {
-                return '<a href="mailto:' . $query->email . '">' . $query->email . '</a> ';
+            ->editColumn('set_as_default', function ($query) {
+                if ($query->set_as_default) {
+                    return '<span class="text-success">Default</span>';
+                } else {
+                    return '<span class="text-info"></span>';
+                }
             })
-            ->editColumn('mobile', function ($query) {
-                return '<a href="tel:' . $query->mobile . '">' . $query->mobile . '</a>';
-            })
-            ->editColumn('area', function ($query) {
-                return $query->customer->area->area;
-            })
-            ->editColumn('is_active', function ($query) {
-                if ($query->is_active) {
+            ->editColumn('status', function ($query) {
+                if ($query->status) {
                     return '<span class="text-success">Active</span>';
                 } else {
                     return '<span class="text-danger">Inactive</span>';
@@ -58,31 +56,30 @@ class CustomerDataTable extends DataTable
             ->addColumn('action', function ($query) {
                 return view(
                     'components.admin.datatable.button',
-                    ['edit' => Helper::getRoute('customer.edit', $query->id),
-                        'delete' => Helper::getRoute('customer.destroy', $query->id), 'id' => $query->id]
+                    ['edit' => Helper::getRoute('address_book.edit', $query->id),
+                        'delete' => Helper::getRoute('address_book.destroy', $query->id), 'id' => $query->id]
                 );
             })
-            ->rawColumns(['email', 'mobile', 'is_active', 'action']);
+            ->rawColumns(['set_as_default', 'status', 'action']);
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param User $model
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param AddressBook $model
+     * @return Builder
      */
-    public function query(User $model): \Illuminate\Database\Eloquent\Builder
+    public function query(AddressBook $model): Builder
     {
-        return $model->with('customer:user_id,customer_id,area_id', 'customer.area')
-            ->where('role_id', Role::CUSTOMER)->orderBy('created_at', 'desc');
+        return $model->select('*')->where('user_id', Auth::id())->orderBy('created_at', 'desc');
     }
 
     /**
      * Optional method if you want to use html builder.
      *
-     * @return Builder
+     * @return \Yajra\DataTables\Html\Builder
      */
-    public function html(): Builder
+    public function html(): \Yajra\DataTables\Html\Builder
     {
         return $this->builder()
             ->setTableId('id')
@@ -92,11 +89,11 @@ class CustomerDataTable extends DataTable
             ->orderBy(1)
             ->parameters([
                 'dom' => 'Bfrtip',
-                'buttons' => ['excel', 'csv', 'pdf', 'print', [
-                    'text' => 'New Customer',
+                'buttons' => [[
+                    'text' => 'New Address',
                     'className' => 'bg-primary mb-lg-0 mb-3',
                     'action' => 'function( e, dt, button, config){
-                         window.location = "' . Helper::getRoute('customer.create') . '";
+                         window.location = "' . Helper::getRoute('address_book.create') . '";
                      }'
                 ],]
             ]);
@@ -110,26 +107,25 @@ class CustomerDataTable extends DataTable
     protected function getColumns(): array
     {
         return [
-            'CID' => new Column(
-                ['title' => 'CID',
-                    'data' => 'customer.customer_id',
-                    'name' => 'customer.customer_id',
+            'company_name',
+            'street_address',
+            'street_address',
+            'street_number',
+            'suburb',
+            'city',
+            'state',
+            'zip',
+            'country',
+            'set_as_default' => new Column(
+                ['title' => 'Default',
+                    'data' => 'set_as_default',
+                    'name' => 'set_as_default',
                     'searchable' => true]
-            ),
-            'first_name',
-            'last_name',
-            'email',
-            'mobile',
-            'area' => new Column(
-                ['title' => 'Area',
-                    'data' => 'area',
-                    'name' => 'area',
-                    'searchable' => false]
             ),
             'status' => new Column(
                 ['title' => 'Status',
-                    'data' => 'is_active',
-                    'name' => 'is_active',
+                    'data' => 'status',
+                    'name' => 'status',
                     'searchable' => true]
             ),
             'action'
@@ -143,6 +139,6 @@ class CustomerDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'User/Customer_' . date('YmdHis');
+        return 'Customer/AddressBook_' . date('YmdHis');
     }
 }

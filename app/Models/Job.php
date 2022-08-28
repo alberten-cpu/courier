@@ -1,11 +1,27 @@
 <?php
 
+/**
+ * PHP Version 7.4.25
+ * Laravel Framework 8.83.18
+ *
+ * @category Model
+ *
+ * @package Laravel
+ *
+ * @author CWSPS154 <codewithsps154@gmail.com>
+ *
+ * @license MIT License https://opensource.org/licenses/MIT
+ *
+ * @link https://github.com/CWSPS154
+ *
+ * Date 28/08/22
+ * */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Wildside\Userstamps\Userstamps;
 
@@ -35,6 +51,14 @@ class Job extends Model
         'job_increment_id',
         'status_id'
     ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = ['van_hire' => 'boolean'];
+
 
     /**
      * @return BelongsTo
@@ -97,7 +121,7 @@ class Job extends Model
      */
     public function jobAssign(): HasOne
     {
-        return $this->hasOne(JobAssign::class, 'job_id', 'id');
+        return $this->hasOne(JobAssign::class, 'job_id', 'id')->orderBy('status', 'desc');
     }
 
     /**

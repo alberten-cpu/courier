@@ -1,62 +1,124 @@
-<x-admin.ui.input label="Street Address"
-                  type="text"
-                  name="street_address_{{ $inputId }}"
-                  id="street_address_{{ $inputId }}"
-                  add-class=""
-                  placeholder="Street Address"
-                  required :value="$editData->$relations->street_address ?? ''"/>
-<x-admin.ui.input label="Street Number"
-                  type="text"
-                  name="street_number_{{ $inputId }}"
-                  id="street_number_{{ $inputId }}"
-                  add-class=""
-                  placeholder="Street Number"
-                  required :value="$editData->$relations->street_number ?? ''"/>
-<x-admin.ui.input label="Suburb"
-                  type="text"
-                  name="suburb_{{ $inputId }}"
-                  id="suburb_{{ $inputId }}"
-                  add-class=""
-                  placeholder="Suburb"
-                  required :value="$editData->$relations->suburb ?? ''"/>
-<x-admin.ui.input label="City"
-                  type="text"
-                  name="city_{{ $inputId }}"
-                  id="city_{{ $inputId }}"
-                  add-class=""
-                  placeholder="City"
-                  required :value="$editData->$relations->city ?? ''"/>
-<x-admin.ui.input label="State/Region"
-                  type="text"
-                  name="state_{{ $inputId }}"
-                  id="state_{{ $inputId }}"
-                  add-class=""
-                  placeholder="State/Region"
-                  required :value="$editData->$relations->state ?? ''"/>
-<x-admin.ui.input label="Country"
-                  type="text"
-                  name="country_{{ $inputId }}"
-                  id="country_{{ $inputId }}"
-                  add-class=""
-                  placeholder="Country"
-                  required :value="$editData->$relations->country ?? ''"/>
-<x-admin.ui.input label="Post Code"
-                  type="text"
-                  name="zip_{{ $inputId }}"
-                  id="zip_{{ $inputId }}"
-                  add-class=""
-                  placeholder="Post Code"
-                  required :value="$editData->$relations->zip ?? ''"/>
-<input type="hidden" name="place_id_{{ $inputId }}" id="place_id_{{ $inputId }}" required
-       value="{{ old('latitude_'.$inputId,$editData->$relations->place_id ?? '') }}">
-<input type="hidden" name="latitude_{{ $inputId }}" id="latitude_{{ $inputId }}" required
-       value="{{ old('latitude_'.$inputId,$editData->$relations->latitude ?? '') }}">
-<input type="hidden" name="longitude_{{ $inputId }}" id="longitude_{{ $inputId }}" required
-       value="{{ old('longitude_'.$inputId,$editData->$relations->longitude ?? '') }}">
-<input type="hidden" name="location_url_{{ $inputId }}" id="location_url_{{ $inputId }}" required
-       value="{{ old('location_url_'.$inputId,$editData->$relations->location_url ?? '') }}">
-<input type="hidden" name="json_response_{{ $inputId }}" id="json_response_{{ $inputId }}" required
-       value="{{ old('json_response_'.$inputId,$editData->$relations->full_json_response ?? '') }}">
+@if($noRelation)
+    <x-admin.ui.input label="Street Address"
+                      type="text"
+                      name="street_address_{{ $inputId }}"
+                      id="street_address_{{ $inputId }}"
+                      add-class=""
+                      placeholder="Street Address"
+                      required :value="$editData->street_address ?? ''"/>
+    <x-admin.ui.input label="Street Number"
+                      type="text"
+                      name="street_number_{{ $inputId }}"
+                      id="street_number_{{ $inputId }}"
+                      add-class=""
+                      placeholder="Street Number"
+                      required :value="$editData->street_number ?? ''"/>
+    <x-admin.ui.input label="Suburb"
+                      type="text"
+                      name="suburb_{{ $inputId }}"
+                      id="suburb_{{ $inputId }}"
+                      add-class=""
+                      placeholder="Suburb"
+                      required :value="$editData->suburb ?? ''"/>
+    <x-admin.ui.input label="City"
+                      type="text"
+                      name="city_{{ $inputId }}"
+                      id="city_{{ $inputId }}"
+                      add-class=""
+                      placeholder="City"
+                      required :value="$editData->city ?? ''"/>
+    <x-admin.ui.input label="State/Region"
+                      type="text"
+                      name="state_{{ $inputId }}"
+                      id="state_{{ $inputId }}"
+                      add-class=""
+                      placeholder="State/Region"
+                      required :value="$editData->state ?? ''"/>
+    <x-admin.ui.input label="Country"
+                      type="text"
+                      name="country_{{ $inputId }}"
+                      id="country_{{ $inputId }}"
+                      add-class=""
+                      placeholder="Country"
+                      required :value="$editData->country ?? ''"/>
+    <x-admin.ui.input label="Post Code"
+                      type="text"
+                      name="zip_{{ $inputId }}"
+                      id="zip_{{ $inputId }}"
+                      add-class=""
+                      placeholder="Post Code"
+                      required :value="$editData->zip ?? ''"/>
+    <input type="hidden" name="place_id_{{ $inputId }}" id="place_id_{{ $inputId }}" required
+           value="{{ old('latitude_'.$inputId,$editData->place_id ?? '') }}">
+    <input type="hidden" name="latitude_{{ $inputId }}" id="latitude_{{ $inputId }}" required
+           value="{{ old('latitude_'.$inputId,$editData->latitude ?? '') }}">
+    <input type="hidden" name="longitude_{{ $inputId }}" id="longitude_{{ $inputId }}" required
+           value="{{ old('longitude_'.$inputId,$editData->longitude ?? '') }}">
+    <input type="hidden" name="location_url_{{ $inputId }}" id="location_url_{{ $inputId }}" required
+           value="{{ old('location_url_'.$inputId,$editData->location_url ?? '') }}">
+    <input type="hidden" name="json_response_{{ $inputId }}" id="json_response_{{ $inputId }}" required
+           value="{{ old('json_response_'.$inputId,$editData->full_json_response ?? '') }}">
+@else
+    <x-admin.ui.input label="Street Address"
+                      type="text"
+                      name="street_address_{{ $inputId }}"
+                      id="street_address_{{ $inputId }}"
+                      add-class=""
+                      placeholder="Street Address"
+                      required :value="$editData->$relations->street_address ?? ''"/>
+    <x-admin.ui.input label="Street Number"
+                      type="text"
+                      name="street_number_{{ $inputId }}"
+                      id="street_number_{{ $inputId }}"
+                      add-class=""
+                      placeholder="Street Number"
+                      required :value="$editData->$relations->street_number ?? ''"/>
+    <x-admin.ui.input label="Suburb"
+                      type="text"
+                      name="suburb_{{ $inputId }}"
+                      id="suburb_{{ $inputId }}"
+                      add-class=""
+                      placeholder="Suburb"
+                      required :value="$editData->$relations->suburb ?? ''"/>
+    <x-admin.ui.input label="City"
+                      type="text"
+                      name="city_{{ $inputId }}"
+                      id="city_{{ $inputId }}"
+                      add-class=""
+                      placeholder="City"
+                      required :value="$editData->$relations->city ?? ''"/>
+    <x-admin.ui.input label="State/Region"
+                      type="text"
+                      name="state_{{ $inputId }}"
+                      id="state_{{ $inputId }}"
+                      add-class=""
+                      placeholder="State/Region"
+                      required :value="$editData->$relations->state ?? ''"/>
+    <x-admin.ui.input label="Country"
+                      type="text"
+                      name="country_{{ $inputId }}"
+                      id="country_{{ $inputId }}"
+                      add-class=""
+                      placeholder="Country"
+                      required :value="$editData->$relations->country ?? ''"/>
+    <x-admin.ui.input label="Post Code"
+                      type="text"
+                      name="zip_{{ $inputId }}"
+                      id="zip_{{ $inputId }}"
+                      add-class=""
+                      placeholder="Post Code"
+                      required :value="$editData->$relations->zip ?? ''"/>
+    <input type="hidden" name="place_id_{{ $inputId }}" id="place_id_{{ $inputId }}" required
+           value="{{ old('latitude_'.$inputId,$editData->$relations->place_id ?? '') }}">
+    <input type="hidden" name="latitude_{{ $inputId }}" id="latitude_{{ $inputId }}" required
+           value="{{ old('latitude_'.$inputId,$editData->$relations->latitude ?? '') }}">
+    <input type="hidden" name="longitude_{{ $inputId }}" id="longitude_{{ $inputId }}" required
+           value="{{ old('longitude_'.$inputId,$editData->$relations->longitude ?? '') }}">
+    <input type="hidden" name="location_url_{{ $inputId }}" id="location_url_{{ $inputId }}" required
+           value="{{ old('location_url_'.$inputId,$editData->$relations->location_url ?? '') }}">
+    <input type="hidden" name="json_response_{{ $inputId }}" id="json_response_{{ $inputId }}" required
+           value="{{ old('json_response_'.$inputId,$editData->$relations->full_json_response ?? '') }}">
+@endif
 @push('scripts')
     @once
         <!-- Google Maps JavaScript library -->
