@@ -535,9 +535,6 @@ class JobController extends Controller
      */
     public function destroy(Job $job): RedirectResponse
     {
-        DailyJob::where('job_id', $job->id)->delete();
-        JobAssign::where('job_id', $job->id)->delete();
-        JobAddress::where('job_id', $job->id)->delete();
         $job->delete();
         return back()->with('success', 'Job Deleted successfully');
     }
