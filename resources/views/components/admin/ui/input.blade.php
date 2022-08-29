@@ -1,4 +1,4 @@
-<div class="form-group">
+<div class="form-group {{ $formGroupClass }}">
     <label for="{{ $id }}">{{ __($label) }} @if($required)
             <span class="text-danger">*</span>
         @endif</label>

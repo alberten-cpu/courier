@@ -22,11 +22,11 @@
                             @method('patch')
                         @endif
                         <div class="card-body">
-                            {{ $input }}
+                            {{ $input ?? '' }}
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-                            {{ $button }}
+                            {{ $button ?? ''}}
                         </div>
                     </form>
                 </div>

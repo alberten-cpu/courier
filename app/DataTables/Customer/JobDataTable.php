@@ -1,5 +1,22 @@
 <?php
 
+/**
+ * PHP Version 7.4.25
+ * Laravel Framework 8.83.18
+ *
+ * @category DataTable
+ *
+ * @package Laravel
+ *
+ * @author CWSPS154 <codewithsps154@gmail.com>
+ *
+ * @license MIT License https://opensource.org/licenses/MIT
+ *
+ * @link https://github.com/CWSPS154
+ *
+ * Date 28/08/22
+ * */
+
 namespace App\DataTables\Customer;
 
 use App\Models\Job;
@@ -18,7 +35,7 @@ class JobDataTable extends DataTable
      * @param mixed $query Results from query() method.
      * @return DataTableAbstract
      */
-    public function dataTable($query)
+    public function dataTable($query): DataTableAbstract
     {
         return datatables()
             ->eloquent($query)
@@ -28,9 +45,6 @@ class JobDataTable extends DataTable
             ->editColumn('to_area_id', function ($query) {
                 return $query->toArea->area;
             })
-            ->editColumn('timeframe_id', function ($query) {
-                return $query->timeFrame->time_frame;
-            })
             ->editColumn('van_hire', function ($query) {
                 if ($query->van_hire) {
                     return '<span class="text-success">Yes</span>';
@@ -38,7 +52,7 @@ class JobDataTable extends DataTable
                     return '<span class="text-danger">No</span>';
                 }
             })
-            ->editColumn('status_id', function ($query) {
+            ->editColumn('status', function ($query) {
                 return $query->status->status;
             })
             ->editColumn('created_at', function ($query) {
@@ -46,12 +60,6 @@ class JobDataTable extends DataTable
             })
             ->editColumn('creator.name', function ($query) {
                 return $query->creator->name;
-            })
-            ->editColumn('updated_at', function ($query) {
-                return $query->updated_at->diffForHumans();
-            })
-            ->editColumn('editor.name', function ($query) {
-                return $query->editor->name;
             })
             ->addColumn('action', function ($query) {
                 return view(
@@ -69,9 +77,10 @@ class JobDataTable extends DataTable
      * @param Job $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Job $model)
+    public function query(Job $model): \Illuminate\Database\Eloquent\Builder
     {
-        return $model->with('fromArea:area,id', 'toArea:area,id', 'timeFrame:time_frame,id', 'status:status,id', 'creator:name,id', 'editor:name,id')->where('jobs.user_id', Auth::id())->select('*')->orderBy('jobs.created_at', 'desc');
+        return $model->with('fromArea:area,id', 'toArea:area,id', 'timeFrame:time_frame,id', 'status:status,id', 'creator:name,id', 'editor:name,id')
+            ->where('jobs.user_id', Auth::id())->select('*')->orderBy('jobs.created_at', 'desc');
     }
 
     /**
@@ -79,13 +88,13 @@ class JobDataTable extends DataTable
      *
      * @return Builder
      */
-    public function html()
+    public function html(): Builder
     {
         return $this->builder()
             ->setTableId('id')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->dom('Bfrtip')
+            ->responsive()
             ->orderBy(1)
             ->parameters([
                 'dom' => 'Bfrtip',
@@ -104,28 +113,40 @@ class JobDataTable extends DataTable
      *
      * @return array
      */
-    protected function getColumns()
+    protected function getColumns(): array
     {
         return [
-            'job_increment_id',
-            'from_area_id',
-            'to_area_id',
-            'timeframe_id',
+            'job_increment_id' => new Column(
+                ['title' => 'Increment ID',
+                    'data' => 'job_increment_id',
+                    'name' => 'job_increment_id',
+                    'searchable' => true]
+            ),
+            'from_area_id' => new Column(
+                ['title' => 'From',
+                    'data' => 'from_area_id',
+                    'name' => 'from_area_id',
+                    'searchable' => true]
+            ),
+            'to_area_id' => new Column(
+                ['title' => 'To',
+                    'data' => 'to_area_id',
+                    'name' => 'to_area_id',
+                    'searchable' => true]
+            ),
             'van_hire',
             'number_box',
-            'status_id',
+            'status_id' => new Column(
+                ['title' => 'Status',
+                    'data' => 'status',
+                    'name' => 'status',
+                    'searchable' => false]
+            ),
             'created_at',
             'created_by' => new Column(
                 ['title' => 'Created By',
                     'data' => 'creator.name',
                     'name' => 'creator.name',
-                    'searchable' => false]
-            ),
-            'updated_at',
-            'updated_by' => new Column(
-                ['title' => 'Updated By',
-                    'data' => 'editor.name',
-                    'name' => 'editor.name',
                     'searchable' => false]
             ),
             'action'
@@ -137,7 +158,7 @@ class JobDataTable extends DataTable
      *
      * @return string
      */
-    protected function filename()
+    protected function filename(): string
     {
         return 'Customer/Job_' . date('YmdHis');
     }

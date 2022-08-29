@@ -28,6 +28,9 @@
 
                     <x-admin.ui.menu name="Job" route="jobs.index" icon="fas fa-briefcase" target="0"
                                      new="0" count="0"/>
+                    <x-admin.ui.menu name="Address Book" route="address_book.index" icon="fas fa-address-book"
+                                     target="0"
+                                     new="0" count="0"/>
 
                 @elseif(auth()->user()->isDriver())
                     <x-admin.ui.menu name="Jobs" route="myjob.index" icon="fas fa-briefcase" target="0"

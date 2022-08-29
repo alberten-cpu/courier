@@ -8,10 +8,11 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
         <x-admin.title-and-breadcrumb title="Edit Area"
-                                      breadcrumbs='{"Home":"admin.dashboard","Area":"area.index","Edit Area":""}'/>
+                                      breadcrumbs='{"Home":"dashboard","Area":"area.index","Edit Area":""}'/>
         <!-- /.content-header -->
 
-        <x-admin.ui.card-form title="Area Details" form-route="area.update" form-id="edit_area" form-route-id="{{ $area->id }}">
+        <x-admin.ui.card-form title="Area Details" form-route="area.update" form-id="edit_area"
+                              form-route-id="{{ $area->id }}">
             <x-slot name="input">
                 <div class="mb-3">
                     <x-admin.ui.bootstrap-switch name="status" id="status" label="Status" onText="Active"

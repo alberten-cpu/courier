@@ -1,5 +1,22 @@
 <?php
 
+/**
+ * PHP Version 7.4.25
+ * Laravel Framework 8.83.18
+ *
+ * @category DataTable
+ *
+ * @package Laravel
+ *
+ * @author CWSPS154 <codewithsps154@gmail.com>
+ *
+ * @license MIT License https://opensource.org/licenses/MIT
+ *
+ * @link https://github.com/CWSPS154
+ *
+ * Date 28/08/22
+ * */
+
 namespace App\DataTables\Admin;
 
 use App\Models\Area;
@@ -52,7 +69,7 @@ class AreaDataTable extends DataTable
      */
     public function query(Area $model): \Illuminate\Database\Eloquent\Builder
     {
-        return $model->select('*');
+        return $model->select('*')->orderBy('created_at', 'desc');
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 /**
  * PHP Version 7.4.25
- * Laravel Framework 8.77.1
+ * Laravel Framework 8.83.18
  *
  * @category Helper
  *
@@ -13,12 +13,13 @@
  *
  * @link https://github.com/CWSPS154
  *
- * Date 06/07/22
+ * Date 28/08/22
  * */
 
 namespace App\Helpers;
 
 use App\Models\AddressBook;
+use App\Models\JobStatus;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class Helper
@@ -27,7 +28,7 @@ class Helper
      * @param $target
      * @return string
      */
-    public static function getTarget($target)
+    public static function getTarget($target): string
     {
         if ($target == 0) {
             return '_self';
@@ -44,7 +45,6 @@ class Helper
      */
     public static function convertJson($menus)
     {
-//        dd(json_decode($menus, true));
         return json_decode($menus, true);
     }
 
@@ -53,7 +53,7 @@ class Helper
      * @param int|string|null $route_id
      * @return string
      */
-    public static function getRoute(string $route, $route_id = null)
+    public static function getRoute(string $route, $route_id = null): string
     {
         try {
             return route($route, $route_id);
@@ -62,6 +62,10 @@ class Helper
         }
     }
 
+    /**
+     * @param string $route
+     * @return mixed|string
+     */
     public static function getFirstRoute(string $route)
     {
         $routeArray = explode('.', $route);
@@ -102,13 +106,29 @@ class Helper
         }
     }
 
+    /**
+     * @param $user_id
+     * @return mixed
+     */
     public static function getAddressBook($user_id)
     {
         return AddressBook::where('user_id', $user_id)->get();
     }
 
-    public static function isJson($string)
+    /**
+     * @return mixed
+     */
+    public static function getJobStatus()
     {
-        return is_string($string) && is_array(json_decode($string, true)) ? true : false;
+        return JobStatus::pluck('status', 'id')->toArray();
+    }
+
+    /**
+     * @param $string
+     * @return bool
+     */
+    public static function isJson($string): bool
+    {
+        return is_string($string) && is_array(json_decode($string, true));
     }
 }

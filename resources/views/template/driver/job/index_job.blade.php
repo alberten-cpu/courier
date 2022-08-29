@@ -1,4 +1,4 @@
-@extends('layouts.admin.admin_layout',['title'=>'Jobs Listing'])
+@extends('layouts.admin.admin_layout',['title'=>'Accepted Jobs Listing'])
 @section('content')
 
     @push('styles')
@@ -6,8 +6,8 @@
     @endpush
     <x-admin.ui.datatable :data-table="$dataTable" title="">
         <x-slot name="breadcrumb">
-            <x-admin.title-and-breadcrumb title="Jobs"
-                                          breadcrumbs='{"Home":"dashboard","Jobs":""}'/>
+            <x-admin.title-and-breadcrumb title="Accepted Jobs"
+                                          breadcrumbs='{"Home":"dashboard","Jobs":"myjob.index","Accepted Jobs":""}'/>
         </x-slot>
     </x-admin.ui.datatable>
 

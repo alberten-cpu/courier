@@ -60,7 +60,7 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
         <x-admin.title-and-breadcrumb title="Create Job"
-                                      breadcrumbs='{"Home":"admin.dashboard","Job":"job.index","Create Job":""}'/>
+                                      breadcrumbs='{"Home":"dashboard","Job":"job.index","Create Job":""}'/>
         <!-- /.content-header -->
 
         <x-admin.ui.card-form title="Job Details" form-route="job.store" form-id="create_job" autocomplete>
@@ -123,7 +123,7 @@
                                         book</label><br>
                                     <x-admin.ui.bootstrap-switch name="from_add_to_address_book"
                                                                  id="from_add_to_address_book" onText="Yes"
-                                                                 offText="No" label="" :value="true"/>
+                                                                 offText="No" label=""/>
 
                                 </div>
                             </div>
@@ -150,7 +150,7 @@
                                     <label for="to_add_to_address_book">Add to address book</label><br>
                                     <x-admin.ui.bootstrap-switch name="to_add_to_address_book"
                                                                  id="to_add_to_address_book" onText="Yes"
-                                                                 offText="No" label="" :value="true"/>
+                                                                 offText="No" label=""/>
 
                                 </div>
                             </div>
@@ -200,8 +200,8 @@
             <x-slot name="button">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <x-admin.ui.button type="reset" btn-name="Cancel" name="job_cancel" id="job_cancel"
-                                           class="btn-secondary"/>
+                        <x-admin.ui.button type="button" btn-name="Cancel" name="job_cancel" id="job_cancel"
+                                           class="btn-secondary" other="onclick=redirectBack()"/>
                     </div>
                     <div>
                         <x-admin.ui.button type="submit" btn-name="Submit" name="job_submit" id="job_submit"/>

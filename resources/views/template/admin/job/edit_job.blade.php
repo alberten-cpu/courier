@@ -59,117 +59,129 @@
 
     <!-- Content Header (Page header) -->
     <div class="content-header">
-        <x-admin.title-and-breadcrumb title="Update Job"
-                                      breadcrumbs='{"Home":"admin.dashboard","Job":"job.index","Update Job":""}'/>
+        <x-admin.title-and-breadcrumb title="Create Job"
+                                      breadcrumbs='{"Home":"dashboard","Job":"job.index","Update Job":""}'/>
         <!-- /.content-header -->
 
-        <x-admin.ui.card-form title="Job Details" form-route="job.update" form-id="update_job"
+        <x-admin.ui.card-form title="Job Details" form-route="job.update" form-id="update_job" autocomplete
                               form-route-id="{{ $job->id }}">
             <x-slot name="input">
-                <x-admin.ui.select label="Customer"
-                                   name="customer"
-                                   id="customer"
-                                   required
-                                   options="customer.list"
-                                   add-class="customer"
-                                   :value="$job->user_id"
-                />
-                <x-admin.ui.input label="Customer Contact" type="text" name="customer_contact" id="customer_contact"
-                                  add-class=""
-                                  placeholder="Customer Contact" required
-                                  :value="$job->customerContact->customer_contact"/>
-                <div class="container-fluid bg-light">
-                    <div class="card-body table-responsive pad">
+                <div class="row px-3">
+                    <div class="col-12">
+                        <x-admin.ui.select label="Customer"
+                                           name="customer"
+                                           id="customer"
+                                           required
+                                           options="customer.list"
+                                           add-class="customer"
+                                           :value="$job->user_id"
+                        />
+                    </div>
+                    <div class="col-12">
+                        <x-admin.ui.input label="Customer Contact" type="text" name="customer_contact"
+                                          id="customer_contact"
+                                          add-class=""
+                                          placeholder="Customer Contact" required autocomplete
+                                          :value="$job->customerContact->customer_contact"/>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="card-body pt-2">
                         <div class="btn-group btn-group-toggle mb-3" data-toggle="buttons">
-                            <label class="btn btn-secondary active">
+                            <label class="btn btn-primary job-radio active">
                                 <input type="radio" name="default_address" id="from" value="from" autocomplete="off"
-                                       class="default_address">From
+                                       class="default_address">Pick up from
                             </label>
-                            <label class="btn btn-secondary">
+                            <label class="btn btn-primary job-radio">
                                 <input type="radio" name="default_address" id="to" value="to" autocomplete="off"
-                                       class="default_address">To
+                                       class="default_address">Deliver to
                             </label>
-                            <label class="btn btn-secondary">
+                            <label class="btn btn-primary job-radio">
                                 <input type="radio" name="default_address" id="neither" value="neither"
-                                       autocomplete="off" class="default_address" checked>Neither
+                                       autocomplete="off" class="default_address">Custom
                             </label>
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
-                                <lable class="text-bold text-black-50">From Address</lable>
-                                <a class="btn btn-link text-sm address-book float-right" data-toggle="modal"
-                                   data-target="#modal-xl" data-id="from">Select From Address Book
-                                </a>
-                                <x-admin.ui.input label="Company Name" type="text" name="company_name_from"
-                                                  id="company_name_from"
-                                                  add-class="company_name"
-                                                  placeholder="Company Name" required autocomplete
-                                                  other="data-type=from" :value="$job->fromAddress->company_name"/>
-                                <x-admin.address-autocomplete input-id="from" :edit-data="$job"
-                                                              relations="fromAddress"/>
-                                <label for="van_hire" class="float-right">Add to address book
+                                <div class="col-12 bg-custom p-3">
+                                    <lable class="text-bold text-black-50">From Address</lable>
+                                    <a class="btn btn-link text-sm address-book float-right" data-toggle="modal"
+                                       data-target="#modal-xl" data-id="from">Select From Address Book
+                                    </a>
+                                    <x-admin.ui.input label="Company Name" type="text" name="company_name_from"
+                                                      id="company_name_from"
+                                                      add-class="company_name"
+                                                      placeholder="Company Name" required autocomplete
+                                                      other="data-type=from"
+                                                      :value="$job->fromAddress->company_name"/>
+                                    <x-admin.address-autocomplete input-id="from" :edit-data="$job"
+                                                                  relations="fromAddress"/>
+                                    <x-admin.ui.select label="Area"
+                                                       name="from_area_id"
+                                                       id="from_area_id"
+                                                       required
+                                                       options="area.list"
+                                                       add-class="from_area"
+                                                       required
+                                                       :value="$job->from_area_id"
+                                    />
+                                    <label for="from_add_to_address_book">Add to address
+                                        book</label><br>
                                     <x-admin.ui.bootstrap-switch name="from_add_to_address_book"
                                                                  id="from_add_to_address_book" onText="Yes"
-                                                                 offText="No" label="Add"/>
-                                </label>
-                                <x-admin.ui.select label="Area"
-                                                   name="from_area_id"
-                                                   id="from_area_id"
-                                                   required
-                                                   options="area.list"
-                                                   add-class="from_area"
-                                                   required
-                                                   :value="$job->from_area_id"
-                                />
+                                                                 offText="No" label=""/>
+                                </div>
                             </div>
                             <div class="col-lg-6">
-                                <lable class="text-bold text-black-50">To Address</lable>
-                                <a class="btn btn-link text-sm address-book float-right" data-toggle="modal"
-                                   data-target="#modal-xl" data-id="to">Select From Address Book
-                                </a>
-                                <x-admin.ui.input label="Company Name" type="text" name="company_name_to"
-                                                  id="company_name_to"
-                                                  add-class="company_name"
-                                                  placeholder="Company Name" required autocomplete
-                                                  other="data-type=to" :value="$job->toAddress->company_name"/>
-                                <x-admin.address-autocomplete input-id="to" :edit-data="$job"
-                                                              relations="toAddress"/>
-                                <label for="van_hire" class="float-right">Add to address book
+                                <div class="col-12 bg-custom p-3">
+                                    <lable class="text-bold text-black-50">To Address</lable>
+                                    <a class="btn btn-link text-sm address-book float-right" data-toggle="modal"
+                                       data-target="#modal-xl" data-id="to">Select From Address Book
+                                    </a>
+                                    <x-admin.ui.input label="Company Name" type="text" name="company_name_to"
+                                                      id="company_name_to"
+                                                      add-class="company_name"
+                                                      placeholder="Company Name" required autocomplete
+                                                      other="data-type=to"
+                                                      :value="$job->toAddress->company_name"/>
+                                    <x-admin.address-autocomplete input-id="to" :edit-data="$job"
+                                                                  relations="toAddress"/>
+                                    <x-admin.ui.select label="Area"
+                                                       name="to_area_id"
+                                                       id="to_area_id"
+                                                       required
+                                                       options="area.list"
+                                                       add-class="to_area"
+                                                       required
+                                                       :value="$job->to_area_id"
+                                    />
+                                    <label for="to_add_to_address_book">Add to address book</label><br>
                                     <x-admin.ui.bootstrap-switch name="to_add_to_address_book"
                                                                  id="to_add_to_address_book" onText="Yes"
-                                                                 offText="No" label="Add"/>
-                                </label>
-                                <x-admin.ui.select label="Area"
-                                                   name="to_area_id"
-                                                   id="to_area_id"
-                                                   required
-                                                   options="area.list"
-                                                   add-class="to_area"
-                                                   required
-                                                   :value="$job->to_area_id"
-                                />
+                                                                 offText="No" label=""/>
+
+                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="row px-3">
+                    <div class="col-12">
+                        <x-admin.ui.input label="Number of Boxes" type="number" name="number_box" id="number_box"
+                                          add-class=""
+                                          placeholder="Number of Boxes" required :value="$job->number_box"/>
+                    </div>
+                    <div class="col-12">
+                        <label for="van_hire">Do you need van?</label><br>
+                        <x-admin.ui.bootstrap-switch name="van_hire" id="van_hire" onText="Yes"
+                                                     offText="No" label="Need" :value="$job->van_hire"/>
+                    </div>
+                    <div class="col-12">
                         <x-admin.ui.Textarea label="Notes"
                                              name="notes"
                                              id="note"
                                              :value="$job->notes"
                         />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <x-admin.ui.input label="Number of Boxes" type="number" name="number_box" id="number_box"
-                                          add-class=""
-                                          placeholder="Number of Boxes" required :value="$job->number_box"/>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="mt-4">
-                            <label for="van_hire">Do you need van?
-                                <x-admin.ui.bootstrap-switch name="van_hire" id="van_hire" onText="Yes"
-                                                             offText="No" label="Need" :value="$job->van_hire"/>
-                            </label>
-                        </div>
                     </div>
                 </div>
                 {{--                <div class="row">--}}
@@ -195,7 +207,16 @@
                 {{--                </div>--}}
             </x-slot>
             <x-slot name="button">
-                <x-admin.ui.button type="submit" btn-name="Submit" name="job_submit" id="job_submit"/>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <x-admin.ui.button type="button" btn-name="Cancel" name="job_cancel" id="job_cancel"
+                                           class="btn-secondary"
+                                           other="onclick=redirectBack()"/>
+                    </div>
+                    <div>
+                        <x-admin.ui.button type="submit" btn-name="Submit" name="job_submit" id="job_submit"/>
+                    </div>
+                </div>
             </x-slot>
         </x-admin.ui.card-form>
 

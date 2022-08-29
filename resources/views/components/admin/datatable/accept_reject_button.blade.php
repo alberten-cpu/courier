@@ -13,6 +13,9 @@
         @method('DELETE')
     </form>
 @endif
-
+@if($view)
+    <a href="{{ $view }}" class="btn btn-xs btn-info"><i
+            class="glyphicon glyphicon-edit" role="button"></i> {{__('View')}}</a>
+@endif
 
 

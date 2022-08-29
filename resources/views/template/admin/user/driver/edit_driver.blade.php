@@ -8,7 +8,7 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
         <x-admin.title-and-breadcrumb title="Update Driver"
-                                      breadcrumbs='{"Home":"admin.dashboard","Driver":"driver.index","Update Driver":""}'/>
+                                      breadcrumbs='{"Home":"dashboard","Driver":"driver.index","Update Driver":""}'/>
         <!-- /.content-header -->
         <x-admin.ui.card-form title="Driver Details" form-route="driver.update" form-route-id="{{ $driver->id }}"
                               form-id="update_driver">

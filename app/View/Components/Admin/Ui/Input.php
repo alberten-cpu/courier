@@ -1,5 +1,22 @@
 <?php
 
+/**
+ * PHP Version 7.4.25
+ * Laravel Framework 8.83.18
+ *
+ * @category Component
+ *
+ * @package Laravel
+ *
+ * @author CWSPS154 <codewithsps154@gmail.com>
+ *
+ * @license MIT License https://opensource.org/licenses/MIT
+ *
+ * @link https://github.com/CWSPS154
+ *
+ * Date 28/08/22
+ * */
+
 namespace App\View\Components\Admin\Ui;
 
 use Illuminate\Contracts\Foundation\Application;
@@ -57,6 +74,10 @@ class Input extends Component
      * @var string|null
      */
     public $other;
+    /**
+     * @var string|null
+     */
+    public $formGroupClass;
 
     /**
      * Create a new component instance.
@@ -66,7 +87,9 @@ class Input extends Component
      * @param string $name
      * @param string $id
      * @param null $value
+     * @param string|null $other
      * @param string|null $addClass
+     * @param string|null $formGroupClass
      * @param string|null $placeholder
      * @param bool $required
      * @param bool $readonly
@@ -81,6 +104,7 @@ class Input extends Component
         $value = null,
         string $other = null,
         string $addClass = null,
+        string $formGroupClass = null,
         string $placeholder = null,
         bool   $required = false,
         bool   $readonly = false,
@@ -94,6 +118,7 @@ class Input extends Component
         $this->value = $value;
         $this->other = $other;
         $this->addClass = $addClass;
+        $this->formGroupClass = $formGroupClass;
         $this->placeholder = null;
         $this->required = $required;
         $this->readonly = $readonly;
