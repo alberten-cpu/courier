@@ -59,13 +59,19 @@ class Job extends Model
      */
     protected $casts = ['van_hire' => 'boolean'];
 
-
     /**
-     * @return BelongsTo
+     * @return void
      */
-    public function user(): BelongsTo
+    protected static function boot()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        parent::boot();
+
+        static::deleting(function ($job) {
+            $job->fromAddress()->delete();
+            $job->toAddress()->delete();
+            $job->jobAssign()->delete();
+            $job->dailyJob()->delete();
+        });
     }
 
     /**
@@ -82,6 +88,30 @@ class Job extends Model
     public function toAddress(): HasOne
     {
         return $this->hasOne(JobAddress::class)->where('type', 'to');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function jobAssign(): HasOne
+    {
+        return $this->hasOne(JobAssign::class, 'job_id', 'id')->orderBy('status', 'desc');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function dailyJob(): HasOne
+    {
+        return $this->HasOne(DailyJob::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
@@ -114,22 +144,6 @@ class Job extends Model
     public function status(): BelongsTo
     {
         return $this->belongsTo(JobStatus::class, 'status_id');
-    }
-
-    /**
-     * @return HasOne
-     */
-    public function jobAssign(): HasOne
-    {
-        return $this->hasOne(JobAssign::class, 'job_id', 'id')->orderBy('status', 'desc');
-    }
-
-    /**
-     * @return HasOne
-     */
-    public function dailyJob(): HasOne
-    {
-        return $this->HasOne(DailyJob::class);
     }
 
     /**

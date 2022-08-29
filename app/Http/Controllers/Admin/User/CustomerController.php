@@ -265,6 +265,8 @@ class CustomerController extends Controller
     public function destroy(User $customer): RedirectResponse
     {
         try {
+            $customer->jobs()->delete();
+            $customer->customerContacts()->delete();
             $customer->defaultAddress()->delete();
             $customer->customer()->delete();
             $customer->forceDelete();
