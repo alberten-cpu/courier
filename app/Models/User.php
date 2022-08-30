@@ -25,6 +25,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -140,6 +141,30 @@ class User extends Authenticatable implements
     public function driver(): HasOne
     {
         return $this->hasOne(Driver::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function jobs(): HasMany
+    {
+        return $this->hasMany(Job::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function jobAssigns(): HasMany
+    {
+        return $this->hasMany(JobAssign::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function customerContacts(): HasMany
+    {
+        return $this->hasMany(CustomerContact::class);
     }
 
     /**

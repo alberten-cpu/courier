@@ -266,6 +266,7 @@ class DriverController extends Controller
     public function destroy(User $driver): RedirectResponse
     {
         try {
+            $driver->jobAssigns()->delete();
             $driver->defaultAddress()->delete();
             $driver->driver()->delete();
             $driver->forceDelete();
