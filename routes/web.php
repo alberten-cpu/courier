@@ -53,15 +53,16 @@ Route::group(['middleware' => 'auth'], function () {
 
     /*Admin Routes */
     Route::group(['middleware' => 'admin', 'prefix' => 'admin', 'name' => 'admin' . '.'], function () {
-        Route::resource('/user/customer', CustomerController::class)->name('*', 'customer');
-        Route::resource('/user/driver', DriverController::class)->name('*', 'driver');
-        Route::resource('/area', AreaController::class)->name('*', 'area');
+        Route::resource('/user/customer', CustomerController::class);
+        Route::resource('/user/driver', DriverController::class);
+        Route::resource('/area', AreaController::class);
         Route::post('/job/getAddress', [JobController::class, 'getAddress'])->name('job.getAddress');
         Route::post('/job/getAddressBook', [JobController::class, 'getAddressBook'])->name('job.getAddressBook');
         Route::post('/job/assignDriver', [JobController::class, 'assignDriver'])->name('job.assignDriver');
         Route::post('/job/getCustomerContact', [JobController::class,
             'getCustomerContact'])->name('job.getCustomerContact');
-        Route::resource('/job', JobController::class)->name('*', 'job');
+        Route::resource('/job', JobController::class);
+        Route::resource('/edit_address_book', CustomerAddressBookController::class)->only(['edit', 'update']);
     });
 
     /*Customer Routes */
@@ -70,12 +71,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/jobs/getAddressBook', [JobController::class, 'getAddressBook'])->name('jobs.getAddressBook');
         Route::post('/jobs/getCustomerContact', [JobController::class,
             'getCustomerContact'])->name('jobs.getCustomerContact');
-        Route::resource('/jobs', CustomerJobController::class)->name('*', 'jobs');
-        Route::resource('/address_book', CustomerAddressBookController::class)->name('*', 'address_book');
+        Route::resource('/jobs', CustomerJobController::class);
+        Route::resource('/address_book', CustomerAddressBookController::class);
     });
 
     /*Driver Routes */
     Route::group(['middleware' => 'driver', 'prefix' => 'driver', 'name' => 'driver' . '.'], function () {
-        Route::resource('/myjob', DriverJobController::class)->name('*', 'myjob');
+        Route::resource('/myjob', DriverJobController::class);
     });
 });
