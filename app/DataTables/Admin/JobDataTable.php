@@ -176,23 +176,28 @@ class JobDataTable extends DataTable
                     'name' => 'job_increment_id',
                     'searchable' => true]
             ),
-            'daily_job_number',
+            'daily_job_number' => new Column(
+                ['title' => 'Job Number',
+                    'data' => 'daily_job_number',
+                    'name' => 'dailyJob.job_number',
+                    'searchable' => true]
+            ),
             'user_id' => new Column(
                 ['title' => 'Customer',
                     'data' => 'user_id',
-                    'name' => 'user_id',
+                    'name' => 'user.name',
                     'searchable' => true]
             ),
             'from_area_id' => new Column(
                 ['title' => 'From',
                     'data' => 'from_area_id',
-                    'name' => 'from_area_id',
+                    'name' => 'fromArea.area',
                     'searchable' => true]
             ),
             'to_area_id' => new Column(
                 ['title' => 'To',
                     'data' => 'to_area_id',
-                    'name' => 'to_area_id',
+                    'name' => 'toArea.area',
                     'searchable' => true]
             ),
             'van_hire',
@@ -200,10 +205,15 @@ class JobDataTable extends DataTable
             'status_id' => new Column(
                 ['title' => 'Status',
                     'data' => 'status_id',
-                    'name' => 'status_id',
+                    'name' => 'status.status',
                     'searchable' => true]
             ),
-            'assigned_to',
+            'assigned_to' => new Column(
+                ['title' => 'Assigned To',
+                    'data' => 'assigned_to',
+                    'name' => 'jobAssign.user.name',
+                    'searchable' => true]
+            ),
             'created_at',
             'created_by' => new Column(
                 ['title' => 'Created By',

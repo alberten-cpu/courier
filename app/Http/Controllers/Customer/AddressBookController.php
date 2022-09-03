@@ -122,12 +122,13 @@ class AddressBookController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param AddressBook $addressBook
+     * @param  $addressBook
      * @return RedirectResponse
      * @throws ValidationException
      */
-    public function update(Request $request, AddressBook $addressBook): RedirectResponse
+    public function update(Request $request, $addressBook): RedirectResponse
     {
+        $addressBook = AddressBook::findOrFail($addressBook);
         $this->validator($request->all())->validate();
         $request->has('status') ? $status = true : $status = false;
         $request->has('set_as_default') ? $set_as_default = true : $set_as_default = false;
@@ -152,7 +153,11 @@ class AddressBookController extends Controller
         $addressBook->set_as_default = $set_as_default;
         $addressBook->save();
         if ($addressBook->wasChanged()) {
-            return redirect()->route('address_book.index')->with('success', 'Address is updated successfully');
+            if (request()->route()->getName() == 'address_book.update') {
+                return redirect()->route('address_book.index')->with('success', 'Address is updated successfully');
+            } else {
+                return back()->with('success', 'Address is updated successfully');
+            }
         }
         return back()->with('info', 'No changes have made.');
     }
@@ -170,12 +175,17 @@ class AddressBookController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param AddressBook $addressBook
+     * @param $addressBook
      * @return Application|Factory
      */
-    public function edit(AddressBook $addressBook)
+    public function edit($addressBook)
     {
-        return view('template.customer.address_book.edit_address_book', compact('addressBook'));
+        $addressBook = AddressBook::findOrFail($addressBook);
+        if (request()->route()->getName() == 'address_book.edit') {
+            return view('template.customer.address_book.edit_address_book', compact('addressBook'));
+        } else {
+            return view('template.admin.address_book.edit_address_book', compact('addressBook'));
+        }
     }
 
     /**

@@ -76,7 +76,7 @@ class AcceptedJobDataTable extends DataTable
      */
     public function query(Job $model): \Illuminate\Database\Eloquent\Builder
     {
-        return $model->with('user:name,id', 'fromArea:area,id', 'toArea:area,id', 'timeFrame:time_frame,id')
+        return $model->with('user:name,id', 'fromArea:area,id', 'toArea:area,id', 'timeFrame:time_frame,id', 'status:status,id')
             ->whereHas('jobAssign', function ($q) {
                 $q->where('user_id', Auth::id())->where('status', JobAssign::JOB_ACCEPTED);
             })->select('jobs.*')->orderBy('jobs.created_at', 'desc');
@@ -115,19 +115,19 @@ class AcceptedJobDataTable extends DataTable
             'user_id' => new Column(
                 ['title' => 'Customer',
                     'data' => 'user.id',
-                    'name' => 'user.id',
-                    'searchable' => false]
+                    'name' => 'user.name',
+                    'searchable' => true]
             ),
             'from_area_id' => new Column(
                 ['title' => 'From',
                     'data' => 'from_area_id',
-                    'name' => 'from_area_id',
+                    'name' => 'fromArea.area',
                     'searchable' => true]
             ),
             'to_area_id' => new Column(
                 ['title' => 'To',
                     'data' => 'to_area_id',
-                    'name' => 'to_area_id',
+                    'name' => 'toArea.area',
                     'searchable' => true]
             ),
             'van_hire',
@@ -135,8 +135,8 @@ class AcceptedJobDataTable extends DataTable
             'status_id' => new Column(
                 ['title' => 'Status',
                     'data' => 'status',
-                    'name' => 'status',
-                    'searchable' => false]
+                    'name' => 'status.status',
+                    'searchable' => true]
             ),
             'action'
         ];

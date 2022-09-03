@@ -73,7 +73,7 @@ class CustomerDataTable extends DataTable
      */
     public function query(User $model): \Illuminate\Database\Eloquent\Builder
     {
-        return $model->with('customer:user_id,customer_id,area_id', 'customer.area')
+        return $model->with('customer:user_id,customer_id,area_id,id', 'customer.area')
             ->where('role_id', Role::CUSTOMER)->orderBy('created_at', 'desc');
     }
 
@@ -123,14 +123,14 @@ class CustomerDataTable extends DataTable
             'area' => new Column(
                 ['title' => 'Area',
                     'data' => 'area',
-                    'name' => 'area',
-                    'searchable' => false]
+                    'name' => 'customer.area.area',
+                    'searchable' => true]
             ),
             'status' => new Column(
                 ['title' => 'Status',
                     'data' => 'is_active',
                     'name' => 'is_active',
-                    'searchable' => true]
+                    'searchable' => false]
             ),
             'action'
         ];

@@ -64,13 +64,13 @@ class CustomerController extends Controller
                 function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%');
                 }
-            )->when($id, function ($query) use ($id) {
-                $query->where('id', $id);
-            })->orWhereHas('customer', function ($query) use ($search) {
+            )->orWhereHas('customer', function ($query) use ($search) {
                 $query->when($search, function ($q) use ($search) {
                     $q->where('company_name', 'like', '%' . $search . '%')
                         ->oRwhere('customer_id', 'like', '%' . $search . '%');
                 });
+            })->when($id, function ($query) use ($id) {
+                $query->where('id', $id);
             })->where('role_id', Role::CUSTOMER)->limit(15)->get();
             $response = array();
             foreach ($customers as $customer) {

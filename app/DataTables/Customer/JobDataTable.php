@@ -79,7 +79,7 @@ class JobDataTable extends DataTable
      */
     public function query(Job $model): \Illuminate\Database\Eloquent\Builder
     {
-        return $model->with('fromArea:area,id', 'toArea:area,id', 'timeFrame:time_frame,id', 'status:status,id', 'creator:name,id', 'editor:name,id')
+        return $model->with('fromArea:area,id', 'toArea:area,id', 'status:status,id', 'creator:name,id', 'editor:name,id')
             ->where('jobs.user_id', Auth::id())->select('*')->orderBy('jobs.created_at', 'desc');
     }
 
@@ -131,7 +131,7 @@ class JobDataTable extends DataTable
             'to_area_id' => new Column(
                 ['title' => 'To',
                     'data' => 'to_area_id',
-                    'name' => 'to_area_id',
+                    'name' => 'toArea.area',
                     'searchable' => true]
             ),
             'van_hire',
@@ -139,8 +139,8 @@ class JobDataTable extends DataTable
             'status_id' => new Column(
                 ['title' => 'Status',
                     'data' => 'status',
-                    'name' => 'status',
-                    'searchable' => false]
+                    'name' => 'status.status',
+                    'searchable' => true]
             ),
             'created_at',
             'created_by' => new Column(
