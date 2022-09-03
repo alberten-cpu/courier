@@ -6,7 +6,7 @@
     @endpush
     <x-admin.ui.datatable :data-table="$dataTable" title="Area Listing">
         <x-slot name="breadcrumb">
-            <x-admin.title-and-breadcrumb title="Customer"
+            <x-admin.title-and-breadcrumb title="Area"
                                           breadcrumbs='{"Home":"dashboard","Area":""}'/>
         </x-slot>
     </x-admin.ui.datatable>

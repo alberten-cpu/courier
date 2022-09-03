@@ -1,4 +1,4 @@
-@extends('layouts.admin.admin_layout',['title'=>'Create Customer'])
+@extends('layouts.admin.admin_layout',['title'=>'Create Area'])
 @section('content')
 
     @push('styles')
