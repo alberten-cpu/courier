@@ -95,6 +95,7 @@ class AcceptedJobDataTable extends DataTable
             ->minifiedAjax()
             ->responsive()
             ->orderBy(1)
+            ->pagingType('numbers')
             ->searching(true);
     }
 

@@ -85,6 +85,7 @@ class AreaDataTable extends DataTable
             ->minifiedAjax()
             ->responsive()
             ->orderBy(1)
+            ->pagingType('numbers')
             ->parameters([
                 'dom' => 'Bfrtip',
                 'buttons' => ['excel', 'csv', 'pdf', 'print', [

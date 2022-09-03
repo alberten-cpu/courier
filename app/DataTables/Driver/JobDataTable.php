@@ -98,7 +98,7 @@ class JobDataTable extends DataTable
             ->minifiedAjax()
             ->responsive()
             ->orderBy(1)
-            ->searching(true)
+            ->pagingType('numbers')
             ->parameters([
                 'dom' => 'Bfrtip',
                 'buttons' => [[
