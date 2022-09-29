@@ -1,0 +1,153 @@
+a{
+   color: #010834;
+
+}
+
+.job-radio.active {
+    background-color: #fff200 !important;
+    color: #000000 !important;
+}
+
+
+
+.bootstrap-switch {
+    background-color: #ffffff !important;
+}
+
+.btn-primary{
+
+    color: #fff;
+    background-color: #010834;
+    border:1px solid #e2e2e2;;
+    box-shadow: none;
+}
+.btn-primary:hover{
+
+    background-color:#fff200;
+    color:#000;
+}
+
+.btn-link{
+
+    color: #010834;
+}
+
+.navbar-dark{
+
+    background-color: #010834;
+    border-color: #4b545c;
+}
+
+.sidebar{
+
+    background-color: #010834;
+    border-color: #4b545c;
+}
+
+[class*=sidebar-dark-] {
+    background-color: #010834;
+}
+
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
+    background-color: #fff200;
+    color: #010834;
+}
+
+button.bg-primary{
+
+    background-color:#fff200 !important;
+    color:#010834 !important;
+    border: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+button.bg-primary:hover{
+
+    background-color:#010834 !important;
+    color:#ffffff !important;
+}
+
+.bg-primary.btn.active, .bg-primary.btn:active, .bg-primary.btn:not(:disabled):not(.disabled).active, .bg-primary.btn:not(:disabled):not(.disabled):active{
+    background-color:#010834 !important;
+    color:#ffffff !important;
+}
+
+.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle{
+
+    background-color: #2a70af;
+    border:none;
+}
+
+
+.btn-secondary{
+    background-color: #2a70af;
+    border-color: #c9c9c9;
+}
+
+.btn-secondary:hover{
+    
+    background-color: #125795;
+    border-color: #c9c9c9;
+}
+
+[class*=sidebar-dark] .brand-link {
+    padding:15px;
+}
+
+.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-default, .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-default{
+
+    background: #e74c3c;
+    color:#fff;
+
+}
+
+.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary, .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary{
+
+    background: #28a745;
+    color:#fff;
+}
+.bootstrap-switch .bootstrap-switch-handle-off, .bootstrap-switch .bootstrap-switch-handle-on, .bootstrap-switch .bootstrap-switch-label{
+    background: black;
+    color:#fff;
+}
+
+.card-primary:not(.card-outline)>.card-header{
+
+    background-color:#010834;
+}
+
+.card-title {
+    float: left;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 0;
+    text-transform: uppercase;
+}
+.card-body{
+
+    padding:30px;
+}
+
+.content-header h1 {
+    font-size: 1.5rem;
+    margin: 0;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/**Create Jobs**/
+
+.box1-bg {
+    background-color: #D4F1F4;
+}
+
+.box2-bg{
+
+    background-color: #fffcc1;
+
+}
+.notes{
+    margin-top:20px;
+}
